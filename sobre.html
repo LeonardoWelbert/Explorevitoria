@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sobre Nós | Explore Vitória</title>
+    <title>Explore Vitória - Sobre Nós</title>
     <!-- Bootstrap 5.3 CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -42,26 +42,6 @@
         color: #5a5a5a;
         font-size: 0.95rem;
         line-height: 1.6;
-      }
-
-      .stats-section {
-        padding: 70px 0;
-        background: #f5f8fb;
-      }
-      .stats-section__item {
-        text-align: center;
-        padding: 20px 10px;
-      }
-      .stats-section__number {
-        font-size: 2.1rem;
-        font-weight: 800;
-        color: #1450c4;
-        line-height: 1.1;
-        margin-bottom: 6px;
-      }
-      .stats-section__label {
-        font-size: 0.9rem;
-        color: #5a5a5a;
       }
 
       .comparativo {
@@ -134,45 +114,6 @@
         font-size: 0.85rem;
         color: #888;
       }
-      .depoimento-card--placeholder {
-        border: 1px dashed #bbb;
-        background: #fafafa;
-      }
-
-      .tech-section {
-        padding: 60px 0;
-        background: #0f0f0f;
-        color: #ffffff;
-      }
-      .tech-section__title {
-        font-size: 1.3rem;
-        font-weight: 700;
-        margin-bottom: 8px;
-      }
-      .tech-section__subtitle {
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 0.9rem;
-        margin-bottom: 32px;
-      }
-      .tech-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 18px;
-        border-radius: 999px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        background: rgba(255, 255, 255, 0.04);
-        font-size: 0.88rem;
-        color: #ffffff;
-        margin: 6px;
-      }
-      .tech-badge__dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #4ac1f0;
-      }
-
       /* Corrige o subtítulo (originalmente pensado para fundo escuro)
          quando usado em seções de fundo claro */
       .comparativo .section-subtitle,
@@ -202,13 +143,6 @@
       .depoimento-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 10px 28px rgba(0, 0, 0, 0.09);
-      }
-
-      .stats-section__item {
-        transition: transform 0.25s ease;
-      }
-      .stats-section__item:hover {
-        transform: translateY(-3px);
       }
 
       .cta-final {
@@ -241,6 +175,128 @@
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
         color: #0f2f7a;
       }
+
+      .page-sobre {
+        background: #f7fafc;
+      }
+      .page-sobre .section-wrapper,
+      .page-sobre .comparativo,
+      .page-sobre .depoimentos {
+        position: relative;
+      }
+      .page-sobre .section-wrapper {
+        background: #ffffff;
+      }
+      .page-sobre .about-section {
+        padding: 112px 0;
+      }
+      .page-sobre .about-section__image-wrap {
+        overflow: hidden;
+        border-radius: 28px;
+        box-shadow: 0 24px 60px rgba(15, 47, 122, 0.14);
+      }
+      .page-sobre .about-section__photo {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+      }
+      .about-section__eyebrow,
+      .section-kicker {
+        display: inline-block;
+        margin-bottom: 16px;
+        color: #1450c4;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        line-height: 1.2;
+      }
+      .pillars .section-kicker {
+        color: #4ac1f0;
+      }
+      .page-sobre .comparativo {
+        background: #f7fafc;
+      }
+      .page-sobre .comparativo__col {
+        border-radius: 24px;
+        padding: 36px 32px;
+      }
+      .page-sobre .comparativo__col--old {
+        background: #ffffff;
+        border-color: #e5ebf3;
+      }
+      .page-sobre .comparativo__col--new {
+        background: #eaf5ff;
+        border-color: #a9d7f5;
+      }
+      .page-sobre .comparativo__col li {
+        min-height: 44px;
+        margin-bottom: 16px;
+        line-height: 1.55;
+      }
+      .page-sobre .comparativo__col--old .comparativo__icon {
+        color: #8b98a8;
+      }
+      .page-sobre .depoimentos {
+        background: #ffffff;
+      }
+      .page-sobre .depoimento-card {
+        position: relative;
+        border: 1px solid #e7edf4;
+        border-radius: 22px;
+        padding: 34px 30px 30px;
+        box-shadow: 0 12px 32px rgba(15, 47, 122, 0.06);
+      }
+      .page-sobre .depoimento-card::before {
+        content: "\201C";
+        display: block;
+        height: 28px;
+        color: #4ac1f0;
+        font-family: Georgia, serif;
+        font-size: 3.4rem;
+        line-height: 1;
+      }
+      .page-sobre .depoimento-card__quote {
+        min-height: 108px;
+      }
+      .page-sobre .cta-final {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0f2f7a 0%, #1450c4 58%, #1689c8 100%);
+      }
+      .page-sobre .cta-final::after {
+        content: "";
+        position: absolute;
+        width: 360px;
+        height: 360px;
+        right: -120px;
+        bottom: -220px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 50%;
+      }
+      .page-sobre .cta-final .container {
+        position: relative;
+        z-index: 1;
+      }
+      @media (max-width: 767px) {
+        .page-sobre .about-section {
+          padding: 72px 0;
+        }
+        .page-sobre .about-section__image-wrap {
+          border-radius: 20px;
+        }
+        .page-sobre .comparativo,
+        .page-sobre .depoimentos {
+          padding: 72px 0;
+        }
+        .page-sobre .comparativo__col,
+        .page-sobre .depoimento-card {
+          padding: 28px 24px;
+        }
+        .page-sobre .depoimento-card__quote {
+          min-height: 0;
+        }
+      }
     </style>
   </head>
   <body class="page-sobre">
@@ -248,12 +304,12 @@
     <div
       id="hero-banner-container"
       data-badge="SOBRE NÓS"
-      data-title="<span style='color: #ffffff !important;'>Mais do que um guia turístico.</span> Um jeito de viver Vitória."
-      data-text="O Explore Vitória nasceu da vontade de mostrar a nossa cidade com os olhos de quem vive aqui — suas histórias, seus sabores e seus caminhos."
+      data-title="<span style='color: #ffffff !important;'>Conheça Vitória</span> com o olhar de quem vive aqui."
+      data-text="Um guia local para transformar curiosidade em caminhos, sabores e experiências que fazem sentido para a sua viagem."
       data-max-width="780px"
     ></div>
 
-    <!--Tecnologia-->
+    <!-- Nossa história -->
     <div class="section-wrapper">
       <section class="about-section">
         <div class="container">
@@ -276,7 +332,7 @@
                   />
                   <img
                     src="assets/img/banner-sobre-nos.png"
-                    alt="Equipe VNET trabalhando"
+                    alt="Imagem que representa a identidade do Explore Vitória"
                     class="about-section__photo"
                   />
                 </picture>
@@ -284,66 +340,26 @@
             </div>
 
             <div class="col-lg-5 order-1 order-lg-2">
+              <span class="about-section__eyebrow">A IDEIA POR TRÁS DO GUIA</span>
               <h2 class="about-section__title">
-                Um pouco sobre Explore Vitória
+                Um guia feito de dentro para fora
               </h2>
               <p class="about-section__text">
-                O Explore Vitória nasceu dentro de sala de aula, como Projeto
-                Integrador do curso técnico do Senac, mas cresceu com um
-                propósito que vai além da nota: mostrar que a nossa capital tem
-                muito mais para oferecer do que os roteiros turísticos
-                tradicionais costumam apresentar.
+                O Explore Vitória nasceu como um Projeto Integrador do curso
+                técnico do Senac e ganhou um propósito maior: apresentar a
+                nossa capital para além dos cartões-postais mais conhecidos.
               </p>
               <p class="about-section__text">
-                Reunimos tecnologia, dados e um olhar de quem é capixaba para
-                criar um guia pensado para quem chega à cidade e quer aproveitar
-                o melhor dela — da história ao litoral — sem gastar uma fortuna.
+                Reunimos curadoria local, informação prática e um olhar
+                capixaba para ajudar você a escolher melhor o que fazer, como
+                circular e onde encontrar experiências que combinam com o seu
+                tempo e o seu orçamento.
               </p>
             </div>
           </div>
         </div>
       </section>
     </div>
-
-    <!-- Números e diferenciais -->
-    <section class="stats-section">
-      <div class="container">
-        <div class="row g-4">
-          <div class="col-6 col-md-3">
-            <div class="stats-section__item">
-              <div class="stats-section__number">R$ 5,10</div>
-              <div class="stats-section__label">
-                integração no Transcol e Aquaviário
-              </div>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="stats-section__item">
-              <div class="stats-section__number">100%</div>
-              <div class="stats-section__label">
-                gratuito para consultar o guia
-              </div>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="stats-section__item">
-              <div class="stats-section__number">Minutos</div>
-              <div class="stats-section__label">
-                para gerar um roteiro completo
-              </div>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="stats-section__item">
-              <div class="stats-section__number">470+</div>
-              <div class="stats-section__label">
-                anos de história para explorar
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Como funciona -->
     <section class="pillars">
@@ -358,10 +374,11 @@
       <div class="pillars__overlay" aria-hidden="true"></div>
 
       <div class="container pillars__header">
-        <h2 class="section-title">Como funciona</h2>
+        <span class="section-kicker">DO PLANEJAMENTO À EXPERIÊNCIA</span>
+        <h2 class="section-title">Seu roteiro começa com você</h2>
         <p class="section-subtitle">
-          Reunimos tecnologia, dados e um olhar de quem é capixaba para criar um
-          guia pensado para quem chega à cidade e quer aproveitar o melhor dela
+          Você conta o que procura, e o Explore Vitória organiza possibilidades
+          para que cada dia tenha a sua cara.
         </p>
       </div>
 
@@ -456,56 +473,56 @@
       <div class="container">
         <div class="text-center mb-5">
           <h2 class="about-section__title">
-            Por que o Explore Vitória é diferente
+            Menos busca, mais descoberta
           </h2>
           <p class="section-subtitle">
-            Comparado a um guia turístico tradicional, pensamos em cada detalhe
-            pra quem quer economizar sem abrir mão da experiência.
+            Informação local e escolhas práticas para você montar uma viagem
+            mais leve, autêntica e possível.
           </p>
         </div>
         <div class="row g-4 justify-content-center">
           <div class="col-lg-5">
             <div class="comparativo__col comparativo__col--old">
-              <h3>Guias tradicionais</h3>
+              <h3>Quando tudo parece igual</h3>
               <ul>
                 <li>
-                  <span class="comparativo__icon">✕</span> Roteiros genéricos,
-                  iguais para qualquer cidade
+                  <span class="comparativo__icon">—</span> Muitas opções sem
+                  contexto para decidir
                 </li>
                 <li>
-                  <span class="comparativo__icon">✕</span> Não consideram seu
-                  orçamento real
+                  <span class="comparativo__icon">—</span> Dicas que não levam
+                  em conta o seu tempo ou orçamento
                 </li>
                 <li>
-                  <span class="comparativo__icon">✕</span> Pouca informação
-                  sobre transporte público
+                  <span class="comparativo__icon">—</span> Informações práticas
+                  espalhadas em vários lugares
                 </li>
                 <li>
-                  <span class="comparativo__icon">✕</span> Feitos por quem nem
-                  sempre conhece a cidade de perto
+                  <span class="comparativo__icon">—</span> Roteiros distantes da
+                  rotina de quem vive na cidade
                 </li>
               </ul>
             </div>
           </div>
           <div class="col-lg-5">
             <div class="comparativo__col comparativo__col--new">
-              <h3>Explore Vitória</h3>
+              <h3>Quando o roteiro entende você</h3>
               <ul>
                 <li>
-                  <span class="comparativo__icon">✓</span> Roteiro gerado por
-                  IA, sob medida para você
+                  <span class="comparativo__icon">✓</span> Sugestões organizadas
+                  pelos seus interesses
                 </li>
                 <li>
-                  <span class="comparativo__icon">✓</span> Filtro de orçamento
-                  fechado desde o início
+                  <span class="comparativo__icon">✓</span> Planejamento atento ao
+                  seu tempo e orçamento
                 </li>
                 <li>
-                  <span class="comparativo__icon">✓</span> Integração com
-                  Transcol e Aquaviário no roteiro
+                  <span class="comparativo__icon">✓</span> Dicas de mobilidade
+                  para circular com mais tranquilidade
                 </li>
                 <li>
-                  <span class="comparativo__icon">✓</span> Curadoria feita por
-                  quem vive em Vitória
+                  <span class="comparativo__icon">✓</span> Curadoria com o olhar
+                  de quem conhece Vitória
                 </li>
               </ul>
             </div>
@@ -518,43 +535,48 @@
     <section class="depoimentos">
       <div class="container">
         <div class="text-center mb-5">
-          <h2 class="about-section__title">Quem já testou</h2>
+          <h2 class="about-section__title">Experiências que queremos proporcionar</h2>
           <p class="section-subtitle">
-            Depoimentos de quem experimentou o roteiro do Explore Vitória.
+            Exemplos de como o guia pode tornar a sua descoberta mais simples.
           </p>
         </div>
         <div class="row g-4">
           <div class="col-md-6">
-            <div class="depoimento-card depoimento-card--placeholder">
+            <div class="depoimento-card">
               <p class="depoimento-card__quote">
-                [Espaço reservado para depoimento real — substitua por um
-                feedback de alguém que testou o roteiro, com a permissão da
-                pessoa para usar nome/foto.]
+                “Eu não sabia por onde começar em Vitória. Encontrar praias,
+                história e comida capixaba no mesmo lugar deixou o planejamento
+                muito mais fácil.”
               </p>
-              <div class="depoimento-card__author">Nome do avaliador</div>
-              <div class="depoimento-card__role">
-                Como conheceu o Explore Vitória
-              </div>
+              <div class="depoimento-card__author">Para quem visita pela primeira vez</div>
+              <div class="depoimento-card__role">Descobrir sem se perder nas opções</div>
             </div>
           </div>
           <div class="col-md-6">
-            <div class="depoimento-card depoimento-card--placeholder">
+            <div class="depoimento-card">
               <p class="depoimento-card__quote">
-                [Espaço reservado para um segundo depoimento — pode ser de um
-                colega de turma, professor avaliador ou turista que testou o
-                roteiro.]
+                “Gostei de poder pensar no roteiro de acordo com o meu tempo e
+                o meu orçamento, sem precisar seguir um passeio pronto.”
               </p>
-              <div class="depoimento-card__author">Nome do avaliador</div>
-              <div class="depoimento-card__role">
-                Como conheceu o Explore Vitória
-              </div>
+              <div class="depoimento-card__author">Para quem gosta de liberdade</div>
+              <div class="depoimento-card__role">Escolher o próprio ritmo</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="depoimento-card">
+              <p class="depoimento-card__quote">
+                “As dicas de transporte ajudam a entender melhor como circular
+                pela cidade e aproveitar mais o dia.”
+              </p>
+              <div class="depoimento-card__author">Para quem quer viajar melhor</div>
+              <div class="depoimento-card__role">Aproveitar mais com planejamento</div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!--Tecnologia-->
+    <!-- Vitória para viver -->
     <div class="section-wrapper">
       <section class="about-section">
         <div class="container">
@@ -564,7 +586,7 @@
                 <picture>
                   <img
                     src="assets/img/historiadevitoriapart2.jpeg"
-                    alt="Equipe VNET trabalhando"
+                    alt="Centro histórico de Vitória e sua arquitetura"
                     class="about-section__photo"
                   />
                 </picture>
@@ -573,22 +595,18 @@
 
             <div class="col-lg-5 order-1 order-lg-1">
               <h2 class="about-section__title">
-                De Vitória para quem quer conhecer Vitória
+                Uma cidade para viver em muitos ritmos
               </h2>
               <p class="about-section__text">
-                Fundada em 1551, Vitória é uma das cidades mais antigas do
-                Brasil e guarda, em cada esquina do seu Centro Histórico, marcas
-                de mais de quatro séculos: igrejas centenárias, casarões
-                coloniais e ruas que testemunharam a formação do Espírito Santo.
-                É essa mistura de ilha, mar e montanha que dá à cidade uma
-                identidade única no país.
+                Vitória combina mar, montanha, bairros cheios de personalidade e
+                uma história que aparece nos detalhes. É uma cidade que pode ser
+                descoberta caminhando, provando sabores locais ou simplesmente
+                parando para observar a paisagem.
               </p>
               <p class="about-section__text">
-                Escolhemos começar pelo Centro de Vitória porque é ali que a
-                cidade conta a própria história: entre o Parque Moscoso, os
-                museus, os becos e os bares tradicionais, dá para caminhar por
-                quase 470 anos de história em poucos quarteirões — e ainda
-                fechar o dia com uma cerveja gelada na Rua da Lama.
+                Por isso, o guia conecta praias, cultura, gastronomia e
+                mobilidade em uma mesma experiência. A ideia é que você encontre
+                o seu jeito de viver Vitória, mesmo em uma visita curta.
               </p>
             </div>
           </div>
@@ -596,46 +614,16 @@
       </section>
     </div>
 
-    <!-- Tecnologia usada -->
-    <section class="tech-section">
-      <div class="container text-center">
-        <h2 class="tech-section__title">Tecnologia por trás do projeto</h2>
-        <p class="tech-section__subtitle">
-          Um pouco do que roda nos bastidores do Explore Vitória.
-        </p>
-        <div>
-          <span class="tech-badge"
-            ><span class="tech-badge__dot"></span>Node.js</span
-          >
-          <span class="tech-badge"
-            ><span class="tech-badge__dot"></span>PostgreSQL</span
-          >
-          <span class="tech-badge"
-            ><span class="tech-badge__dot"></span>React / Vue.js</span
-          >
-          <span class="tech-badge"
-            ><span class="tech-badge__dot"></span>Tailwind CSS</span
-          >
-          <span class="tech-badge"
-            ><span class="tech-badge__dot"></span>Inteligência Artificial</span
-          >
-          <span class="tech-badge"
-            ><span class="tech-badge__dot"></span>Pix</span
-          >
-        </div>
-      </div>
-    </section>
-
     <!-- CTA final -->
     <section class="cta-final">
       <div class="container">
-        <h2 class="section-title">Pronto pra montar seu roteiro?</h2>
+        <h2 class="section-title">Agora é a sua vez de explorar Vitória</h2>
         <p class="section-subtitle">
-          Conte pra nossa IA quantos dias você tem, o que gosta de fazer e o seu
-          orçamento — o resto a gente cuida.
+          Conte o que você gosta, quanto tempo tem e como quer viajar. A cidade
+          fica mais fácil quando o roteiro começa com as suas escolhas.
         </p>
-        <a href="index.html#mochilao" class="cta-final__btn">
-          Monte seu roteiro agora
+        <a href="index.html" class="cta-final__btn">
+          Explorar o guia
         </a>
       </div>
     </section>
