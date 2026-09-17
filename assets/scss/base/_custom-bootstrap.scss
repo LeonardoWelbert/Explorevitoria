@@ -1,0 +1,19 @@
+.btn-primary {
+  background-color: $color-primary;
+  border-color: $color-primary;
+  font-weight: $font-weight-bold;
+  border-radius: $border-radius-pill;
+
+  &:hover {
+    background-color: darken($color-primary, 10%);
+    border-color: darken($color-primary, 10%);
+  }
+}
+
+.text-cyan {
+  color: $color-cyan-light !important;
+}
+
+.bg-header-vnet {
+  background-color: $color-bg-header !important;
+}

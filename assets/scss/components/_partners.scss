@@ -1,0 +1,98 @@
+.partners {
+  padding: 96px 0 64px;
+
+  &__badge {
+    display: inline-block;
+    padding: 6px 22px;
+    border: $border-width-subtle solid $color-primary;
+    border-radius: $border-radius-pill;
+    color: $color-primary;
+    font-family: $font-family-base;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-light;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    max-width: 720px;
+    color: $color-secondary;
+    font-family: $font-family-base;
+    font-weight: $font-weight-extrabold;
+    font-size: $font-size-lg;
+    line-height: $line-height-tight;
+    margin-bottom: 20px;
+  }
+
+  &__subtitle {
+    max-width: 620px;
+    color: $color-text-dark;
+    font-family: $font-family-base;
+    font-weight: $font-weight-regular;
+    font-size: $font-size-sm;
+    line-height: $line-height-body;
+    margin-bottom: 56px;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    &__title {
+      font-size: $font-size-md;
+    }
+
+    &__subtitle {
+      margin-bottom: 40px;
+    }
+  }
+}
+
+.partners-carousel {
+  position: relative;
+  width: 100%;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  overflow: hidden;
+
+  &__track {
+    display: flex;
+    align-items: center;
+    gap: 72px;
+    width: max-content;
+    animation: partners-scroll 8s linear infinite alternate;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    &__track {
+      gap: 48px;
+      animation-duration: 12s;
+    }
+  }
+}
+
+.partners-logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+
+  img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    height: 28px;
+  }
+}
+
+@keyframes partners-scroll {
+  0%,
+  2% {
+    transform: translateX(0);
+  }
+  98%,
+  100% {
+    transform: translateX(calc(-100% + 100vw));
+  }
+}

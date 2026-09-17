@@ -1,0 +1,113 @@
+.page-banner {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  max-height: 747px;
+  aspect-ratio: 1920 / 747;
+  overflow: hidden;
+
+  &__video {
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    z-index: 1;
+    width: 150%;
+    height: 180%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 20px;
+    background-color: rgba($color-text-black, 0.5);
+    color: $color-text-white;
+    text-align: center;
+  }
+
+  &__badge {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 5px 28px;
+    background: rgba(15, 15, 15, 0.4);
+    border: 1px solid rgba($color-text-white, 0.1);
+    border-radius: $border-radius-pill;
+    color: $color-text-white;
+    font-size: $font-size-xs;
+    font-weight: 500;
+    letter-spacing: 1px;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 80%);
+      border-radius: inherit;
+      pointer-events: none;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+  }
+
+  &__title {
+    margin-bottom: 16px;
+    color: $color-cyan-main !important;
+    font-size: $font-size-xl !important;
+    font-weight: $font-weight-extrabold;
+    line-height: $line-height-hero;
+  }
+
+  &__text {
+    max-width: $max-width-banner-subtitle;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: $font-size-banner-subtitle;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-tight;
+  }
+
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    min-height: 420px;
+
+    &__overlay {
+      align-items: flex-start;
+      padding-top: 140px;
+    }
+
+    &__title {
+      font-size: 1.05rem !important;
+    }
+
+    &__text {
+      font-size: $font-size-xs !important;
+    }
+  }
+
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    min-height: 380px;
+
+    &__title {
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+.hero-banner--contact {
+  .page-banner__text {
+    font-size: 2.01rem;
+  }
+}

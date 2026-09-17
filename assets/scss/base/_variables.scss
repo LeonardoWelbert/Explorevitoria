@@ -1,0 +1,50 @@
+// paleta de cores
+$color-primary: #2f62c4;
+$color-secondary: #003caf;
+$color-cyan-light: #4cd2f3;
+$color-cyan-main: #4ac1f0;
+$color-cyan-carousel: #42b4f1;
+$color-text-dark: #1e1e1e;
+$color-text-black: #000000;
+$color-text-white: #ffffff;
+$color-bg-header: #d9d9d90c;
+$color-bg-footer: #0f0f0f;
+$color-bg-dark: #0f0f0f;
+
+// tipografia
+$font-family-base: "Manrope", sans-serif;
+
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+$font-size-xs: 0.8375rem;
+$font-size-sm: 1.4rem;
+$font-size-nav: 1.1925rem;
+$font-size-base: 1.45rem;
+$font-size-md: 1.5625rem;
+$font-size-banner-subtitle: 23.3px;
+$font-size-lg: 2.1875rem;
+$font-size-xl: 2.5rem;
+$font-size-hero: 3.5rem;
+
+$max-width-banner-subtitle: 1091px;
+
+$line-height-tight: 100%;
+$line-height-hero: 109%;
+$line-height-body: 26px;
+
+// espaçamento e bordas
+$border-radius-sm: 18px;
+$border-radius-md: 26px;
+$border-radius-pill: 71.85px;
+$border-width-subtle: 1.11px;
+
+// breakpoints
+$breakpoint-xs: 0;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;

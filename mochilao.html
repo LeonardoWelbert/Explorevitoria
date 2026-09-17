@@ -1,0 +1,128 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mochilão | Explore Vitória</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+  <body>
+
+    <div id="header-container"></div>
+
+      <div
+      id="hero-banner-container"
+      data-badge="SOLUÇÕES"
+      data-title="<span style='color: #ffffff !important;'>Seu roteiro em Vitória,  </span> montado por uma IA"
+      data-text="Diga quantos dias você tem, o que curte fazer e seu orçamento — a
+          nossa IA cruza gastronomia, transporte e pontos turísticos de Vitória
+          e do litoral do ES para montar seu roteiro na hora.​"
+    ></div>  
+
+    <main>
+     
+
+      <!-- ROTEIRIZADOR -->
+      <section class="mochilao-builder">
+        <div class="mochilao-builder__grid">
+
+          <div>
+            <span class="mochilao-builder__badge">COMO FUNCIONA</span>
+            <h2 class="mochilao-builder__title">
+              Descubra Vitória do seu jeito
+            </h2>
+            <p class="mochilao-builder__text">
+              Roteiros pensados para unir cultura capixaba, economia e liberdade
+              para aproveitar cada instante. Conte pra nossa IA quantos dias
+              você tem, o que gosta de fazer e o seu orçamento — ela monta o
+              roteiro pra você, com praias, gastronomia, pontos históricos e as
+              melhores formas de se locomover pela cidade.
+            </p>
+
+            <div class="mochilao-builder__hints">
+              <button
+                class="hint-chip"
+                type="button"
+                data-prompt="Quero 3 dias em Vitória, gastronomia e praia, sem gastar muito."
+              >
+                3 dias · praia e gastronomia
+              </button>
+              <button
+                class="hint-chip"
+                type="button"
+                data-prompt="Fim de semana em Vitória com história e vida noturna, orçamento de R$ 250."
+              >
+                Fim de semana · história e balada
+              </button>
+              <button
+                class="hint-chip"
+                type="button"
+                data-prompt="1 dia em Vitória focado em natureza e trilha."
+              >
+                1 dia · natureza
+              </button>
+            </div>
+
+            <a href="#chat-roteirizador" class="btn-primary-pill"
+              >Monte seu roteiro agora</a
+            >
+          </div>
+
+          <div class="chat-card" id="chat-roteirizador">
+            <div class="chat-card__header">
+              <span class="dot"></span>
+              <div>
+                <strong>IA Explore Vitória</strong>
+                <small>Roteiriza sua viagem em segundos</small>
+              </div>
+            </div>
+
+            <div class="chat-card__messages" id="chatMessages">
+              <div class="msg msg--bot">
+                Oi! Me conta quantos dias você vai ficar em Vitória, o que curte
+                (praia, gastronomia, história, natureza, vida noturna) e se quer
+                economizar. Eu monto seu roteiro. 🎒
+              </div>
+            </div>
+
+            <form class="chat-card__form" id="chatForm">
+              <input
+                type="text"
+                class="chat-card__input"
+                id="chatInput"
+                placeholder="Ex: Quero 3 dias em Vitória, gastronomia e praia, sem gastar muito."
+                autocomplete="off"
+                required
+              />
+              <button
+                type="submit"
+                class="chat-card__send"
+                id="chatSend"
+                aria-label="Enviar"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 11L21 3L13 21L11 13L3 11Z" fill="currentColor" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="assets/js/main.js"></script>
+
+  </body>
+</html>

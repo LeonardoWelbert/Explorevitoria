@@ -1,0 +1,184 @@
+@mixin video-background(
+  $overlay-gradient: (
+    linear-gradient(90deg, rgba(15, 15, 15, 0) 55%, rgba(15, 15, 15, 0.65) 100%),
+    linear-gradient(180deg, rgba(15, 15, 15, 0.55) 0%, rgba(15, 15, 15, 0.35) 40%, rgba(15, 15, 15, 0.7) 100%)
+  )
+) {
+  position: relative;
+  overflow: hidden;
+
+  &__video {
+    position: absolute;
+    top: 60%;
+    left: 30%;
+    width: 150%;
+    height: 140%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: $overlay-gradient;
+    z-index: 1;
+  }
+}
+
+.pillars {
+  @include video-background;
+  background-color: $color-bg-dark;
+  padding: 120px 0 140px;
+}
+
+.pillars__header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.pillars-carousel {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 360px;
+  overflow-x: hidden;
+  overflow-y: visible;
+  cursor: grab;
+  perspective: 1400px;
+
+  &.is-dragging {
+    cursor: grabbing;
+  }
+}
+
+.pillars-carousel__track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 325px;
+  transform-style: preserve-3d;
+  touch-action: none;
+}
+
+.pillar-card {
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 671px;
+  max-width: 80vw;
+  min-height: 325px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 36px;
+  background: rgba($color-text-white, 0.04);
+  border: $border-width-subtle solid rgba($color-text-white, 0.9);
+  border-top: $border-width-subtle solid rgba($color-text-white, 0.9);
+
+  border-radius: $border-radius-sm;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(14px);
+
+  transform-style: preserve-3d;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.55s ease,
+    filter 0.55s ease,
+    border-color 0.55s ease,
+    box-shadow 0.55s ease;
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+
+  &.is-active {
+    border-color: rgba($color-text-white, 0.2);
+  }
+}
+
+.pillar-card__icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-cyan-carousel;
+}
+
+.pillar-card__title {
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.pillar-card__text {
+  font-size: $font-size-nav;
+  line-height: $line-height-body;
+  color: $color-text-white;
+  max-width: 440px;
+}
+
+.pillars-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  gap: 10px;
+}
+
+.pillars-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba($color-text-white, 0.3);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+
+  &.is-active {
+    background: $color-cyan-carousel;
+    transform: scale(1.3);
+  }
+}
+
+@media (max-width: #{$breakpoint-lg - 1px}) {
+  .pillars {
+    padding: 60px 0 80px;
+  }
+
+  .pillars-carousel {
+    min-height: 360px;
+  }
+
+  .pillar-card {
+    width: 86vw;
+    max-width: 420px;
+    padding: 32px 24px;
+  }
+
+  .pillars-nav {
+    width: 40px;
+    height: 40px;
+
+    &--prev {
+      left: 8px;
+    }
+
+    &--next {
+      right: 8px;
+    }
+  }
+}

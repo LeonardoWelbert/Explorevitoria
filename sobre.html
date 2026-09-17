@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sobre Nós | Explore Vitória</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+      /* ==== Seções extras da página Sobre Nós ==== */
+      .como-funciona {
+        padding: 90px 0;
+      }
+      .como-funciona__step {
+        text-align: center;
+        padding: 32px 20px;
+        height: 100%;
+      }
+      .como-funciona__number {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #4ac1f0;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+      .como-funciona__step h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .como-funciona__step p {
+        color: #5a5a5a;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .stats-section {
+        padding: 70px 0;
+        background: #f5f8fb;
+      }
+      .stats-section__item {
+        text-align: center;
+        padding: 20px 10px;
+      }
+      .stats-section__number {
+        font-size: 2.1rem;
+        font-weight: 800;
+        color: #1450c4;
+        line-height: 1.1;
+        margin-bottom: 6px;
+      }
+      .stats-section__label {
+        font-size: 0.9rem;
+        color: #5a5a5a;
+      }
+
+      .comparativo {
+        padding: 60px 0 90px;
+      }
+      .comparativo__col {
+        border-radius: 16px;
+        padding: 32px 28px;
+        height: 100%;
+      }
+      .comparativo__col--old {
+        background: #f5f5f5;
+        border: 1px solid #e4e4e4;
+      }
+      .comparativo__col--new {
+        background: #eef6fd;
+        border: 1px solid #bfe2f7;
+      }
+      .comparativo__col h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 18px;
+      }
+      .comparativo__col ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .comparativo__col li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 14px;
+        font-size: 0.95rem;
+        color: #444;
+      }
+      .comparativo__icon {
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .comparativo__col--old .comparativo__icon {
+        color: #b5391c;
+      }
+      .comparativo__col--new .comparativo__icon {
+        color: #1450c4;
+      }
+
+      .depoimentos {
+        padding: 90px 0;
+        background: #f5f8fb;
+      }
+      .depoimento-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 32px;
+        height: 100%;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+      }
+      .depoimento-card__quote {
+        font-size: 0.98rem;
+        color: #333;
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
+      .depoimento-card__author {
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+      .depoimento-card__role {
+        font-size: 0.85rem;
+        color: #888;
+      }
+      .depoimento-card--placeholder {
+        border: 1px dashed #bbb;
+        background: #fafafa;
+      }
+
+      .tech-section {
+        padding: 60px 0;
+        background: #0f0f0f;
+        color: #ffffff;
+      }
+      .tech-section__title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .tech-section__subtitle {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+        margin-bottom: 32px;
+      }
+      .tech-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.04);
+        font-size: 0.88rem;
+        color: #ffffff;
+        margin: 6px;
+      }
+      .tech-badge__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4ac1f0;
+      }
+
+      /* Corrige o subtítulo (originalmente pensado para fundo escuro)
+         quando usado em seções de fundo claro */
+      .comparativo .section-subtitle,
+      .depoimentos .section-subtitle,
+      .cta-final .section-subtitle {
+        color: #6b7280 !important;
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .comparativo__col {
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+      .comparativo__col:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+      }
+
+      .depoimento-card {
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+      .depoimento-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.09);
+      }
+
+      .stats-section__item {
+        transition: transform 0.25s ease;
+      }
+      .stats-section__item:hover {
+        transform: translateY(-3px);
+      }
+
+      .cta-final {
+        padding: 80px 0;
+        background: linear-gradient(135deg, #1450c4 0%, #0f2f7a 100%);
+        color: #ffffff;
+        text-align: center;
+      }
+      .cta-final .section-title {
+        color: #ffffff;
+      }
+      .cta-final .section-subtitle {
+        color: rgba(255, 255, 255, 0.85) !important;
+      }
+      .cta-final__btn {
+        display: inline-block;
+        margin-top: 28px;
+        padding: 14px 36px;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #1450c4;
+        font-weight: 700;
+        text-decoration: none;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .cta-final__btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+        color: #0f2f7a;
+      }
+    </style>
+  </head>
+  <body class="page-sobre">
+    <div id="header-container"></div>
+    <div
+      id="hero-banner-container"
+      data-badge="SOBRE NÓS"
+      data-title="<span style='color: #ffffff !important;'>Mais do que um guia turístico.</span> Um jeito de viver Vitória."
+      data-text="O Explore Vitória nasceu da vontade de mostrar a nossa cidade com os olhos de quem vive aqui — suas histórias, seus sabores e seus caminhos."
+      data-max-width="780px"
+    ></div>
+
+    <!--Tecnologia-->
+    <div class="section-wrapper">
+      <section class="about-section">
+        <div class="container">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-7 order-2 order-lg-1">
+              <div class="about-section__image-wrap">
+                <img
+                  src="assets/img/dd8d2d26f14e2000ea4fa08a5491eb58739ac966.png"
+                  alt=""
+                  class="section-wrapper__watermark"
+                />
+                <picture>
+                  <source
+                    srcset="assets/img/banner-sobre-nos.avif"
+                    type="image/avif"
+                  />
+                  <source
+                    srcset="assets/img/banner-sobre-nos.webp"
+                    type="image/webp"
+                  />
+                  <img
+                    src="assets/img/banner-sobre-nos.png"
+                    alt="Equipe VNET trabalhando"
+                    class="about-section__photo"
+                  />
+                </picture>
+              </div>
+            </div>
+
+            <div class="col-lg-5 order-1 order-lg-2">
+              <h2 class="about-section__title">
+                Um pouco sobre Explore Vitória
+              </h2>
+              <p class="about-section__text">
+                O Explore Vitória nasceu dentro de sala de aula, como Projeto
+                Integrador do curso técnico do Senac, mas cresceu com um
+                propósito que vai além da nota: mostrar que a nossa capital tem
+                muito mais para oferecer do que os roteiros turísticos
+                tradicionais costumam apresentar.
+              </p>
+              <p class="about-section__text">
+                Reunimos tecnologia, dados e um olhar de quem é capixaba para
+                criar um guia pensado para quem chega à cidade e quer aproveitar
+                o melhor dela — da história ao litoral — sem gastar uma fortuna.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Números e diferenciais -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-6 col-md-3">
+            <div class="stats-section__item">
+              <div class="stats-section__number">R$ 5,10</div>
+              <div class="stats-section__label">
+                integração no Transcol e Aquaviário
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stats-section__item">
+              <div class="stats-section__number">100%</div>
+              <div class="stats-section__label">
+                gratuito para consultar o guia
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stats-section__item">
+              <div class="stats-section__number">Minutos</div>
+              <div class="stats-section__label">
+                para gerar um roteiro completo
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stats-section__item">
+              <div class="stats-section__number">470+</div>
+              <div class="stats-section__label">
+                anos de história para explorar
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Como funciona -->
+    <section class="pillars">
+      <video
+        class="pillars__video"
+        src="assets/img/winter_nexus_espelhado.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
+      <div class="pillars__overlay" aria-hidden="true"></div>
+
+      <div class="container pillars__header">
+        <h2 class="section-title">Como funciona</h2>
+        <p class="section-subtitle">
+          Reunimos tecnologia, dados e um olhar de quem é capixaba para criar um
+          guia pensado para quem chega à cidade e quer aproveitar o melhor dela
+        </p>
+      </div>
+
+      <div class="pillars-carousel" data-stack-carousel="pillars">
+        <div class="pillars-carousel__track" data-stack-track>
+          <article class="pillar-card" data-stack-item>
+            <div class="pillar-card__icon">
+              <svg
+                width="41"
+                height="41"
+                viewBox="0 0 41 41"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M38.9913 11.6501C41.1861 16.2358 41.5985 21.4736 40.1486 26.3464C38.6987 31.2192 35.4899 35.3794 31.1452 38.0194C26.8004 40.6593 21.6297 41.5907 16.6369 40.6327C11.644 39.6746 7.18527 36.8955 4.12625 32.8348C1.06724 28.7742 -0.373786 23.7217 0.0829297 18.6584C0.539645 13.595 2.86152 8.88194 6.59778 5.43422C10.334 1.98651 15.2181 0.0501105 20.3018 0.000959081C25.3855 -0.0481924 30.3061 1.79341 34.1083 5.16824L38.929 0.347552C39.1558 0.124705 39.4614 0.000491568 39.7794 0.00197012C40.0973 0.00344867 40.4018 0.130499 40.6264 0.355446C40.8511 0.580393 40.9778 0.885011 40.9789 1.20294C40.98 1.52088 40.8555 1.82637 40.6323 2.05287L21.3496 21.3356C21.238 21.449 21.105 21.5391 20.9583 21.6008C20.8117 21.6624 20.6543 21.6945 20.4952 21.695C20.3361 21.6956 20.1785 21.6646 20.0314 21.604C19.8844 21.5433 19.7508 21.4541 19.6383 21.3416C19.5259 21.229 19.4369 21.0953 19.3764 20.9482C19.3159 20.801 19.2851 20.6434 19.2859 20.4843C19.2866 20.3252 19.3188 20.1678 19.3807 20.0212C19.4426 19.8747 19.5328 19.7418 19.6463 19.6303L25.5496 13.725C24.0115 12.5748 22.127 11.984 20.2076 12.05C18.2882 12.116 16.4488 12.835 14.9934 14.088C13.5379 15.3411 12.5536 17.0533 12.2031 18.9416C11.8526 20.8299 12.1569 22.7812 13.0657 24.4731C13.9745 26.1651 15.4333 27.4963 17.2012 28.2467C18.969 28.9972 20.94 29.1219 22.7884 28.6004C24.6368 28.0789 26.2519 26.9423 27.3668 25.3785C28.4817 23.8147 29.0297 21.9173 28.9201 19.9999C28.902 19.6803 29.0116 19.3665 29.2248 19.1277C29.438 18.8889 29.7373 18.7445 30.057 18.7264C30.3766 18.7083 30.6903 18.8179 30.9291 19.0311C31.168 19.2443 31.3123 19.5437 31.3304 19.8633C31.475 22.3436 30.7637 24.7984 29.3155 26.8171C27.8673 28.8359 25.7699 30.2963 23.374 30.9541C20.9782 31.6119 18.4291 31.4272 16.1531 30.431C13.8771 29.4348 12.012 27.6874 10.8698 25.481C9.72766 23.2746 9.37758 20.7429 9.87813 18.3094C10.3787 15.8758 11.6995 13.6878 13.6198 12.1113C15.5401 10.5348 17.9434 9.66536 20.4278 9.64831C22.9123 9.63125 25.3273 10.4676 27.269 12.0176L32.399 6.88561C29.0284 3.94651 24.6872 2.36254 20.2158 2.44035C15.7444 2.51817 11.461 4.25224 8.19465 7.30684C4.92836 10.3614 2.91158 14.5193 2.53477 18.9755C2.15796 23.4316 3.44792 27.8691 6.15492 31.4288C8.86192 34.9885 12.7934 37.4172 17.1882 38.2447C21.583 39.0723 26.1286 38.2398 29.9449 35.9084C33.7611 33.577 36.5767 29.9126 37.8464 25.6245C39.1161 21.3365 38.7496 16.7299 36.818 12.6965C36.7493 12.5538 36.7093 12.399 36.7005 12.2409C36.6916 12.0827 36.7139 11.9244 36.7663 11.7749C36.8186 11.6254 36.8998 11.4877 37.0054 11.3696C37.1109 11.2515 37.2387 11.1554 37.3814 11.0866C37.5241 11.0179 37.6789 10.978 37.8371 10.9691C37.9952 10.9602 38.1535 10.9826 38.303 11.0349C38.4525 11.0872 38.5903 11.1685 38.7083 11.274C38.8264 11.3796 38.9226 11.5074 38.9913 11.6501Z"
+                  fill="#4AC1F0"
+                />
+              </svg>
+            </div>
+            <h3 class="pillar-card__title">Passo 1: Conte o que você quer</h3>
+            <p class="pillar-card__text">
+              Diga pra nossa IA quantos dias você tem, o que gosta de fazer e
+              qual é o seu orçamento.
+            </p>
+          </article>
+
+          <article class="pillar-card" data-stack-item>
+            <div class="pillar-card__icon">
+              <svg
+                width="44"
+                height="44"
+                viewBox="0 0 44 44"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0.875 42.8752H42.875M7.27767 16.7232L37.275 3.09658M31.339 0.875244L37.275 3.09658L35.0537 9.05124M10.675 29.8086H5.075C4.7052 29.8134 4.35191 29.9625 4.0904 30.224C3.82889 30.4855 3.67983 30.8388 3.675 31.2086V42.8752H12.075V31.2086C12.0702 30.8388 11.9211 30.4855 11.6596 30.224C11.3981 29.9625 11.0448 29.8134 10.675 29.8086ZM24.675 22.3419H19.075C18.7052 22.3467 18.3519 22.4958 18.0904 22.7573C17.8289 23.0188 17.6798 23.3721 17.675 23.7419V42.8752H26.075V23.7419C26.0702 23.3721 25.9211 23.0188 25.6596 22.7573C25.3981 22.4958 25.0448 22.3467 24.675 22.3419ZM38.675 14.8752H33.075C32.7052 14.8801 32.3519 15.0291 32.0904 15.2906C31.8289 15.5522 31.6798 15.9054 31.675 16.2752V42.8752H40.075V16.2752C40.0702 15.9054 39.9211 15.5522 39.6596 15.2906C39.3981 15.0291 39.0448 14.8801 38.675 14.8752Z"
+                  stroke="#4AC1F0"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <h3 class="pillar-card__title">Passo 2: A gente cruza os dados</h3>
+            <p class="pillar-card__text">
+              O sistema combina atrações, hospedagem e opções de mobilidade que
+              cabem no seu perfil e no seu bolso.
+            </p>
+          </article>
+
+          <article class="pillar-card" data-stack-item>
+            <div class="pillar-card__icon">
+              <svg
+                width="48"
+                height="34"
+                viewBox="0 0 48 34"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M28.398 21.648C29.6638 20.3821 30.375 18.6652 30.375 16.875C30.375 15.0848 29.6638 13.3679 28.398 12.102C27.1321 10.8362 25.4152 10.125 23.625 10.125C21.8348 10.125 20.1179 10.8362 18.852 12.102C17.5862 13.3679 16.875 15.0848 16.875 16.875C16.875 18.6652 17.5862 20.3821 18.852 21.648C20.1179 22.9138 21.8348 23.625 23.625 23.625C25.4152 23.625 27.1321 22.9138 28.398 21.648Z"
+                  stroke="#4AC1F0"
+                  stroke-width="2.25"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M1.125 16.875C4.725 7.65675 13.131 1.125 23.625 1.125C34.119 1.125 42.525 7.65675 46.125 16.875C42.525 26.0933 34.119 32.625 23.625 32.625C13.131 32.625 4.725 26.0933 1.125 16.875Z"
+                  stroke="#4AC1F0"
+                  stroke-width="2.25"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <h3 class="pillar-card__title">Passo 3: Seu roteiro fica pronto</h3>
+            <p class="pillar-card__text">
+              Em segundos, você recebe um roteiro completo, pronto para seguir
+              ou ajustar do seu jeito.
+            </p>
+          </article>
+        </div>
+
+        <div class="pillars-dots" data-stack-dots></div>
+      </div>
+    </section>
+
+    <!-- Diferencial vs. guias tradicionais -->
+    <section class="comparativo">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="about-section__title">
+            Por que o Explore Vitória é diferente
+          </h2>
+          <p class="section-subtitle">
+            Comparado a um guia turístico tradicional, pensamos em cada detalhe
+            pra quem quer economizar sem abrir mão da experiência.
+          </p>
+        </div>
+        <div class="row g-4 justify-content-center">
+          <div class="col-lg-5">
+            <div class="comparativo__col comparativo__col--old">
+              <h3>Guias tradicionais</h3>
+              <ul>
+                <li>
+                  <span class="comparativo__icon">✕</span> Roteiros genéricos,
+                  iguais para qualquer cidade
+                </li>
+                <li>
+                  <span class="comparativo__icon">✕</span> Não consideram seu
+                  orçamento real
+                </li>
+                <li>
+                  <span class="comparativo__icon">✕</span> Pouca informação
+                  sobre transporte público
+                </li>
+                <li>
+                  <span class="comparativo__icon">✕</span> Feitos por quem nem
+                  sempre conhece a cidade de perto
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="comparativo__col comparativo__col--new">
+              <h3>Explore Vitória</h3>
+              <ul>
+                <li>
+                  <span class="comparativo__icon">✓</span> Roteiro gerado por
+                  IA, sob medida para você
+                </li>
+                <li>
+                  <span class="comparativo__icon">✓</span> Filtro de orçamento
+                  fechado desde o início
+                </li>
+                <li>
+                  <span class="comparativo__icon">✓</span> Integração com
+                  Transcol e Aquaviário no roteiro
+                </li>
+                <li>
+                  <span class="comparativo__icon">✓</span> Curadoria feita por
+                  quem vive em Vitória
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Depoimentos -->
+    <section class="depoimentos">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="about-section__title">Quem já testou</h2>
+          <p class="section-subtitle">
+            Depoimentos de quem experimentou o roteiro do Explore Vitória.
+          </p>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="depoimento-card depoimento-card--placeholder">
+              <p class="depoimento-card__quote">
+                [Espaço reservado para depoimento real — substitua por um
+                feedback de alguém que testou o roteiro, com a permissão da
+                pessoa para usar nome/foto.]
+              </p>
+              <div class="depoimento-card__author">Nome do avaliador</div>
+              <div class="depoimento-card__role">
+                Como conheceu o Explore Vitória
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="depoimento-card depoimento-card--placeholder">
+              <p class="depoimento-card__quote">
+                [Espaço reservado para um segundo depoimento — pode ser de um
+                colega de turma, professor avaliador ou turista que testou o
+                roteiro.]
+              </p>
+              <div class="depoimento-card__author">Nome do avaliador</div>
+              <div class="depoimento-card__role">
+                Como conheceu o Explore Vitória
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--Tecnologia-->
+    <div class="section-wrapper">
+      <section class="about-section">
+        <div class="container">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-7 order-2 order-lg-2">
+              <div class="about-section__image-wrap">
+                <picture>
+                  <img
+                    src="assets/img/historiadevitoriapart2.jpeg"
+                    alt="Equipe VNET trabalhando"
+                    class="about-section__photo"
+                  />
+                </picture>
+              </div>
+            </div>
+
+            <div class="col-lg-5 order-1 order-lg-1">
+              <h2 class="about-section__title">
+                De Vitória para quem quer conhecer Vitória
+              </h2>
+              <p class="about-section__text">
+                Fundada em 1551, Vitória é uma das cidades mais antigas do
+                Brasil e guarda, em cada esquina do seu Centro Histórico, marcas
+                de mais de quatro séculos: igrejas centenárias, casarões
+                coloniais e ruas que testemunharam a formação do Espírito Santo.
+                É essa mistura de ilha, mar e montanha que dá à cidade uma
+                identidade única no país.
+              </p>
+              <p class="about-section__text">
+                Escolhemos começar pelo Centro de Vitória porque é ali que a
+                cidade conta a própria história: entre o Parque Moscoso, os
+                museus, os becos e os bares tradicionais, dá para caminhar por
+                quase 470 anos de história em poucos quarteirões — e ainda
+                fechar o dia com uma cerveja gelada na Rua da Lama.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Tecnologia usada -->
+    <section class="tech-section">
+      <div class="container text-center">
+        <h2 class="tech-section__title">Tecnologia por trás do projeto</h2>
+        <p class="tech-section__subtitle">
+          Um pouco do que roda nos bastidores do Explore Vitória.
+        </p>
+        <div>
+          <span class="tech-badge"
+            ><span class="tech-badge__dot"></span>Node.js</span
+          >
+          <span class="tech-badge"
+            ><span class="tech-badge__dot"></span>PostgreSQL</span
+          >
+          <span class="tech-badge"
+            ><span class="tech-badge__dot"></span>React / Vue.js</span
+          >
+          <span class="tech-badge"
+            ><span class="tech-badge__dot"></span>Tailwind CSS</span
+          >
+          <span class="tech-badge"
+            ><span class="tech-badge__dot"></span>Inteligência Artificial</span
+          >
+          <span class="tech-badge"
+            ><span class="tech-badge__dot"></span>Pix</span
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA final -->
+    <section class="cta-final">
+      <div class="container">
+        <h2 class="section-title">Pronto pra montar seu roteiro?</h2>
+        <p class="section-subtitle">
+          Conte pra nossa IA quantos dias você tem, o que gosta de fazer e o seu
+          orçamento — o resto a gente cuida.
+        </p>
+        <a href="index.html#mochilao" class="cta-final__btn">
+          Monte seu roteiro agora
+        </a>
+      </div>
+    </section>
+
+    <!--Parceiros-->
+    <div id="partners-container"></div>
+    <!--Contato-->
+    <div id="contact-container"></div>
+    <!--Footer-->
+    <div id="footer-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

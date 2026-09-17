@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explore Vitória | Vivendo no ES</title>
+    <meta
+      name="description"
+      content="Guia digital para descobrir Vitória e o litoral capixaba: gastronomia, pontos turísticos, cultura e roteiros personalizados feitos por IA."
+    />
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+
+    <!-- Estilos do modal de vídeo (galeria "Vitória em vídeo") -->
+    <style>
+      .video-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .video-modal.is-open {
+        display: flex;
+      }
+
+      .video-modal__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+      }
+
+      .video-modal__dialog {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        aspect-ratio: 16 / 9;
+        background: #000;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      .video-modal__player {
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: #000;
+      }
+
+      .video-modal__close {
+        position: absolute;
+        top: -44px;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .video-modal__close:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      body.video-modal-open {
+        overflow: hidden;
+      }
+
+      /* Capa (poster/primeiro frame) dentro de cada card da galeria de vídeos */
+      .video-card__thumb {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .video-card__cover {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .video-card__thumb::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.1) 0%,
+          rgba(0, 0, 0, 0.55) 100%
+        );
+        pointer-events: none;
+      }
+
+      .video-card__play,
+      .video-card__tag {
+        position: relative;
+        z-index: 2;
+      }
+
+      @media (max-width: 576px) {
+        .video-modal__close {
+          top: auto;
+          bottom: calc(100% + 8px);
+        }
+      }
+    </style>
+  </head>
+  <body class="page-home">
+    <div id="header-container"></div>
+
+    <!-- Hero -->
+    <section class="hero-banner">
+      <video
+        class="hero-banner__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        poster="assets/img/banner-home.mp4"
+      >
+        <source src="assets/img/video-banner-home.mp4" type="video/mp4" />
+      </video>
+
+      <div class="hero-banner__overlay"></div>
+
+      <div class="hero-banner__content container">
+        <h1 class="hero-banner__title">
+          <span class="text-cyan">Explore Vitória</span> como quem vive aqui
+        </h1>
+        <p class="hero-banner__subtitle">
+          Praias, gastronomia capixaba, história e cultura em um só lugar.
+          Descubra o melhor da Ilha e do litoral do Espírito Santo com quem
+          conhece cada canto da cidade.
+        </p>
+        <div class="hero-banner__actions">
+          <a href="mochilao.html" class="btn btn-primary hero-banner__btn">
+            Monte seu roteiro com a IA
+          </a>
+          <a href="#video-gallery" class="hero-banner__scroll-link">
+            Ver o que Vitória tem pra oferecer ↓
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sobre nós -->
+    <div class="section-wrapper">
+      <section class="about-section">
+        <div class="container">
+          <div class="row align-items-center g-5">
+            <div class="col-lg-7 order-2 order-lg-1">
+              <div class="about-section__image-wrap">
+                <img
+                  src="assets/img/dd8d2d26f14e2000ea4fa08a5491eb58739ac966.png"
+                  alt=""
+                  class="section-wrapper__watermark"
+                />
+                <picture>
+                  <img
+                    src="assets/img/vsobrenos.png"
+                    alt="Vista da Praia de Camburi em Vitória"
+                    class="about-section__photo"
+                  />
+                </picture>
+              </div>
+            </div>
+
+            <div class="col-lg-5 order-1 order-lg-2">
+              <span class="about-section__badge">SOBRE O EXPLORE VITÓRIA</span>
+              <h2 class="about-section__title">
+                O guia que todo visitante gostaria de ter
+              </h2>
+              <p class="about-section__text">
+                Criamos o Explore Vitória para quem chega na cidade e não sabe
+                por onde começar. Reunimos praias, restaurantes, pontos
+                históricos e experiências reais de quem vive aqui — para que sua
+                visita pareça ter sido planejada por um amigo capixaba.
+              </p>
+              <a href="sobre.html" class="btn btn-primary about-section__btn">
+                Conheça mais
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Vídeos: Sabores & Lugares -->
+    <section class="video-gallery" id="video-gallery">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-7 col-md-10 col-12">
+            <span class="about-section__badge">CONTEÚDO</span>
+            <h2 class="about-section__title">
+              Vitória em vídeo: sabores, lugares e histórias
+            </h2>
+            <p class="about-section__text mw-100">
+              Antes de chegar, já sinta o clima da cidade. Vídeos curtos sobre a
+              culinária capixaba e os lugares que você não pode deixar de
+              conhecer.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-gallery-carousel">
+        <div class="video-gallery-carousel__track" id="videoTrack">
+          <a
+            href="#"
+            class="video-card"
+            data-video="assets/img/video-banner-home.mp4"
+          >
+            <div class="video-card__thumb video-card__thumb--1">
+              <video
+                class="video-card__cover"
+                src="assets/video/moqueca-capixaba.mp4"
+                poster="assets/img/banner-home.jpg"
+                muted
+                playsinline
+                preload="metadata"
+              ></video>
+              <span class="video-card__play" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="video-card__tag">Gastronomia</span>
+            </div>
+            <h3 class="video-card__title">
+              Moqueca capixaba: a receita que atravessa gerações
+            </h3>
+          </a>
+
+          <a
+            href="#"
+            class="video-card"
+            data-video="assets/video/camburi-por-do-sol.mp4"
+          >
+            <div class="video-card__thumb video-card__thumb--2">
+              <video
+                class="video-card__cover"
+                src="assets/video/camburi-por-do-sol.mp4"
+                poster="assets/img/video-thumbs/camburi-por-do-sol.jpg"
+                muted
+                playsinline
+                preload="metadata"
+              ></video>
+              <span class="video-card__play" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="video-card__tag">Praias</span>
+            </div>
+            <h3 class="video-card__title">Praia de Camburi ao pôr do sol</h3>
+          </a>
+
+          <a
+            href="#"
+            class="video-card"
+            data-video="assets/video/centro-historico.mp4"
+          >
+            <div class="video-card__thumb video-card__thumb--3">
+              <video
+                class="video-card__cover"
+                src="assets/video/centro-historico.mp4"
+                poster="assets/img/video-thumbs/centro-historico.jpg"
+                muted
+                playsinline
+                preload="metadata"
+              ></video>
+              <span class="video-card__play" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="video-card__tag">Cultura</span>
+            </div>
+            <h3 class="video-card__title">
+              Centro histórico: as ruas que contam a cidade
+            </h3>
+          </a>
+
+          <a
+            href="#"
+            class="video-card"
+            data-video="assets/video/convento-da-penha.mp4"
+          >
+            <div class="video-card__thumb video-card__thumb--4">
+              <video
+                class="video-card__cover"
+                src="assets/video/convento-da-penha.mp4"
+                poster="assets/img/video-thumbs/convento-da-penha.jpg"
+                muted
+                playsinline
+                preload="metadata"
+              ></video>
+              <span class="video-card__play" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="video-card__tag">Turismo religioso</span>
+            </div>
+            <h3 class="video-card__title">
+              Convento da Penha: a vista que emociona
+            </h3>
+          </a>
+
+          <a
+            href="#"
+            class="video-card"
+            data-video="assets/video/mercado-da-vila-rubim.mp4"
+          >
+            <div class="video-card__thumb video-card__thumb--5">
+              <video
+                class="video-card__cover"
+                src="assets/video/mercado-da-vila-rubim.mp4"
+                poster="assets/img/video-thumbs/mercado-da-vila-rubim.jpg"
+                muted
+                playsinline
+                preload="metadata"
+              ></video>
+              <span class="video-card__play" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="video-card__tag">Compras &amp; Artesanato</span>
+            </div>
+            <h3 class="video-card__title">
+              Mercado da Vila Rubim: cheiro, cor e tradição
+            </h3>
+          </a>
+
+          <a
+            href="#"
+            class="video-card"
+            data-video="assets/video/vida-noturna-praia-do-canto.mp4"
+          >
+            <div class="video-card__thumb video-card__thumb--6">
+              <video
+                class="video-card__cover"
+                src="assets/video/vida-noturna-praia-do-canto.mp4"
+                poster="assets/img/video-thumbs/vida-noturna-praia-do-canto.jpg"
+                muted
+                playsinline
+                preload="metadata"
+              ></video>
+              <span class="video-card__play" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="video-card__tag">Vida noturna</span>
+            </div>
+            <h3 class="video-card__title">
+              Praia do Canto depois que o sol se põe
+            </h3>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!--Diferenciais-->
+    <section class="value-prop">
+      <video class="value-prop__video" autoplay muted loop playsinline>
+        <source src="assets/img/video-banner2-home.mp4" type="video/mp4" />
+      </video>
+      <div class="value-prop__overlay"></div>
+
+      <div class="value-prop__content">
+        <div class="container differentials">
+          <span class="section-badge">DIFERENCIAIS</span>
+          <h2 class="section-title">Por que explorar Vitória com a gente?</h2>
+          <p class="section-subtitle col-lg-8 col-md-10 col-12">
+            Revelamos o melhor do Espírito Santo por meio de roteiros
+            <br class="d-none d-lg-inline" />
+            autênticos, experiências exclusivas e um atendimento local que faz
+            você se sentir em casa.
+          </p>
+
+          <div class="differentials__grid">
+            <div class="differential-card">
+              <div class="differential-card__icon">
+                <svg
+                  width="58"
+                  height="58"
+                  viewBox="0 0 58 58"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10.6069 36.6194L5.73975 31.7522C5.05116 31.063 4.64581 30.1406 4.604 29.1672C4.56248 28.1989 4.88368 27.2501 5.50439 26.5061L5.74854 26.2375L10.3315 21.6555L10.6069 21.3801V14.5002C10.6071 13.5183 10.9782 12.5726 11.646 11.8528C12.3113 11.1357 13.2219 10.6956 14.1968 10.6194L14.5132 10.6067H21.3804L26.2476 5.7395C26.9366 5.05149 27.8587 4.64653 28.8315 4.60474C29.7992 4.56322 30.747 4.88433 31.4907 5.50415L31.772 5.76001L36.3442 10.3313L36.6196 10.6067H43.4995L43.6841 10.6106C44.5995 10.6541 45.4722 11.0198 46.147 11.6458C46.8218 12.2718 47.2519 13.115 47.3638 14.0247L47.3813 14.2083L47.394 14.5374V21.3801L47.6694 21.6555L52.2603 26.2473C52.949 26.9365 53.3542 27.8588 53.396 28.8323C53.4376 29.8014 53.1153 30.7502 52.4937 31.4944L52.2583 31.7522L47.3911 36.6194V43.5002C47.3914 44.4824 47.0208 45.4285 46.353 46.1487C45.6873 46.8666 44.7752 47.3062 43.7993 47.3821L43.4683 47.3938H36.6226L36.3472 47.6682L31.7554 52.26C31.0662 52.9487 30.1438 53.3539 29.1704 53.3958C28.1986 53.4375 27.2466 53.1136 26.5015 52.4885L26.23 52.2405L21.6587 47.6682L21.3833 47.3938H14.4995C13.5174 47.394 12.5713 47.0226 11.8511 46.3547C11.1367 45.6923 10.6967 44.7862 10.6177 43.8157L10.6069 43.5002V36.6194Z"
+                    stroke="currentColor"
+                    stroke-width="1.87963"
+                  />
+                  <path
+                    d="M37.018 21.4814L38.6667 23.1302L24.9457 36.8511L18.2593 30.1647L19.908 28.516L24.9457 33.5537L37.018 21.4814Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+              <h3 class="differential-card__title">
+                Roteiros Inteligentes &amp; Praticidade
+              </h3>
+              <ul class="differential-card__list">
+                <li>Otimização do seu tempo de viagem</li>
+                <li>Roteiros ágeis e bem planejados</li>
+              </ul>
+            </div>
+
+            <div class="differential-card">
+              <div class="differential-card__icon">
+                <svg
+                  width="47"
+                  height="52"
+                  viewBox="0 0 47 52"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M23.375 0.875C29.625 0.875 35.4175 2.26 40.1475 4.6125C42.4675 5.7675 43.625 6.345 44.75 8.16C45.875 9.975 45.875 11.73 45.875 15.245V23.9675C45.875 38.175 34.5175 46.075 27.9425 49.46L27.9276 49.4676C26.1025 50.4051 25.1876 50.875 23.375 50.875C21.5624 50.875 20.6475 50.4051 18.8224 49.4676L18.8075 49.46C12.23 46.075 0.875 38.1775 0.875 23.97V15.245C0.875 11.73 0.8775 9.975 2 8.16C3.1225 6.345 4.2825 5.7675 6.6025 4.6125C11.335 2.26 17.125 0.875 23.375 0.875Z"
+                    stroke="#4AC1F0"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M18.375 20.875V17.125C18.375 15.7989 18.9018 14.5271 19.8395 13.5895C20.7771 12.6518 22.0489 12.125 23.375 12.125C24.7011 12.125 25.9729 12.6518 26.9105 13.5895C27.8482 14.5271 28.375 15.7989 28.375 17.125V20.875M18.375 20.875H28.375M18.375 20.875C17.3804 20.875 16.4266 21.2701 15.7233 21.9733C15.0201 22.6766 14.625 23.6304 14.625 24.625V28.375C14.625 29.3696 15.0201 30.3234 15.7233 31.0267C16.4266 31.7299 17.3804 32.125 18.375 32.125H28.375C29.3696 32.125 30.3234 31.7299 31.0267 31.0267C31.7299 30.3234 32.125 29.3696 32.125 28.375V24.625C32.125 23.6304 31.7299 22.6766 31.0267 21.9733C30.3234 21.2701 29.3696 20.875 28.375 20.875"
+                    stroke="#4AC1F0"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <h3 class="differential-card__title">
+                Segurança &amp; Conforto Total
+              </h3>
+              <ul class="differential-card__list">
+                <li>Parceiros e locais verificados</li>
+                <li>Suporte local durante toda a sua estadia</li>
+              </ul>
+            </div>
+
+            <div class="differential-card">
+              <div class="differential-card__icon">
+                <svg
+                  width="44"
+                  height="44"
+                  viewBox="0 0 44 44"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0.875 42.8752H42.875M7.27767 16.7232L37.275 3.09658M31.339 0.875244L37.275 3.09658L35.0537 9.05124M10.675 29.8086H5.075C4.7052 29.8134 4.35191 29.9625 4.0904 30.224C3.82889 30.4855 3.67983 30.8388 3.675 31.2086V42.8752H12.075V31.2086C12.0702 30.8388 11.9211 30.4855 11.6596 30.224C11.3981 29.9625 11.0448 29.8134 10.675 29.8086ZM24.675 22.3419H19.075C18.7052 22.3467 18.3519 22.4958 18.0904 22.7573C17.8289 23.0188 17.6798 23.3721 17.675 23.7419V42.8752H26.075V23.7419C26.0702 23.3721 25.9211 23.0188 25.6596 22.7573C25.3981 22.4958 25.0448 22.3419 24.675 22.3419ZM38.675 14.8752H33.075C32.7052 14.8801 32.3519 15.0291 32.0904 15.2906C31.8289 15.5522 31.6798 15.9054 31.675 16.2752V42.8752H40.075V16.2752C40.0702 15.9054 39.9211 15.5522 39.6596 15.2906C39.3981 15.0291 39.0448 14.8801 38.675 14.8752Z"
+                    stroke="#4AC1F0"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <h3 class="differential-card__title">
+                Custo-Benefício &amp; Flexibilidade
+              </h3>
+              <ul class="differential-card__list">
+                <li>Roteiros que cabem no seu bolso</li>
+                <li>100% personalizado para você ou sua família</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="container solutions">
+          <div class="row">
+            <div class="col-lg-7 col-md-10 col-12 text-center text-lg-start">
+              <span class="section-badge">EXPERIÊNCIAS</span>
+              <h2 class="section-title">
+                Roteiros que revelam, conectam e marcam a sua passagem pelo
+                Espírito Santo
+              </h2>
+
+              <p class="section-subtitle">
+                Levamos você para descobrir o melhor de Vitória e do litoral
+                capixaba, combinando cultura, gastronomia e paisagens em
+                experiências feitas sob medida.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="solutions-carousel">
+          <div class="solutions-carousel__track" id="solutionsTrack">
+            <a
+              href="experiencias/turismo-historico-cultural.html"
+              class="solution-card"
+            >
+              <h3 class="solution-card__title">
+                Turismo Histórico<br />&amp; Cultural
+              </h3>
+              <p class="solution-card__text">
+                Passeios pelos principais pontos históricos, monumentos e pela
+                rica cultura da Ilha de Vitória.
+              </p>
+            </a>
+            <a
+              href="experiencias/gastronomia-capixaba.html"
+              class="solution-card"
+            >
+              <h3 class="solution-card__title">Gastronomia Capixaba</h3>
+              <p class="solution-card__text">
+                Da moqueca à torta capixaba: os sabores que só se encontram por
+                aqui.
+              </p>
+            </a>
+            <a href="experiencias/praias-e-litoral.html" class="solution-card">
+              <h3 class="solution-card__title">Praias<br />&amp; Litoral</h3>
+              <p class="solution-card__text">
+                Das praias urbanas às mais tranquilas, roteiros para aproveitar
+                o mar capixaba.
+              </p>
+            </a>
+            <a
+              href="experiencias/vida-noturna-lazer.html"
+              class="solution-card"
+            >
+              <h3 class="solution-card__title">Vida Noturna &amp; Lazer</h3>
+              <p class="solution-card__text">
+                Bares, música ao vivo e os melhores points para curtir a noite
+                na cidade.
+              </p>
+            </a>
+            <a
+              href="experiencias/compras-artesanato.html"
+              class="solution-card"
+            >
+              <h3 class="solution-card__title">
+                Compras<br />&amp; Artesanato
+              </h3>
+              <p class="solution-card__text">
+                Feiras, mercados e produtos locais para levar um pouco de
+                Vitória com você.
+              </p>
+            </a>
+            <a href="experiencias/aventura-natureza.html" class="solution-card">
+              <h3 class="solution-card__title">Aventura<br />&amp; Natureza</h3>
+              <p class="solution-card__text">
+                Trilhas, mirantes e passeios ao ar livre pertinho da capital.
+              </p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--Parceiros-->
+    <div id="partners-container"></div>
+
+    <!-- Explorar -->
+    <section class="segmentos">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 text-center">
+            <span class="about-section__badge">EXPLORAR</span>
+            <h2 class="about-section__title">
+              Tudo o que você pode viver em Vitória
+            </h2>
+            <p class="about-section__text text-lg-nowrap mw-100 mx-auto">
+              Um pouco de cada Vitória: a histórica, a gastronômica, a que tem
+              praia e a que não dorme cedo.
+            </p>
+          </div>
+        </div>
+
+        <div class="row segmentos__row">
+          <div class="col-lg-6 col-12">
+            <div class="segmentos__card">
+              <div class="segmentos__card__image">
+                <picture>
+                  <img
+                    src="assets/img/ChatGPT Image Sep 14, 2026, 04_17_18 PM.png"
+                    alt="Centro histórico de Vitória"
+                  />
+                </picture>
+              </div>
+              <div class="segmentos__card__content">
+                <div class="segmentos__card__icon">
+                  <svg
+                    width="63"
+                    height="63"
+                    viewBox="0 0 63 63"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M37.9879 30.1283C40.8828 30.1283 43.2275 32.473 43.2275 35.368V43.2275H19.6489V37.9879C19.6489 35.0929 21.9937 32.7481 24.8886 32.7481H29.5257C30.4296 31.1762 32.1194 30.1283 34.0581 30.1283H37.9879ZM37.9879 32.7481H34.0581C32.6172 32.7481 31.4382 33.9271 31.4382 35.368V40.6077H40.6077V35.368C40.6077 33.9271 39.4287 32.7481 37.9879 32.7481ZM28.8184 35.368H24.8886C23.4477 35.368 22.2688 36.5469 22.2688 37.9879V40.6077H28.8184V35.368ZM26.1986 23.5787C28.3652 23.5787 30.1283 25.3419 30.1283 27.5085C30.1283 29.6751 28.3652 31.4382 26.1986 31.4382C24.0319 31.4382 22.2688 29.6751 22.2688 27.5085C22.2688 25.3419 24.0319 23.5787 26.1986 23.5787ZM26.1986 26.0348C25.3864 26.0348 24.7249 26.695 24.7249 27.5085C24.7249 28.3219 25.3864 28.9821 26.1986 28.9821C27.0107 28.9821 27.6722 28.3219 27.6722 27.5085C27.6722 26.695 27.0107 26.0348 26.1986 26.0348ZM36.023 19.6489C38.5511 19.6489 40.6077 21.7055 40.6077 24.2337C40.6077 26.7619 38.5511 28.8184 36.023 28.8184C33.4948 28.8184 31.4382 26.7618 31.4382 24.2337C31.4382 21.7055 33.4948 19.6489 36.023 19.6489ZM36.023 22.2688C34.9397 22.2688 34.0581 23.1503 34.0581 24.2337C34.0581 25.3169 34.9397 26.1986 36.023 26.1986C37.1062 26.1986 37.9879 25.3169 37.9879 24.2337C37.9879 23.1503 37.1062 22.2688 36.023 22.2688Z"
+                      fill="#003CAF"
+                    />
+                  </svg>
+                </div>
+                <h3 class="segmentos__card__title">
+                  Turismo Histórico &amp; Cultural
+                </h3>
+                <p class="segmentos__card__text">
+                  Passeios guiados pelos principais pontos históricos,
+                  monumentos e pela rica cultura da Ilha de Vitória.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="segmentos__card">
+              <div class="segmentos__card__image">
+                <picture>
+                  <img
+                    src="assets/img/_ (13).jpeg"
+                    alt="Gastronomia capixaba à beira-mar"
+                  />
+                </picture>
+              </div>
+              <div class="segmentos__card__content">
+                <div class="segmentos__card__icon">
+                  <svg
+                    width="64"
+                    height="67"
+                    viewBox="0 0 64 67"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M32.6359 23.0776C30.0113 26.4257 33.534 34.2071 31.4546 41.2563"
+                      stroke="#003CAF"
+                      stroke-width="1.65464"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <h3 class="segmentos__card__title">
+                  Gastronomia &amp; Litoral
+                </h3>
+                <p class="segmentos__card__text">
+                  Roteiros imperdíveis pelas praias capixabas e polos
+                  gastronômicos especializados na tradicional moqueca.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="segmentos__card">
+              <div class="segmentos__card__image">
+                <picture>
+                  <img
+                    src="assets/img/b7e4aceb0349784341d4448b121064a5.jpg"
+                    alt="Praia de Camburi"
+                  />
+                </picture>
+              </div>
+              <div class="segmentos__card__content">
+                <div class="segmentos__card__icon">
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 48 48"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4 40C10 34 16 34 24 40C32 46 38 40 44 34"
+                      stroke="#003CAF"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <circle
+                      cx="24"
+                      cy="14"
+                      r="8"
+                      stroke="#003CAF"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <h3 class="segmentos__card__title">Praias &amp; Litoral</h3>
+                <p class="segmentos__card__text">
+                  Das praias urbanas de Camburi e Curva da Jurema às mais
+                  tranquilas do litoral capixaba.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="segmentos__card">
+              <div class="segmentos__card__image">
+                <picture>
+                  <img
+                    src="assets/img/e20e9c3c74ebe2941e0306c74bf1eda8.jpg"
+                    alt="Vida noturna na Praia do Canto"
+                  />
+                </picture>
+              </div>
+              <div class="segmentos__card__content">
+                <div class="segmentos__card__icon">
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 48 48"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M40 26.5C37.5 33 30.9 38 23 38C13 38 5 30 5 20C5 12.1 10 5.5 16.5 3C15 6.5 14.5 10 15.5 13.5C17 19 22 24 27.5 25.5C31 26.5 34.5 26 38 24.5C39 24 39.5 25 40 26.5Z"
+                      stroke="#003CAF"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <h3 class="segmentos__card__title">Vida Noturna &amp; Lazer</h3>
+                <p class="segmentos__card__text">
+                  Bares, música ao vivo e os points certos para curtir Vitória
+                  depois do pôr do sol.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mochilão / IA -->
+    <section class="backpack-cta">
+      <div class="container">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-6">
+            <span class="about-section__badge">MOCHILÃO</span>
+            <h2 class="about-section__title">Descubra Vitória do seu jeito</h2>
+            <p class="about-section__text">
+              Roteiros cuidadosamente planejados que unem a cultura capixaba, o
+              conforto e a liberdade para você aproveitar cada instante. Conte
+              pra nossa IA quantos dias você tem, o que gosta de fazer e o seu
+              orçamento — ela monta o roteiro pra você.
+            </p>
+            <a href="mochilao.html" class="btn btn-primary about-section__btn">
+              Monte seu roteiro agora
+            </a>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="backpack-cta__preview">
+              <div
+                class="backpack-cta__preview-row backpack-cta__preview-row--user"
+              >
+                Quero 3 dias em Vitória, gastronomia e praia, sem gastar muito.
+              </div>
+              <div
+                class="backpack-cta__preview-row backpack-cta__preview-row--ai"
+              >
+                Bora! Separei um roteiro de 3 dias com moqueca capixaba, praia
+                de Camburi e o centro histórico. Quer ver?
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--Contato-->
+    <div id="contact-container"></div>
+
+    <!--Footer-->
+    <div id="footer-container"></div>
+
+    <!-- Modal de reprodução de vídeo (usado pela galeria "Vitória em vídeo") -->
+    <div class="video-modal" id="videoModal">
+      <div class="video-modal__backdrop"></div>
+      <div class="video-modal__dialog">
+        <button
+          type="button"
+          class="video-modal__close"
+          aria-label="Fechar vídeo"
+        >
+          &times;
+        </button>
+        <video
+          id="videoModalPlayer"
+          class="video-modal__player"
+          controls
+          playsinline
+        ></video>
+      </div>
+    </div>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

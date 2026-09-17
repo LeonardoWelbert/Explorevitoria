@@ -1,0 +1,102 @@
+<div class="section-wrapper">
+  <section class="about-section contact-section">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7 order-2 order-lg-1">
+          <div class="about-section__image-wrap">
+            <img
+              src="assets/img/dd8d2d26f14e2000ea4fa08a5491eb58739ac966.png"
+              alt=""
+              class="section-wrapper__watermark"
+            />
+            <picture>
+              <source
+                srcset="assets/img/banner-contato.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="assets/img/banner-contato.webp"
+                type="image/webp"
+              />
+              <img
+                src="assets/img/banner-contato.png"
+                alt="Vitória vista de cima"
+                class="about-section__photo"
+              />
+            </picture>
+          </div>
+        </div>
+
+        <div class="col-lg-5 order-1 order-lg-2">
+          <span class="about-section__badge">CONTATO</span>
+          <h2 class="about-section__title">Vamos planejar sua viagem?</h2>
+          <p class="about-section__text">
+            Conte pra gente o que você quer conhecer em Vitória e a nossa equipe
+            te ajuda a montar a experiência perfeita.
+          </p>
+
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="contact-form__group">
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="contact-form__input"
+                placeholder="Nome*"
+                required
+              />
+            </div>
+
+            <div class="contact-form__group">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="contact-form__input"
+                placeholder="E-mail*"
+                required
+              />
+            </div>
+
+            <div class="contact-form__group">
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="contact-form__input"
+                placeholder="Telefone/WhatsApp*"
+                required
+              />
+            </div>
+
+            <div class="contact-form__group">
+              <textarea
+                id="message"
+                name="message"
+                class="contact-form__textarea"
+                placeholder="Conte um pouco sobre a viagem que você está planejando"
+                rows="4"
+              ></textarea>
+            </div>
+
+            <div class="contact-form__footer">
+              <div class="contact-form__captcha">
+                <div
+                  class="g-recaptcha"
+                  data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                ></div>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary contact-form__submit"
+              >
+                Enviar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
