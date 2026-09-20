@@ -12,6 +12,9 @@
   }
 
   function resolveUrl(url) {
+    // URLs externas (http, https, //) nunca devem ser alteradas
+    if (/^(https?:)?\/\//i.test(url)) return url;
+
     const basePath = getBasePath();
 
     if (basePath === "../" && !url.startsWith("../") && !url.startsWith("/")) {
@@ -671,6 +674,31 @@
     render();
   }
 
+  /* ==================================================================
+   * MODAL DE VÍDEO (YouTube + arquivo local)
+   *
+   * O data-video do .video-card aceita:
+   *   - Link do YouTube (watch?v=, youtu.be/, shorts/, embed/, live/)
+   *   - Caminho de arquivo local (ex.: assets/video/meu-video.mp4)
+   *
+   * Requer no HTML:
+   *   <div id="videoModalPlayer" class="video-modal__player"></div>
+   * ================================================================== */
+
+  function isYouTubeUrl(url) {
+    if (!url) return false;
+    return /(?:youtube\.com|youtu\.be)/i.test(url);
+  }
+
+  function getYouTubeEmbedUrl(url) {
+    const match = url.match(
+      /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i,
+    );
+
+    if (!match || !match[1]) return "";
+    return `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+  }
+
   function initVideoModal(trackEl) {
     if (!trackEl) return;
 
@@ -690,19 +718,52 @@
     function openModal(src) {
       if (!src) return;
 
-      player.src = resolveUrl(src);
+      const rawSrc = src.trim();
+      player.innerHTML = "";
+
+      // Checa o YouTube ANTES do resolveUrl, para não mexer na URL externa
+      if (isYouTubeUrl(rawSrc)) {
+        const embedUrl = getYouTubeEmbedUrl(rawSrc);
+        if (!embedUrl) {
+          console.warn("Link do YouTube inválido:", rawSrc);
+          return;
+        }
+
+        const iframe = document.createElement("iframe");
+        iframe.src = embedUrl;
+        iframe.title = "Vídeo do YouTube";
+        iframe.allow =
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
+        iframe.allowFullscreen = true;
+        iframe.setAttribute("frameborder", "0");
+        player.appendChild(iframe);
+      } else {
+        const video = document.createElement("video");
+        video.src = resolveUrl(rawSrc);
+        video.controls = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        player.appendChild(video);
+        video.play().catch(() => {});
+      }
+
       modal.classList.add("is-open");
       document.body.classList.add("video-modal-open");
-      player.currentTime = 0;
-      player.play().catch(() => {});
     }
 
     function closeModal() {
       modal.classList.remove("is-open");
       document.body.classList.remove("video-modal-open");
-      player.pause();
-      player.removeAttribute("src");
-      player.load();
+
+      const video = player.querySelector("video");
+      if (video) {
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+      }
+
+      // Remove o iframe (e para o áudio do YouTube)
+      player.innerHTML = "";
     }
 
     trackEl.addEventListener("click", (e) => {
@@ -840,6 +901,553 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     });
   }
 
+  /* ==================================================================
+   * PÁGINAS DE EXPERIÊNCIA  (solucoes/*.html com data-experience="...")
+   *
+   * Como funciona:
+   *   1. A página tem <div class="historic-page" data-experience="chave"></div>
+   *   2. initExperiencePage() lê EXPERIENCIAS[chave] (logo abaixo)
+   *   3. Monta hero + guia da IA + galeria dentro dessa div.
+   *
+   * Para criar uma página nova: copie o HTML, troque o data-experience
+   * e adicione um bloco novo em EXPERIENCIAS.
+   * Se a página não tiver [data-experience], nada disso executa.
+   * ================================================================== */
+
+  // Ícones do guia (só o miolo do SVG). Para criar um novo: adicione aqui
+  // e use o nome no campo "icon" dos dados.
+  const EXPERIENCE_ICONS = {
+    clock:
+      '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    language:
+      '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
+    navigation: '<polygon points="3 11 22 2 13 21 11 13 3 11"/>',
+    back: '<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
+    bookmark: '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',
+    check: '<polyline points="20 6 9 17 4 12"/>',
+    arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+    moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+    cloudsun:
+      '<path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/>',
+    cloud: '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>',
+    rain: '<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/>',
+    storm:
+      '<path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/><path d="m13 12-3 5h4l-3 5"/>',
+    fog: '<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 17H7"/><path d="M17 21H9"/>',
+    waves:
+      '<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>',
+  };
+
+  const EXPERIENCE_LABEL_SAVE = "Salvar no meu roteiro";
+  const EXPERIENCE_LABEL_SAVED = "Adicionado ao roteiro";
+  const EXPERIENCE_BACK_URL = "../index.html";
+
+  // Seção "Planejar viagem" (aparece no fim de TODAS as páginas de experiência).
+  // Para mudar só numa página, adicione um campo "plan" no bloco dela em
+  // EXPERIENCIAS (ele sobrescreve estes valores).
+  const EXPERIENCE_PLAN = {
+    kicker: "Planejar viagem",
+    title: "Planeje sua viagem",
+    text: "Deixe a IA montar um roteiro personalizado com mapa em PDF.",
+    ctaLabel: "Montar roteiro",
+    ctaUrl: "../mochilao.html",
+    cards: [
+      // Clima em TEMPO REAL (Open-Meteo) — ver EXPERIENCE_WEATHER abaixo
+      { type: "weather", label: "Clima agora" },
+      // ATENÇÃO: maré é texto FIXO de exemplo (vindo do design), não é ao vivo.
+      {
+        icon: "waves",
+        label: "Maré do dia",
+        value: "Cheia 14:32 · baixa 20:50",
+      },
+    ],
+  };
+
+  // Clima em tempo real: Open-Meteo (sem chave de API).
+  // Guarda a resposta no sessionStorage por alguns minutos para não
+  // chamar a API a cada página que o visitante abre.
+  const EXPERIENCE_WEATHER = {
+    city: "Vitória",
+    latitude: -20.3155,
+    longitude: -40.3128,
+    timezone: "America/Sao_Paulo",
+    cacheMinutes: 10,
+  };
+
+  // Imagens: caminhos relativos à página em /solucoes/
+  // ex.: "../assets/img/convento-da-penha.jpg"
+  const EXPERIENCIAS = {
+    // ----------------------------------------------------------------
+    historico: {
+      hero: {
+        image:
+          "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/a65d237a3_generated_abf2b648.jpg",
+        alt: "Convento da Penha",
+      },
+      kicker: "Patrimônio",
+      title: "Turismo Histórico e Cultural",
+      subtitle:
+        "Centros coloniais, conventos e palácios que contam quase cinco séculos de história.",
+      guide: {
+        title: "Dicas práticas para visitantes estrangeiros",
+        items: [
+          {
+            icon: "clock",
+            label: "Melhor momento",
+            text: "Manhã e fim de tarde, para luz dourada e menos calor.",
+          },
+          {
+            icon: "shield",
+            label: "Segurança",
+            text: "Centro histórico bem vigiado; mantenha pertences à vista em ruas movimentadas.",
+          },
+          {
+            icon: "language",
+            label: "Idioma",
+            text: "Poucos guias bilíngues — leve tradutor no celular; placas em português.",
+          },
+          {
+            icon: "navigation",
+            label: "Como chegar",
+            text: "Caminhe pelo Centro; use app de transporte para o Convento da Penha (Vila Velha).",
+          },
+        ],
+        note: "A maioria dos monumentos é gratuita; chegue cedo no Convento da Penha para evitar filas.",
+      },
+      galleryTitle: "Lugares para conhecer",
+      locations: [
+        {
+          name: "Convento da Penha",
+          description:
+            "O cartão-postal do Espírito Santo. Fundado em 1558 no alto de um morro em Vila Velha, oferece vista de 360° da baía de Vitória. Subida de bondinho ou a pé por trilha pavimentada — pôr do sol inesquecível.",
+          tip: "Visite entre 15h e 17h para o pôr do sol; bondinho funciona até as 18h.",
+          image:
+            "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/a65d237a3_generated_abf2b648.jpg",
+        },
+        {
+          name: "Catedral Metropolitana de Vitória",
+          description:
+            "No coração do Centro, a Catedral Nossa Senhora da Vitória mistura pedra e luz. Vitrais coloridos contam a história da evangelização capixaba; o interior sereno é um respiro no meio da cidade.",
+          tip: "Aberta para visitação das 8h às 17h; missa dominical às 18h.",
+          image:
+            "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/f2e73087a_generated_3598b5d1.jpg",
+        },
+        {
+          name: "Palácio Anchieta",
+          description:
+            "Sede do governo do estado e um dos edifícios administrativos mais antigos das Américas (século XVI). Fachada de pedra e visitas guiadas mostram a história política capixaba.",
+          tip: "Visitas guiadas gratuitas de terça a domingo, das 9h às 17h.",
+          // ATENÇÃO: mesma imagem do Convento (placeholder) — troque
+          image:
+            "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/a65d237a3_generated_abf2b648.jpg",
+        },
+        {
+          name: "Igreja do Rosário e Largo do Carmo",
+          description:
+            "Conjunto colonial no alto da cidade, com a Igreja de Nossa Senhora do Rosário dos Pretos e o Largo do Carmo. Ruas de paralelepípedos, casarios restaurados e cafés charmosos.",
+          tip: "Caminhe no fim de tarde; cafés ao redor abrem até a noite.",
+          // ATENÇÃO: mesma imagem do Convento (placeholder) — troque
+          image:
+            "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/a65d237a3_generated_abf2b648.jpg",
+        },
+      ],
+    },
+
+    // ----------------------------------------------------------------
+    // RASCUNHO: revise textos, dicas e horários antes de publicar e
+    // coloque as fotos em assets/img/ com os nomes abaixo.
+    gastronomia: {
+      hero: {
+        image: "../assets/img/gastronomia-hero.jpg",
+        alt: "Moqueca capixaba servida em panela de barro",
+      },
+      kicker: "Sabores",
+      title: "Gastronomia Capixaba",
+      subtitle:
+        "Moqueca na panela de barro, torta capixaba e frutos do mar direto das comunidades de pescadores.",
+      guide: {
+        title: "Dicas práticas para visitantes estrangeiros",
+        items: [
+          {
+            icon: "clock",
+            label: "Melhor momento",
+            text: "O almoço é a refeição principal; muitas casas de frutos do mar enchem no fim de semana, então chegue cedo.",
+          },
+          {
+            icon: "shield",
+            label: "Segurança",
+            text: "Prefira restaurantes movimentados, onde os frutos do mar têm giro rápido; em mercados, mantenha bolsa e celular à vista.",
+          },
+          {
+            icon: "language",
+            label: "Idioma",
+            text: "Nem todo cardápio tem versão em inglês — use o tradutor do celular e pergunte pelo prato do dia. Muitos pratos servem duas pessoas.",
+          },
+          {
+            icon: "navigation",
+            label: "Como chegar",
+            text: "O Mercado da Vila Rubim dá para fazer a pé pelo Centro; para Goiabeiras e Ilha das Caieiras, use app de transporte.",
+          },
+        ],
+        note: "A moqueca capixaba leva urucum e não leva dendê nem leite de coco. A torta capixaba é tradição da Semana Santa, mas muitas casas servem o ano todo.",
+      },
+      galleryTitle: "Onde provar",
+      locations: [
+        {
+          name: "Galpão das Paneleiras de Goiabeiras",
+          description:
+            "Onde nasce a panela da moqueca capixaba. As paneleiras moldam a argila à mão e finalizam a peça com tinta natural extraída da casca do mangue — um ofício reconhecido como patrimônio cultural imaterial do Brasil. Nas redondezas, restaurantes servem a moqueca na própria panela.",
+          tip: "Vá pela manhã para ver o trabalho das paneleiras e confirme os dias de funcionamento antes.",
+          image: "../assets/img/paneleiras-goiabeiras.jpg",
+        },
+        {
+          name: "Ilha das Caieiras",
+          description:
+            "Comunidade de pescadores à beira do manguezal, conhecida pelos restaurantes de frutos do mar. Ponto tradicional para moqueca de peixe, casquinha de siri e torta capixaba.",
+          tip: "Fins de semana costumam lotar; chegue cedo ou reserve mesa para o almoço.",
+          image: "../assets/img/ilha-das-caieiras.jpg",
+        },
+        {
+          name: "Mercado da Vila Rubim",
+          description:
+            "Mercado tradicional na região central de Vitória. Nos corredores há queijos, temperos, cafés, cachaças e produtos regionais — boa parada para sentir o cotidiano da cidade e levar lembranças comestíveis.",
+          tip: "Vá de manhã, quando o movimento é maior, e combine com um passeio a pé pelo Centro.",
+          image: "../assets/img/mercado-vila-rubim.jpg",
+        },
+        {
+          name: "Praia do Canto",
+          description:
+            "Bairro com grande concentração de restaurantes e bares, ótimo para provar a moqueca em ambiente mais moderno e esticar a noite com uma caminhada.",
+          tip: "Compare cardápios e preços na porta antes de escolher a casa.",
+          image: "../assets/img/praia-do-canto.jpg",
+        },
+      ],
+    },
+
+    // ----------------------------------------------------------------
+    // Próximas: praias, "vida-noturna", compras, aventura
+    // (copie o bloco "gastronomia", troque a chave e o conteúdo)
+  };
+
+  function experienceSvg(inner, cls) {
+    return `<svg${cls ? ` class="${cls}"` : ""} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
+  }
+
+  // Escapa texto E aspas (seguro para usar dentro de atributos)
+  function esc(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function experienceHeroHTML(d) {
+    return `
+      <section class="historic-hero">
+        <img class="historic-hero__img" src="${esc(d.hero.image)}" alt="${esc(d.hero.alt)}" />
+        <div class="historic-hero__overlay"></div>
+        <div class="historic-hero__content">
+          <a href="${EXPERIENCE_BACK_URL}" class="historic-hero__back">
+            ${experienceSvg(EXPERIENCE_ICONS.back)}
+            Todas as experiências
+          </a>
+          <p class="historic-hero__kicker">${esc(d.kicker)}</p>
+          <h1 class="historic-hero__title">${esc(d.title)}</h1>
+          <p class="historic-hero__subtitle">${esc(d.subtitle)}</p>
+        </div>
+      </section>
+      <div class="historic-line"></div>`;
+  }
+
+  function experienceGuideHTML(g) {
+    const items = (g.items || [])
+      .map(
+        (item) => `
+          <li class="historic-guide__item">
+            ${experienceSvg(EXPERIENCE_ICONS[item.icon] || EXPERIENCE_ICONS.clock, "historic-guide__icon")}
+            <div>
+              <p class="historic-guide__key">${esc(item.label)}</p>
+              <p class="historic-guide__val">${esc(item.text)}</p>
+            </div>
+          </li>`,
+      )
+      .join("");
+
+    return `
+      <aside class="historic-guide">
+        <div class="historic-guide__card">
+          <p class="historic-guide__label">Guia da IA</p>
+          <h2 class="historic-guide__title">${esc(g.title)}</h2>
+          <div class="historic-line historic-line--soft historic-guide__divider"></div>
+          <ul class="historic-guide__list">${items}</ul>
+          ${g.note ? `<p class="historic-guide__note">${esc(g.note)}</p>` : ""}
+        </div>
+      </aside>`;
+  }
+
+  function experienceLocationsHTML(list) {
+    return (list || [])
+      .map(
+        (loc, i) => `
+        <article class="historic-location">
+          <div class="historic-location__media">
+            <img class="historic-location__img" src="${esc(loc.image)}" alt="${esc(loc.name)}" loading="lazy" />
+            <span class="historic-location__badge">${String(i + 1).padStart(2, "0")}</span>
+          </div>
+          <div class="historic-location__body">
+            <h3 class="historic-location__name">${esc(loc.name)}</h3>
+            <p class="historic-location__desc">${esc(loc.description)}</p>
+            <div class="historic-location__tip">
+              ${experienceSvg(EXPERIENCE_ICONS.clock)}
+              <span>${esc(loc.tip)}</span>
+            </div>
+            <button type="button" class="historic-location__save" aria-pressed="false">
+              ${experienceSvg(EXPERIENCE_ICONS.bookmark)}
+              <span>${EXPERIENCE_LABEL_SAVE}</span>
+            </button>
+          </div>
+        </article>`,
+      )
+      .join("");
+  }
+
+  // ---------- Clima: texto + tipo + ícone a partir do código WMO ----------
+  function experienceWeatherInfo(code, isDay) {
+    const c = Number(code);
+    const is = (kind, text, icon) => ({ kind, text, icon });
+
+    if (c === 0)
+      return isDay
+        ? is("clear", "Ensolarado", "sun")
+        : is("night", "Céu limpo", "moon");
+    if (c === 1)
+      return isDay
+        ? is("partly", "Poucas nuvens", "cloudsun")
+        : is("night", "Poucas nuvens", "moon");
+    if (c === 2)
+      return isDay
+        ? is("partly", "Parcialmente nublado", "cloudsun")
+        : is("cloud", "Parcialmente nublado", "cloud");
+    if (c === 3) return is("cloud", "Nublado", "cloud");
+    if (c === 45 || c === 48) return is("fog", "Neblina", "fog");
+    if (c >= 51 && c <= 57) return is("rain", "Garoa", "rain");
+    if (c === 61 || c === 66) return is("rain", "Chuva fraca", "rain");
+    if (c === 63 || c === 67) return is("rain", "Chuva", "rain");
+    if (c === 65 || c === 82) return is("rain", "Chuva forte", "rain");
+    if (c === 80 || c === 81) return is("rain", "Pancadas de chuva", "rain");
+    if ((c >= 71 && c <= 77) || c === 85 || c === 86)
+      return is("cloud", "Neve", "cloud");
+    if (c === 95) return is("storm", "Trovoada", "storm");
+    if (c === 96 || c === 99)
+      return is("storm", "Trovoada com granizo", "storm");
+    return is("cloud", "Condição indisponível", "cloud");
+  }
+
+  async function loadExperienceWeather(cfg) {
+    const cacheKey = `explore-weather:${cfg.latitude},${cfg.longitude}`;
+
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(cacheKey) || "null");
+      if (cached && Date.now() - cached.t < cfg.cacheMinutes * 60000) {
+        return cached.current;
+      }
+    } catch {}
+
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      `?latitude=${cfg.latitude}&longitude=${cfg.longitude}` +
+      "&current=temperature_2m,apparent_temperature,relative_humidity_2m,is_day,weather_code,wind_speed_10m" +
+      `&timezone=${encodeURIComponent(cfg.timezone)}`;
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+
+    try {
+      const res = await fetch(url, { signal: controller.signal });
+      if (!res.ok) throw new Error(`Open-Meteo HTTP ${res.status}`);
+
+      const data = await res.json();
+      if (!data.current) throw new Error("Resposta sem o campo current");
+
+      try {
+        sessionStorage.setItem(
+          cacheKey,
+          JSON.stringify({ t: Date.now(), current: data.current }),
+        );
+      } catch {}
+
+      return data.current;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  function renderExperienceWeather(card, cur, cfg) {
+    const info = experienceWeatherInfo(cur.weather_code, cur.is_day === 1);
+    const n = (v) => Math.round(Number(v));
+    const time = String(cur.time || "").slice(11, 16);
+
+    card.classList.remove("is-loading", "is-error");
+    card.classList.add(`historic-plan__card--${info.kind}`);
+
+    const icon = card.querySelector("[data-weather-icon]");
+    if (icon) icon.innerHTML = experienceSvg(EXPERIENCE_ICONS[info.icon]);
+
+    card.querySelector("[data-weather-body]").innerHTML = `
+      <p class="historic-plan__card-value">
+        <span class="historic-plan__temp">${n(cur.temperature_2m)}°</span>
+        <span class="historic-plan__cond">${esc(info.text)}</span>
+      </p>
+      <dl class="historic-plan__stats">
+        <div><dt>Sensação</dt><dd>${n(cur.apparent_temperature)}°</dd></div>
+        <div><dt>Umidade</dt><dd>${n(cur.relative_humidity_2m)}%</dd></div>
+        <div><dt>Vento</dt><dd>${n(cur.wind_speed_10m)} km/h</dd></div>
+      </dl>
+      <p class="historic-plan__caption">${esc(cfg.city)}${time ? ` · atualizado ${esc(time)}` : ""}</p>`;
+  }
+
+  function renderExperienceWeatherError(card) {
+    card.classList.remove("is-loading");
+    card.classList.add("is-error");
+    card.querySelector("[data-weather-body]").innerHTML = `
+      <p class="historic-plan__card-value">Clima indisponível</p>
+      <p class="historic-plan__caption">Não foi possível atualizar agora. Recarregue a página em instantes.</p>`;
+  }
+
+  function initExperienceWeather(root, data) {
+    const card = root.querySelector("[data-weather]");
+    if (!card) return;
+
+    const cfg = {
+      ...EXPERIENCE_WEATHER,
+      ...((data.plan && data.plan.weather) || {}),
+    };
+
+    loadExperienceWeather(cfg)
+      .then((cur) => renderExperienceWeather(card, cur, cfg))
+      .catch((err) => {
+        console.warn("[experiência] Clima indisponível:", err);
+        renderExperienceWeatherError(card);
+      });
+  }
+
+  function experienceWeatherCardHTML(c) {
+    return `
+        <div class="historic-plan__card historic-plan__card--weather is-loading" data-weather aria-live="polite">
+          <p class="historic-plan__card-label">
+            <span class="historic-plan__icon" data-weather-icon>${experienceSvg(EXPERIENCE_ICONS.sun)}</span>
+            ${esc(c.label || "Clima agora")}
+          </p>
+          <div data-weather-body>
+            <span class="historic-plan__skeleton historic-plan__skeleton--temp"></span>
+            <span class="historic-plan__skeleton historic-plan__skeleton--stats"></span>
+          </div>
+        </div>`;
+  }
+
+  function experienceStaticCardHTML(c) {
+    return `
+        <div class="historic-plan__card">
+          <p class="historic-plan__card-label">
+            ${EXPERIENCE_ICONS[c.icon] ? `<span class="historic-plan__icon">${experienceSvg(EXPERIENCE_ICONS[c.icon])}</span>` : ""}
+            ${esc(c.label)}
+          </p>
+          <p class="historic-plan__card-value">${esc(c.value)}</p>
+        </div>`;
+  }
+
+  function experiencePlanHTML(d) {
+    const p = { ...EXPERIENCE_PLAN, ...(d.plan || {}) };
+
+    const cards = (p.cards || [])
+      .map((c) =>
+        c.type === "weather"
+          ? experienceWeatherCardHTML(c)
+          : experienceStaticCardHTML(c),
+      )
+      .join("");
+
+    return `
+      <section class="historic-plan">
+        <div class="historic-plan__inner">
+          <div class="historic-plan__intro">
+            <p class="historic-plan__kicker">${esc(p.kicker)}</p>
+            <h2 class="historic-plan__title">${esc(p.title)}</h2>
+            <p class="historic-plan__text">${esc(p.text)}</p>
+            <a href="${esc(p.ctaUrl)}" class="historic-plan__cta">
+              ${esc(p.ctaLabel)}
+              ${experienceSvg(EXPERIENCE_ICONS.arrow)}
+            </a>
+          </div>
+          <div class="historic-plan__cards">${cards}</div>
+        </div>
+      </section>
+      <div class="historic-line"></div>`;
+  }
+
+  function experiencePageHTML(d) {
+    return `
+      ${experienceHeroHTML(d)}
+      <main class="historic-split">
+        ${experienceGuideHTML(d.guide || {})}
+        <div class="historic-gallery">
+          <h2 class="historic-gallery__title">${esc(d.galleryTitle || "Lugares para conhecer")}</h2>
+          <div class="historic-gallery__list">${experienceLocationsHTML(d.locations)}</div>
+        </div>
+      </main>
+      ${experiencePlanHTML(d)}`;
+  }
+
+  function initExperiencePage() {
+    const root = document.querySelector("[data-experience]");
+    if (!root) return;
+
+    const key = root.dataset.experience;
+    const data = EXPERIENCIAS[key];
+
+    if (!data) {
+      console.warn(
+        `[experiência] Não achei "${key}" em EXPERIENCIAS. Confira o data-experience da página.`,
+      );
+      return;
+    }
+
+    root.innerHTML = experiencePageHTML(data);
+    initExperienceWeather(root, data);
+
+    // Botão "Salvar no meu roteiro" (um listener só, na raiz)
+    root.addEventListener("click", (e) => {
+      const btn = e.target.closest(".historic-location__save");
+      if (!btn || !root.contains(btn)) return;
+
+      const isSaved = btn.classList.toggle("is-saved");
+      btn.setAttribute("aria-pressed", String(isSaved));
+      btn.innerHTML = isSaved
+        ? `${experienceSvg(EXPERIENCE_ICONS.check)}<span>${EXPERIENCE_LABEL_SAVED}</span>`
+        : `${experienceSvg(EXPERIENCE_ICONS.bookmark)}<span>${EXPERIENCE_LABEL_SAVE}</span>`;
+    });
+
+    // Imagem que não carregou (arquivo ainda não existe): esconde e avisa no console
+    root.addEventListener(
+      "error",
+      (e) => {
+        const img = e.target;
+        if (img && img.tagName === "IMG") {
+          img.style.visibility = "hidden";
+          console.warn(
+            "[experiência] Imagem não encontrada:",
+            img.getAttribute("src"),
+          );
+        }
+      },
+      true,
+    );
+  }
+
   function init() {
     setFavicon();
     loadPageComponents();
@@ -859,6 +1467,7 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     );
 
     initMochilaoChat();
+    initExperiencePage();
   }
 
   if (document.readyState === "loading") {

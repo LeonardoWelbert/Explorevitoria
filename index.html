@@ -38,22 +38,30 @@
         background: rgba(0, 0, 0, 0.85);
       }
 
+      /* Sem overflow:hidden aqui, para o botão X (fora do quadro) não ser cortado */
       .video-modal__dialog {
         position: relative;
         width: 100%;
         max-width: 900px;
         aspect-ratio: 16 / 9;
+      }
+
+      /* Contêiner onde o JS insere o <iframe> (YouTube) ou o <video> (arquivo local) */
+      .video-modal__player {
+        width: 100%;
+        height: 100%;
         background: #000;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       }
 
-      .video-modal__player {
+      .video-modal__player iframe,
+      .video-modal__player video {
         width: 100%;
         height: 100%;
+        border: 0;
         display: block;
-        background: #000;
       }
 
       .video-modal__close {
@@ -82,7 +90,7 @@
         overflow: hidden;
       }
 
-      /* Capa (poster/primeiro frame) dentro de cada card da galeria de vídeos */
+      /* Capa (imagem) dentro de cada card da galeria de vídeos */
       .video-card__thumb {
         position: relative;
         overflow: hidden;
@@ -111,7 +119,11 @@
         pointer-events: none;
       }
 
-      .video-card__play,
+      /* O play já é position:absolute no main.css (centralizado); aqui só o z-index */
+      .video-card__play {
+        z-index: 2;
+      }
+
       .video-card__tag {
         position: relative;
         z-index: 2;
@@ -130,14 +142,8 @@
 
     <!-- Hero -->
     <section class="hero-banner">
-      <video
-        class="hero-banner__video"
-        autoplay
-        muted
-        loop
-        playsinline
-        poster="assets/img/banner-home.mp4"
-      >
+      <!-- Se tiver uma imagem de capa (jpg/webp), adicione: poster="assets/img/SUA-IMAGEM.jpg" -->
+      <video class="hero-banner__video" autoplay muted loop playsinline>
         <source src="assets/img/video-banner-home.mp4" type="video/mp4" />
       </video>
 
@@ -231,14 +237,12 @@
             data-video="https://www.youtube.com/shorts/uTsd8BVq97c"
           >
             <div class="video-card__thumb video-card__thumb--1">
-              <video
+              <img
                 class="video-card__cover"
-                src="../frontend/assets/img/_ (13).jpeg"
-                poster="./assets/img/moqueca.webp"
-                muted
-                playsinline
-                preload="metadata"
-              ></video>
+                src="assets/img/moqueca.webp"
+                alt=""
+                loading="lazy"
+              />
               <span class="video-card__play" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                   <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
@@ -257,14 +261,12 @@
             data-video="https://www.youtube.com/watch?v=w9OSQDqcBNw"
           >
             <div class="video-card__thumb video-card__thumb--2">
-              <video
+              <img
                 class="video-card__cover"
-                src="assets/video/camburi-por-do-sol.mp4"
-                poster="./assets/img/praia.jpg"
-                muted
-                playsinline
-                preload="metadata"
-              ></video>
+                src="assets/img/praia.jpg"
+                alt=""
+                loading="lazy"
+              />
               <span class="video-card__play" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                   <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
@@ -281,14 +283,12 @@
             data-video="https://www.youtube.com/watch?v=9PzkgFWaaGc"
           >
             <div class="video-card__thumb video-card__thumb--3">
-              <video
+              <img
                 class="video-card__cover"
-                src="assets/video/centro-historico.mp4"
-                poster="./assets/img/Palacioanchieta.jpg"
-                muted
-                playsinline
-                preload="metadata"
-              ></video>
+                src="assets/img/Palacioanchieta.jpg"
+                alt=""
+                loading="lazy"
+              />
               <span class="video-card__play" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                   <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
@@ -307,14 +307,12 @@
             data-video="https://www.youtube.com/watch?v=a434yO6YTVk"
           >
             <div class="video-card__thumb video-card__thumb--4">
-              <video
+              <img
                 class="video-card__cover"
-                src="assets/video/convento-da-penha.mp4"
-                poster="./assets/img/convento-penha.jpg"
-                muted
-                playsinline
-                preload="metadata"
-              ></video>
+                src="assets/img/convento-penha.jpg"
+                alt=""
+                loading="lazy"
+              />
               <span class="video-card__play" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                   <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
@@ -333,14 +331,12 @@
             data-video="https://www.youtube.com/watch?v=6_cPmIzhVxk"
           >
             <div class="video-card__thumb video-card__thumb--5">
-              <video
+              <img
                 class="video-card__cover"
-                src="assets/video/mercado-da-vila-rubim.mp4"
-                poster="./assets/img/mercado-vilarubim.jpg"
-                muted
-                playsinline
-                preload="metadata"
-              ></video>
+                src="assets/img/mercado-vilarubim.jpg"
+                alt=""
+                loading="lazy"
+              />
               <span class="video-card__play" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                   <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
@@ -359,14 +355,12 @@
             data-video="https://www.youtube.com/watch?v=p0JvWW5zRME"
           >
             <div class="video-card__thumb video-card__thumb--6">
-              <video
+              <img
                 class="video-card__cover"
-                src="assets/video/vida-noturna-praia-do-canto.mp4"
-                poster="./assets/img/praiadocanto.jpg"
-                muted
-                playsinline
-                preload="metadata"
-              ></video>
+                src="assets/img/praiadocanto.jpg"
+                alt=""
+                loading="lazy"
+              />
               <span class="video-card__play" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                   <path d="M6 3.5L18 11L6 18.5V3.5Z" fill="currentColor" />
@@ -810,10 +804,7 @@
         >
           &times;
         </button>
-        <div
-          id="videoModalPlayer"
-          class="video-modal__player"
-        ></div>
+        <div id="videoModalPlayer" class="video-modal__player"></div>
       </div>
     </div>
 
