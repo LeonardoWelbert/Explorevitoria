@@ -201,8 +201,18 @@
         if (container && isSolutions) {
           const logoImg = container.querySelector(".logo-header");
           if (logoImg) {
-            logoImg.setAttribute("src", "../assets/img/logotipo-header.png");
+            logoImg.setAttribute(
+              "src",
+              "../assets/img/logo-exploretevitoria.png",
+            );
           }
+        }
+
+        // Aplica o idioma salvo imediatamente após o header injetado carregar na tela
+        const idiomaSalvo =
+          localStorage.getItem("idioma-selecionado") || "pt-BR";
+        if (typeof mudarIdioma === "function") {
+          mudarIdioma(idiomaSalvo);
         }
       },
     );
@@ -674,17 +684,6 @@
     render();
   }
 
-  /* ==================================================================
-   * MODAL DE VÍDEO (YouTube + arquivo local)
-   *
-   * O data-video do .video-card aceita:
-   *   - Link do YouTube (watch?v=, youtu.be/, shorts/, embed/, live/)
-   *   - Caminho de arquivo local (ex.: assets/video/meu-video.mp4)
-   *
-   * Requer no HTML:
-   *   <div id="videoModalPlayer" class="video-modal__player"></div>
-   * ================================================================== */
-
   function isYouTubeUrl(url) {
     if (!url) return false;
     return /(?:youtube\.com|youtu\.be)/i.test(url);
@@ -721,7 +720,6 @@
       const rawSrc = src.trim();
       player.innerHTML = "";
 
-      // Checa o YouTube ANTES do resolveUrl, para não mexer na URL externa
       if (isYouTubeUrl(rawSrc)) {
         const embedUrl = getYouTubeEmbedUrl(rawSrc);
         if (!embedUrl) {
@@ -762,7 +760,6 @@
         video.load();
       }
 
-      // Remove o iframe (e para o áudio do YouTube)
       player.innerHTML = "";
     }
 
@@ -861,6 +858,7 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
         "Desculpe, ocorreu um erro ao gerar seu roteiro. Tente novamente!"
       );
     }
+
     async function handleUserMessage(texto) {
       if (!texto.trim()) return;
 
@@ -901,21 +899,6 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     });
   }
 
-  /* ==================================================================
-   * PÁGINAS DE EXPERIÊNCIA  (solucoes/*.html com data-experience="...")
-   *
-   * Como funciona:
-   *   1. A página tem <div class="historic-page" data-experience="chave"></div>
-   *   2. initExperiencePage() lê EXPERIENCIAS[chave] (logo abaixo)
-   *   3. Monta hero + guia da IA + galeria dentro dessa div.
-   *
-   * Para criar uma página nova: copie o HTML, troque o data-experience
-   * e adicione um bloco novo em EXPERIENCIAS.
-   * Se a página não tiver [data-experience], nada disso executa.
-   * ================================================================== */
-
-  // Ícones do guia (só o miolo do SVG). Para criar um novo: adicione aqui
-  // e use o nome no campo "icon" dos dados.
   const EXPERIENCE_ICONS = {
     clock:
       '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
@@ -927,6 +910,7 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     bookmark: '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',
     check: '<polyline points="20 6 9 17 4 12"/>',
     arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    chevron: '<polyline points="6 9 12 15 18 9"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
     moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
     cloudsun:
@@ -944,9 +928,13 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
   const EXPERIENCE_LABEL_SAVED = "Adicionado ao roteiro";
   const EXPERIENCE_BACK_URL = "../index.html";
 
-  // Seção "Planejar viagem" (aparece no fim de TODAS as páginas de experiência).
-  // Para mudar só numa página, adicione um campo "plan" no bloco dela em
-  // EXPERIENCIAS (ele sobrescreve estes valores).
+  const EXPERIENCE_LABEL_MORE = "Ver mais";
+  const EXPERIENCE_LABEL_LESS = "Ver menos";
+  const EXPERIENCE_INTRO_MIN = 140;
+  const EXPERIENCE_INTRO_MAX = 300;
+  const EXPERIENCE_MORE_MIN = 120;
+  const EXPERIENCE_PARAGRAPH_MAX = 320;
+
   const EXPERIENCE_PLAN = {
     kicker: "Planejar viagem",
     title: "Planeje sua viagem",
@@ -954,9 +942,7 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     ctaLabel: "Montar roteiro",
     ctaUrl: "../mochilao.html",
     cards: [
-      // Clima em TEMPO REAL (Open-Meteo) — ver EXPERIENCE_WEATHER abaixo
       { type: "weather", label: "Clima agora" },
-      // ATENÇÃO: maré é texto FIXO de exemplo (vindo do design), não é ao vivo.
       {
         icon: "waves",
         label: "Maré do dia",
@@ -965,9 +951,6 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     ],
   };
 
-  // Clima em tempo real: Open-Meteo (sem chave de API).
-  // Guarda a resposta no sessionStorage por alguns minutos para não
-  // chamar a API a cada página que o visitante abre.
   const EXPERIENCE_WEATHER = {
     city: "Vitória",
     latitude: -20.3155,
@@ -976,88 +959,112 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     cacheMinutes: 10,
   };
 
-  // Imagens: caminhos relativos à página em /solucoes/
-  // ex.: "../assets/img/convento-da-penha.jpg"
   const EXPERIENCIAS = {
-    // ----------------------------------------------------------------
     historico: {
       hero: {
         image:
           "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/a65d237a3_generated_abf2b648.jpg",
-        alt: "Convento da Penha",
+        alt: "Centro Histórico de Vitória",
       },
       kicker: "Patrimônio",
       title: "Turismo Histórico e Cultural",
       subtitle:
-        "Centros coloniais, conventos e palácios que contam quase cinco séculos de história.",
+        "Igrejas, palácios, teatros, escadarias e construções que preservam mais de quatro séculos da história de Vitória e ajudam a contar a formação cultural do Espírito Santo.",
       guide: {
         title: "Dicas práticas para visitantes estrangeiros",
         items: [
           {
             icon: "clock",
             label: "Melhor momento",
-            text: "Manhã e fim de tarde, para luz dourada e menos calor.",
+            text: "Prefira as manhãs ou o fim da tarde para caminhar pelo Centro Histórico, especialmente nos períodos mais quentes do ano. O roteiro reúne diversos monumentos próximos e pode ser feito parcialmente a pé.",
           },
           {
             icon: "shield",
             label: "Segurança",
-            text: "Centro histórico bem vigiado; mantenha pertences à vista em ruas movimentadas.",
+            text: "Durante o passeio pelo Centro Histórico, mantenha documentos, celular e outros objetos pessoais próximos. Prefira circular pelas áreas movimentadas e durante o dia.",
           },
           {
             icon: "language",
             label: "Idioma",
-            text: "Poucos guias bilíngues — leve tradutor no celular; placas em português.",
+            text: "O idioma oficial é o português. O programa Visitar possui sinalização turística interpretativa e mapa do Centro Histórico com informações bilíngues, facilitando a experiência de visitantes estrangeiros.",
           },
           {
             icon: "navigation",
             label: "Como chegar",
-            text: "Caminhe pelo Centro; use app de transporte para o Convento da Penha (Vila Velha).",
+            text: "O Centro Histórico concentra vários atrativos próximos. É possível conhecer parte do roteiro caminhando pela Cidade Alta e utilizar ônibus ou aplicativos de transporte para chegar a outros pontos de Vitória.",
           },
         ],
-        note: "A maioria dos monumentos é gratuita; chegue cedo no Convento da Penha para evitar filas.",
+        note: "O programa Visitar Centro Histórico oferece atendimento turístico gratuito e monitores em monumentos históricos da região. Para grupos com mais de 10 pessoas, é possível realizar agendamento.",
       },
       galleryTitle: "Lugares para conhecer",
       locations: [
         {
-          name: "Convento da Penha",
+          name: "Palácio Anchieta",
           description:
-            "O cartão-postal do Espírito Santo. Fundado em 1558 no alto de um morro em Vila Velha, oferece vista de 360° da baía de Vitória. Subida de bondinho ou a pé por trilha pavimentada — pôr do sol inesquecível.",
-          tip: "Visite entre 15h e 17h para o pôr do sol; bondinho funciona até as 18h.",
-          image:
-            "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/a65d237a3_generated_abf2b648.jpg",
+            "Localizado na Cidade Alta, no Centro Histórico de Vitória, o Palácio Anchieta é uma das construções mais importantes da história do Espírito Santo. Sua origem remonta ao século XVI, quando o local abrigava o Colégio de São Tiago, ligado aos padres jesuítas. Com a expulsão dos jesuítas, o edifício passou por diferentes funções administrativas e tornou-se sede do Governo do Espírito Santo. O prédio passou por importantes restaurações ao longo de sua história e preserva ambientes, móveis e elementos arquitetônicos relacionados à trajetória política e cultural do Estado.",
+          tip: "Visitação: terça a sexta, das 9h às 17h; aos sábados, das 9h às 16h. Para informações sobre visitas guiadas e agendamentos, consulte a programação oficial do Palácio Anchieta.",
+          image: "/assets/img/4ad2bc4086b0e93ffb1f8c468eb771fa.jpg",
         },
         {
           name: "Catedral Metropolitana de Vitória",
           description:
-            "No coração do Centro, a Catedral Nossa Senhora da Vitória mistura pedra e luz. Vitrais coloridos contam a história da evangelização capixaba; o interior sereno é um respiro no meio da cidade.",
-          tip: "Aberta para visitação das 8h às 17h; missa dominical às 18h.",
-          image:
-            "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/f2e73087a_generated_3598b5d1.jpg",
+            "A história da Catedral Metropolitana de Vitória remonta ao século XVI. Uma primeira capela provavelmente foi construída por volta de 1550, tornando-se um marco da antiga Vila de Nossa Senhora da Vitória. Ao longo dos séculos, o templo foi ampliado e substituído até dar lugar à atual catedral. As obras da construção atual começaram em 1920 e foram concluídas em 1970. O edifício apresenta arquitetura eclética com características neogóticas e possui vitrais que estão entre seus elementos mais marcantes. Em 1984, a Catedral foi tombada pelo Conselho Estadual de Cultura.",
+          tip: "Visitas monitoradas e gratuitas pelo programa Visitar, de quarta a domingo, inclusive feriados, das 13h às 17h.",
+          image: "/assets/img/ef3c9bbe8ce466af0345944f3e4cff23.jpg",
         },
         {
-          name: "Palácio Anchieta",
+          name: "Igreja Nossa Senhora do Rosário",
           description:
-            "Sede do governo do estado e um dos edifícios administrativos mais antigos das Américas (século XVI). Fachada de pedra e visitas guiadas mostram a história política capixaba.",
-          tip: "Visitas guiadas gratuitas de terça a domingo, das 9h às 17h.",
-          // ATENÇÃO: mesma imagem do Convento (placeholder) — troque
+            "A Igreja de Nossa Senhora do Rosário dos Pretos é um dos monumentos mais importantes para compreender a história religiosa e afro-brasileira de Vitória. Sua construção começou em 1765 por iniciativa da Irmandade de Nossa Senhora do Rosário dos Pretos. A irmandade teve papel importante na vida religiosa e social da população negra da cidade durante o período colonial. Localizada na Cidade Alta, a igreja integra o conjunto de patrimônios históricos do Centro de Vitória.",
+          tip: "O monumento integra o roteiro histórico-cultural do Centro de Vitória. Para visitação interna e monitoria, consulte previamente o funcionamento do programa Visitar.",
           image:
-            "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/a65d237a3_generated_abf2b648.jpg",
+            "/assets/img/01-Igreja-Historica-de-Nossa-Senhora-do-Rosario-em-Vitoria.jpeg",
         },
         {
-          name: "Igreja do Rosário e Largo do Carmo",
+          name: "Igreja de São Gonçalo",
           description:
-            "Conjunto colonial no alto da cidade, com a Igreja de Nossa Senhora do Rosário dos Pretos e o Largo do Carmo. Ruas de paralelepípedos, casarios restaurados e cafés charmosos.",
-          tip: "Caminhe no fim de tarde; cafés ao redor abrem até a noite.",
-          // ATENÇÃO: mesma imagem do Convento (placeholder) — troque
+            "A Igreja de São Gonçalo está localizada na Cidade Alta e possui uma história ligada às antigas irmandades religiosas de Vitória. No local existia uma capela dedicada a Nossa Senhora do Amparo e da Boa Morte. Em 1715, a irmandade solicitou autorização para construir uma nova igreja dedicada a São Gonçalo Garcia. A construção em pedra e cal foi concluída em 1766. O templo apresenta elementos associados à arquitetura barroca, incluindo entalhes em madeira pintados de dourado no altar-mor. Em seu interior também estão duas imagens portuguesas do século XVII. A igreja foi tombada pelo IPHAN em 1948.",
+          tip: "O local integra o patrimônio histórico do Centro de Vitória. Para visitação monitorada, consulte previamente a programação atual do programa Visitar.",
+          image: "/assets/img/0c43b1fa16bb818a4b86708f02de3de2.jpg",
+        },
+        {
+          name: "Convento São Francisco",
+          description:
+            "O Convento São Francisco foi construído no final do século XVI pelos padres franciscanos, atendendo a um pedido de Vasco Fernandes Coutinho Filho, segundo donatário da Capitania do Espírito Santo. O conjunto religioso incluía o convento, a igreja dedicada a São Francisco de Assis e a Capela da Ordem Terceira da Penitência. O complexo teve diferentes funções ao longo do tempo, incluindo atividades religiosas, escola, enfermaria e outras utilizações. Atualmente, o espaço abriga a Cúria Metropolitana e entidades ligadas à Igreja Católica. O frontispício preservado foi reformado nos séculos XVIII e o conjunto foi tombado pelo Conselho Estadual de Cultura em 1984.",
+          tip: "Visitas pelo programa Visitar: quarta a sexta, das 13h às 17h; sábado e domingo, das 9h às 13h. O serviço de monitoria é gratuito.",
+          image: "/assets/img/0ac0e89eb4e6ab9019b732280c5a984b.jpg",
+        },
+        {
+          name: "Capela de Santa Luzia",
+          description:
+            "Construída no século XVI, a Capela de Santa Luzia é considerada pela Prefeitura de Vitória a construção mais antiga da capital. Erguida em pedra e cal de ostra e coberta com telhas de barro, a pequena capela foi construída sobre uma formação rochosa e fazia parte da antiga propriedade de Duarte Lemos. Sua arquitetura simples representa um dos primeiros momentos da ocupação portuguesa na região de Vitória. O monumento está localizado na Cidade Alta e possui grande importância para a preservação da memória histórica da cidade.",
+          tip: "A Capela de Santa Luzia integra o conjunto histórico da Cidade Alta. Consulte previamente a situação de visitação e eventuais obras de restauração antes de programar a visita interna.",
           image:
-            "https://media.base44.com/images/public/6ab043291eb7ef8c1be42282/a65d237a3_generated_abf2b648.jpg",
+            "/assets/img/Vitória-Capela-de-Santa-Luzia-Imagem-SeCult-ES.jpg",
+        },
+        {
+          name: "Igreja Nossa Senhora do Carmo",
+          description:
+            "A história do conjunto Nossa Senhora do Carmo começou no século XVII, quando os padres carmelitas se estabeleceram na região de Vitória. Por volta de 1675, começou a construção do Convento de Nossa Senhora do Monte do Carmo, que incluía a igreja e a Capela da Ordem Terceira. O conjunto originalmente apresentava características da arquitetura colonial e barroca. Ao longo do tempo, o espaço passou por diversas transformações e chegou a ser utilizado pelo governo provincial. Entre 1910 e 1913, o convento passou por uma grande reforma. A igreja preserva imagens religiosas e quadros da Via-Crucis.",
+          tip: "Visitas pelo programa Visitar: quarta a sexta, das 13h às 17h; sábado e domingo, das 9h às 13h. O atendimento turístico é gratuito.",
+          image: "/assets/img/normal@2x.jpg",
+        },
+        {
+          name: "Theatro Carlos Gomes",
+          description:
+            "O Theatro Carlos Gomes é um dos principais símbolos culturais do Centro de Vitória. Sua construção ocorreu após o antigo Teatro Melpômene sofrer um incêndio em 1924. O governo estadual decidiu construir um novo teatro na região da Praça Costa Pereira. O projeto foi realizado pelo arquiteto autodidata e construtor André Carloni, que reutilizou colunas de ferro fundido do antigo teatro para sustentar os balcões e galerias. A construção foi concluída em janeiro de 1927, seguindo o estilo arquitetônico eclético. O teatro passou por uma grande restauração em 1970 e foi tombado pelo Conselho Estadual de Cultura em 1983.",
+          tip: "O Theatro Carlos Gomes recebe programação cultural e artística. Para conhecer apresentações, visitas e horários de funcionamento, consulte a programação oficial antes de ir.",
+          image: "/assets/img/Theatro_Carlos_Gomes_(Vitória,_Brasil).jpg",
+        },
+        {
+          name: "Parque Moscoso",
+          description:
+            "Inaugurado em 1912, o Parque Moscoso é um dos espaços públicos históricos mais antigos de Vitória. O parque foi criado durante o processo de modernização urbana promovido pelo governo de Jerônimo Monteiro e possui aproximadamente 24 mil metros quadrados. Inspirado em jardins europeus, o espaço possui áreas arborizadas, alamedas, lagos, fontes e jardins. Um dos seus principais elementos é a Concha Acústica, palco histórico de apresentações culturais e estrutura tombada como patrimônio cultural pelo Conselho Estadual de Cultura.",
+          tip: "Aberto todos os dias, das 5h às 22h. Às segundas-feiras, o parque permanece fechado das 9h às 17h para manutenção.",
+          image: "/assets/img/20171119-114743-largejpg.jpg",
         },
       ],
     },
-
-    // ----------------------------------------------------------------
-    // RASCUNHO: revise textos, dicas e horários antes de publicar e
-    // coloque as fotos em assets/img/ com os nomes abaixo.
     gastronomia: {
       hero: {
         image: "../assets/img/gastronomia-hero.jpg",
@@ -1125,17 +1132,12 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
         },
       ],
     },
-
-    // ----------------------------------------------------------------
-    // Próximas: praias, "vida-noturna", compras, aventura
-    // (copie o bloco "gastronomia", troque a chave e o conteúdo)
   };
 
   function experienceSvg(inner, cls) {
     return `<svg${cls ? ` class="${cls}"` : ""} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
   }
 
-  // Escapa texto E aspas (seguro para usar dentro de atributos)
   function esc(value) {
     return String(value ?? "")
       .replace(/&/g, "&amp;")
@@ -1189,10 +1191,75 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
       </aside>`;
   }
 
+  function experienceSplitText(text) {
+    const clean = String(text ?? "").trim();
+    const sentences = clean.split(/(?<=[.!?])\s+/).filter(Boolean);
+    if (sentences.length < 2) return { intro: clean, paragraphs: [] };
+
+    let intro = "";
+    let i = 0;
+
+    while (i < sentences.length) {
+      const next = intro ? `${intro} ${sentences[i]}` : sentences[i];
+      if (
+        intro &&
+        (intro.length >= EXPERIENCE_INTRO_MIN ||
+          next.length > EXPERIENCE_INTRO_MAX)
+      ) {
+        break;
+      }
+      intro = next;
+      i++;
+    }
+
+    const rest = sentences.slice(i);
+    if (rest.join(" ").length < EXPERIENCE_MORE_MIN) {
+      return { intro: clean, paragraphs: [] };
+    }
+
+    const paragraphs = [];
+    let current = "";
+
+    rest.forEach((sentence) => {
+      current = current ? `${current} ${sentence}` : sentence;
+      if (current.length >= EXPERIENCE_PARAGRAPH_MAX) {
+        paragraphs.push(current);
+        current = "";
+      }
+    });
+
+    if (current) paragraphs.push(current);
+
+    return { intro, paragraphs };
+  }
+
   function experienceLocationsHTML(list) {
     return (list || [])
-      .map(
-        (loc, i) => `
+      .map((loc, i) => {
+        const { intro, paragraphs } = experienceSplitText(loc.description);
+        const hasMore = paragraphs.length > 0;
+        const moreId = `experience-more-${i + 1}`;
+
+        const toggleBtn = hasMore
+          ? `
+            <button type="button" class="historic-location__toggle" aria-expanded="false" aria-controls="${moreId}">
+              <span>${EXPERIENCE_LABEL_MORE}</span>
+              ${experienceSvg(EXPERIENCE_ICONS.chevron)}
+            </button>`
+          : "";
+
+        const morePanel = hasMore
+          ? `
+          <div class="historic-location__more" id="${moreId}">
+            <div class="historic-location__more-inner">
+              <div class="historic-location__more-content">
+                ${paragraphs.map((p) => `<p>${esc(p)}</p>`).join("")}
+              </div>
+            </div>
+          </div>`
+          : "";
+
+        return `
         <article class="historic-location">
           <div class="historic-location__media">
             <img class="historic-location__img" src="${esc(loc.image)}" alt="${esc(loc.name)}" loading="lazy" />
@@ -1200,7 +1267,8 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
           </div>
           <div class="historic-location__body">
             <h3 class="historic-location__name">${esc(loc.name)}</h3>
-            <p class="historic-location__desc">${esc(loc.description)}</p>
+            <p class="historic-location__desc">${esc(intro)}</p>
+            ${toggleBtn}
             <div class="historic-location__tip">
               ${experienceSvg(EXPERIENCE_ICONS.clock)}
               <span>${esc(loc.tip)}</span>
@@ -1210,12 +1278,12 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
               <span>${EXPERIENCE_LABEL_SAVE}</span>
             </button>
           </div>
-        </article>`,
-      )
+          ${morePanel}
+        </article>`;
+      })
       .join("");
   }
 
-  // ---------- Clima: texto + tipo + ícone a partir do código WMO ----------
   function experienceWeatherInfo(code, isDay) {
     const c = Number(code);
     const is = (kind, text, icon) => ({ kind, text, icon });
@@ -1419,8 +1487,25 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     root.innerHTML = experiencePageHTML(data);
     initExperienceWeather(root, data);
 
-    // Botão "Salvar no meu roteiro" (um listener só, na raiz)
     root.addEventListener("click", (e) => {
+      const toggle = e.target.closest(".historic-location__toggle");
+      if (toggle && root.contains(toggle)) {
+        const card = toggle.closest(".historic-location");
+        const panel = card && card.querySelector(".historic-location__more");
+        if (!panel) return;
+
+        const isOpen = panel.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", String(isOpen));
+
+        const label = toggle.querySelector("span");
+        if (label) {
+          label.textContent = isOpen
+            ? EXPERIENCE_LABEL_LESS
+            : EXPERIENCE_LABEL_MORE;
+        }
+        return;
+      }
+
       const btn = e.target.closest(".historic-location__save");
       if (!btn || !root.contains(btn)) return;
 
@@ -1431,7 +1516,6 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
         : `${experienceSvg(EXPERIENCE_ICONS.bookmark)}<span>${EXPERIENCE_LABEL_SAVE}</span>`;
     });
 
-    // Imagem que não carregou (arquivo ainda não existe): esconde e avisa no console
     root.addEventListener(
       "error",
       (e) => {
@@ -1476,3 +1560,73 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     init();
   }
 })();
+
+// ==========================================
+// SISTEMA DE TRADUÇÃO (PT-BR, PT-PT, EN)
+// ==========================================
+
+const translations = {
+  "pt-BR": {
+    "nav.home": "HOME",
+    "nav.sobre": "SOBRE NÓS",
+    "nav.experiencias": "EXPERIÊNCIAS",
+    "exp.historia": "Turismo Histórico e Cultural",
+    "exp.gastronomia": "Gastronomia Capixaba",
+    "exp.praias": "Praias e Litoral",
+    "exp.vidaNoturna": "Vida Noturna e Lazer",
+    "exp.compras": "Compras e Artesanato",
+    "exp.aventura": "Aventura e Natureza",
+    "nav.mochilao": "MOCHILÃO",
+    "nav.faleConosco": "FALE CONOSCO",
+  },
+  "pt-PT": {
+    "nav.home": "INÍCIO",
+    "nav.sobre": "QUEM SOMOS",
+    "nav.experiencias": "EXPERIÊNCIAS",
+    "exp.historia": "Turismo Histórico e Cultural",
+    "exp.gastronomia": "Gastronomia local",
+    "exp.praias": "Praias e Litoral",
+    "exp.vidaNoturna": "Vida Noturna e Lazer",
+    "exp.compras": "Compras e Artesanato",
+    "exp.aventura": "Aventura e Natureza",
+    "nav.mochilao": "MOCHILÃO",
+    "nav.faleConosco": "CONTACTE-NOS",
+  },
+  en: {
+    "nav.home": "HOME",
+    "nav.sobre": "ABOUT US",
+    "nav.experiencias": "EXPERIENCES",
+    "exp.historia": "Historical & Cultural Tourism",
+    "exp.gastronomia": "Local Gastronomy",
+    "exp.praias": "Beaches & Coastline",
+    "exp.vidaNoturna": "Nightlife & Leisure",
+    "exp.compras": "Shopping & Handicrafts",
+    "exp.aventura": "Adventure & Nature",
+    "nav.mochilao": "BACKPACKING",
+    "nav.faleConosco": "CONTACT US",
+  },
+};
+
+function mudarIdioma(idioma) {
+  const elementos = document.querySelectorAll("[data-i18n]");
+
+  elementos.forEach((elemento) => {
+    const chave = elemento.getAttribute("data-i18n");
+    if (translations[idioma] && translations[idioma][chave]) {
+      elemento.textContent = translations[idioma][chave];
+    }
+  });
+
+  const labelMap = { "pt-BR": "PT-BR", "pt-PT": "PT-PT", en: "EN" };
+  const labelElement = document.getElementById("current-lang-label");
+  if (labelElement) {
+    labelElement.textContent = labelMap[idioma];
+  }
+
+  localStorage.setItem("idioma-selecionado", idioma);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const idiomaSalvo = localStorage.getItem("idioma-selecionado") || "pt-BR";
+  mudarIdioma(idiomaSalvo);
+});

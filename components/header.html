@@ -3,6 +3,7 @@
     <div
       class="container-fluid px-4 px-lg-5 d-flex align-items-center justify-content-between"
     >
+      <!-- Logo -->
       <a class="navbar-brand d-flex align-items-center" href="index.html">
         <img
           src="assets/img/logo-exploretevitoria.png"
@@ -11,6 +12,7 @@
         />
       </a>
 
+      <!-- Botão Mobile -->
       <button
         class="navbar-toggler"
         type="button"
@@ -23,14 +25,20 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
+      <!-- Links do Menu -->
       <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
           <li class="nav-item">
-            <a class="nav-link" href="index.html">HOME</a>
+            <a class="nav-link" href="index.html" data-i18n="nav.home">HOME</a>
           </li>
+
           <li class="nav-item">
-            <a class="nav-link" href="sobre.html">SOBRE NÓS</a>
+            <a class="nav-link" href="sobre.html" data-i18n="nav.sobre"
+              >SOBRE NÓS</a
+            >
           </li>
+
+          <!-- Dropdown Experiências -->
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
@@ -39,6 +47,7 @@
               role="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
+              data-i18n="nav.experiencias"
             >
               EXPERIÊNCIAS
             </a>
@@ -50,52 +59,113 @@
               <li>
                 <a
                   class="dropdown-item"
-                  href="solucoes/cloud-containers-apis.html"
+                  href="solucoes/historia-cultura.html"
+                  data-i18n="exp.historia"
                   >Turismo Histórico e Cultural</a
                 >
               </li>
               <li>
                 <a
                   class="dropdown-item"
-                  href="solucoes/comunicacao-em-cloud.html"
+                  href="solucoes/gastronomia-capixaba.html"
+                  data-i18n="exp.gastronomia"
                   >Gastronomia Capixaba</a
                 >
               </li>
               <li>
                 <a
                   class="dropdown-item"
-                  href="experiencias/praias-e-litoral.html"
+                  href="solucoes/praias-litoral.html"
+                  data-i18n="exp.praias"
                   >Praias e Litoral</a
                 >
               </li>
               <li>
                 <a
                   class="dropdown-item"
-                  href="experiencias/vida-noturna-lazer.html"
+                  href="solucoes/vida-noturna-lazer.html"
+                  data-i18n="exp.vidaNoturna"
                   >Vida Noturna e Lazer</a
                 >
               </li>
               <li>
                 <a
                   class="dropdown-item"
-                  href="experiencias/compras-artesanato.html"
+                  href="solucoes/compras-artesanato.html"
+                  data-i18n="exp.compras"
                   >Compras e Artesanato</a
                 >
               </li>
               <li>
                 <a
                   class="dropdown-item"
-                  href="experiencias/aventura-natureza.html"
+                  href="solucoes/aventura-natureza.html"
+                  data-i18n="exp.aventura"
                   >Aventura e Natureza</a
                 >
               </li>
             </ul>
           </li>
+
           <li class="nav-item">
-            <a class="nav-link" href="mochilao.html">MOCHILÃO</a>
+            <a class="nav-link" href="mochilao.html" data-i18n="nav.mochilao"
+              >MOCHILÃO</a
+            >
           </li>
+
           <li class="nav-item">
-            <a class="nav-link" href="fale-conosco.html">FALE CONOSCO</a>
+            <a
+              class="nav-link"
+              href="fale-conosco.html"
+              data-i18n="nav.faleConosco"
+              >FALE CONOSCO</a
+            >
+          </li>
+
+          <!-- Seletor de Idioma (Dropdown do Bootstrap) -->
+          <li class="nav-item dropdown ms-lg-2">
+            <a
+              class="nav-link dropdown-toggle fw-bold text-primary"
+              href="#"
+              id="languageDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              🌐 <span id="current-lang-label">PT-BR</span>
+            </a>
+            <ul
+              class="dropdown-menu dropdown-menu-end shadow-sm"
+              aria-labelledby="languageDropdown"
+            >
+              <li>
+                <button
+                  class="dropdown-item"
+                  type="button"
+                  onclick="mudarIdioma('pt-BR')"
+                >
+                  🇧🇷 Português (BR)
+                </button>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item"
+                  type="button"
+                  onclick="mudarIdioma('pt-PT')"
+                >
+                  🇵🇹 Português (PT)
+                </button>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item"
+                  type="button"
+                  onclick="mudarIdioma('en')"
+                >
+                  🇺🇸 English
+                </button>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
