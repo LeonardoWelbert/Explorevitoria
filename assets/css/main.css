@@ -1819,7 +1819,8 @@ body {
   font-weight: 700;
 }
 
-.historic-page {
+.historic-page,
+.gastronomy-page {
   background: #f9f6f1;
   color: #0a2e36;
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -1831,43 +1832,59 @@ body {
 .historic-page h2,
 .historic-page h3,
 .historic-page p,
-.historic-page ul {
+.historic-page ul,
+.gastronomy-page h1,
+.gastronomy-page h2,
+.gastronomy-page h3,
+.gastronomy-page p,
+.gastronomy-page ul {
   margin: 0;
   padding: 0;
 }
 .historic-page h1,
 .historic-page h2,
-.historic-page h3 {
+.historic-page h3,
+.gastronomy-page h1,
+.gastronomy-page h2,
+.gastronomy-page h3 {
   font-family: "Cormorant Garamond", ui-serif, Georgia, serif;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
-.historic-page ul {
+.historic-page ul,
+.gastronomy-page ul {
   list-style: none;
 }
-.historic-page img {
+.historic-page img,
+.gastronomy-page img {
   display: block;
   max-width: 100%;
 }
 .historic-page a:focus-visible,
-.historic-page button:focus-visible {
+.historic-page button:focus-visible,
+.gastronomy-page a:focus-visible,
+.gastronomy-page button:focus-visible {
   outline: 2px solid #d87c55;
   outline-offset: 2px;
 }
-.historic-page .historic-line {
+.historic-page .historic-line,
+.gastronomy-page .historic-line {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(216, 124, 85, 0.6), transparent);
 }
-.historic-page .historic-line--soft {
+.historic-page .historic-line--soft,
+.gastronomy-page .historic-line--soft {
   background: linear-gradient(90deg, transparent, rgba(216, 124, 85, 0.3), transparent);
 }
-.historic-page .historic-hero {
+.historic-page .historic-hero,
+.gastronomy-page .historic-hero {
   position: relative;
   height: 60vh;
   min-height: 520px;
   overflow: hidden;
 }
-.historic-page .historic-hero__img {
+.historic-page .historic-hero__img,
+.gastronomy-page .historic-hero__img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1875,12 +1892,14 @@ body {
   -o-object-fit: cover;
      object-fit: cover;
 }
-.historic-page .historic-hero__overlay {
+.historic-page .historic-hero__overlay,
+.gastronomy-page .historic-hero__overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, rgba(10, 46, 54, 0.9), rgba(10, 46, 54, 0.5) 50%, rgba(10, 46, 54, 0.3));
 }
-.historic-page .historic-hero__content {
+.historic-page .historic-hero__content,
+.gastronomy-page .historic-hero__content {
   position: relative;
   height: 100%;
   max-width: 1400px;
@@ -1890,7 +1909,8 @@ body {
   flex-direction: column;
   justify-content: flex-end;
 }
-.historic-page .historic-hero__back {
+.historic-page .historic-hero__back,
+.gastronomy-page .historic-hero__back {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -1902,33 +1922,39 @@ body {
   text-decoration: none;
   transition: color 0.2s;
 }
-.historic-page .historic-hero__back:hover {
+.historic-page .historic-hero__back:hover,
+.gastronomy-page .historic-hero__back:hover {
   color: #f9f6f1;
 }
-.historic-page .historic-hero__back svg {
+.historic-page .historic-hero__back svg,
+.gastronomy-page .historic-hero__back svg {
   width: 16px;
   height: 16px;
 }
-.historic-page .historic-hero__kicker {
+.historic-page .historic-hero__kicker,
+.gastronomy-page .historic-hero__kicker {
   margin-bottom: 0.75rem;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: #d87c55;
 }
-.historic-page .historic-hero__title {
+.historic-page .historic-hero__title,
+.gastronomy-page .historic-hero__title {
   max-width: 48rem;
   font-size: clamp(3rem, 6vw, 4.5rem);
   line-height: 0.98;
   color: #f9f6f1;
 }
-.historic-page .historic-hero__subtitle {
+.historic-page .historic-hero__subtitle,
+.gastronomy-page .historic-hero__subtitle {
   max-width: 32rem;
   margin-top: 1rem;
   font-size: 18px;
   color: rgba(249, 246, 241, 0.8);
 }
-.historic-page .historic-split {
+.historic-page .historic-split,
+.gastronomy-page .historic-split {
   max-width: 1400px;
   margin: 0 auto;
   padding: 4rem 2.5rem 6rem;
@@ -1936,19 +1962,22 @@ body {
   grid-template-columns: 5fr 7fr;
   gap: 3rem;
 }
-.historic-page .historic-guide {
+.historic-page .historic-guide,
+.gastronomy-page .historic-guide {
   align-self: start;
   position: sticky;
   top: 11rem;
 }
-.historic-page .historic-guide__card {
+.historic-page .historic-guide__card,
+.gastronomy-page .historic-guide__card {
   position: relative;
   background: #fbfaf8;
   border: 1px solid rgba(10, 46, 54, 0.1);
   border-radius: 1rem;
   padding: 1.75rem;
 }
-.historic-page .historic-guide__card::after {
+.historic-page .historic-guide__card::after,
+.gastronomy-page .historic-guide__card::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1957,86 +1986,102 @@ body {
   opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E");
 }
-.historic-page .historic-guide__label {
+.historic-page .historic-guide__label,
+.gastronomy-page .historic-guide__label {
   margin-bottom: 0.25rem;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: #d87c55;
 }
-.historic-page .historic-guide__title {
+.historic-page .historic-guide__title,
+.gastronomy-page .historic-guide__title {
   font-size: 1.875rem;
   line-height: 1.2;
   color: #0a2e36;
 }
-.historic-page .historic-guide__divider {
+.historic-page .historic-guide__divider,
+.gastronomy-page .historic-guide__divider {
   margin: 1.5rem 0;
 }
-.historic-page .historic-guide__list {
+.historic-page .historic-guide__list,
+.gastronomy-page .historic-guide__list {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
-.historic-page .historic-guide__item {
+.historic-page .historic-guide__item,
+.gastronomy-page .historic-guide__item {
   display: flex;
   gap: 0.75rem;
 }
-.historic-page .historic-guide__icon {
+.historic-page .historic-guide__icon,
+.gastronomy-page .historic-guide__icon {
   flex-shrink: 0;
   width: 20px;
   height: 20px;
   margin-top: 2px;
   color: #d87c55;
 }
-.historic-page .historic-guide__key {
+.historic-page .historic-guide__key,
+.gastronomy-page .historic-guide__key {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: #4e6d74;
 }
-.historic-page .historic-guide__val {
+.historic-page .historic-guide__val,
+.gastronomy-page .historic-guide__val {
   color: #0a2e36;
 }
-.historic-page .historic-guide__note {
+.historic-page .historic-guide__note,
+.gastronomy-page .historic-guide__note {
   margin-top: 1.5rem;
   font-size: 14px;
   font-style: italic;
   color: #4e6d74;
 }
-.historic-page .historic-gallery__title {
+.historic-page .historic-gallery__title,
+.gastronomy-page .historic-gallery__title {
   margin-bottom: 2rem;
   font-size: 2.5rem;
   color: #0a2e36;
 }
-.historic-page .historic-gallery__list {
+.historic-page .historic-gallery__list,
+.gastronomy-page .historic-gallery__list {
   display: flex;
   flex-direction: column;
   gap: 3.5rem;
 }
-.historic-page .historic-location {
+.historic-page .historic-location,
+.gastronomy-page .historic-location {
   display: grid;
   grid-template-columns: 1fr 1fr;
   -moz-column-gap: 1.5rem;
        column-gap: 1.5rem;
   row-gap: 0;
 }
-.historic-page .historic-location__media {
+.historic-page .historic-location__media,
+.gastronomy-page .historic-location__media {
   position: relative;
   aspect-ratio: 4/3;
   overflow: hidden;
   border-radius: 1rem;
 }
-.historic-page .historic-location__img {
+.historic-page .historic-location__img,
+.gastronomy-page .historic-location__img {
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
   transition: transform 0.6s;
 }
-.historic-page .historic-location:hover .historic-location__img {
+.historic-page .historic-location:hover .historic-location__img,
+.gastronomy-page .historic-location:hover .historic-location__img {
   transform: scale(1.05);
 }
-.historic-page .historic-location__badge {
+.historic-page .historic-location__badge,
+.gastronomy-page .historic-location__badge {
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
@@ -2048,22 +2093,26 @@ body {
   font-size: 12px;
   font-weight: 500;
 }
-.historic-page .historic-location__body {
+.historic-page .historic-location__body,
+.gastronomy-page .historic-location__body {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.historic-page .historic-location__name {
+.historic-page .historic-location__name,
+.gastronomy-page .historic-location__name {
   font-size: 1.875rem;
   line-height: 1.2;
   color: #0a2e36;
 }
-.historic-page .historic-location__desc {
+.historic-page .historic-location__desc,
+.gastronomy-page .historic-location__desc {
   margin-top: 0.75rem;
   line-height: 1.6;
   color: #4e6d74;
 }
-.historic-page .historic-location__toggle {
+.historic-page .historic-location__toggle,
+.gastronomy-page .historic-location__toggle {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
@@ -2078,37 +2127,44 @@ body {
   font-weight: 600;
   cursor: pointer;
 }
-.historic-page .historic-location__toggle svg {
+.historic-page .historic-location__toggle svg,
+.gastronomy-page .historic-location__toggle svg {
   width: 18px;
   height: 18px;
   color: #d87c55;
   transition: transform 0.3s ease;
 }
-.historic-page .historic-location__toggle:hover {
+.historic-page .historic-location__toggle:hover,
+.gastronomy-page .historic-location__toggle:hover {
   text-decoration: underline;
   text-decoration-color: rgba(216, 124, 85, 0.7);
   text-underline-offset: 4px;
 }
-.historic-page .historic-location__toggle[aria-expanded=true] svg {
+.historic-page .historic-location__toggle[aria-expanded=true] svg,
+.gastronomy-page .historic-location__toggle[aria-expanded=true] svg {
   transform: rotate(180deg);
 }
-.historic-page .historic-location__more {
+.historic-page .historic-location__more,
+.gastronomy-page .historic-location__more {
   grid-column: 1/-1;
   display: grid;
   grid-template-rows: 0fr;
   visibility: hidden;
   transition: grid-template-rows 0.4s ease, visibility 0s linear 0.4s;
 }
-.historic-page .historic-location__more.is-open {
+.historic-page .historic-location__more.is-open,
+.gastronomy-page .historic-location__more.is-open {
   grid-template-rows: 1fr;
   visibility: visible;
   transition: grid-template-rows 0.4s ease, visibility 0s linear 0s;
 }
-.historic-page .historic-location__more-inner {
+.historic-page .historic-location__more-inner,
+.gastronomy-page .historic-location__more-inner {
   min-height: 0;
   overflow: hidden;
 }
-.historic-page .historic-location__more-content {
+.historic-page .historic-location__more-content,
+.gastronomy-page .historic-location__more-content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -2116,11 +2172,13 @@ body {
   padding-top: 1.25rem;
   border-top: 1px solid rgba(10, 46, 54, 0.1);
 }
-.historic-page .historic-location__more-content p {
+.historic-page .historic-location__more-content p,
+.gastronomy-page .historic-location__more-content p {
   line-height: 1.7;
   color: #4e6d74;
 }
-.historic-page .historic-location__tip {
+.historic-page .historic-location__tip,
+.gastronomy-page .historic-location__tip {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
@@ -2131,14 +2189,16 @@ body {
   font-size: 14px;
   color: rgba(10, 46, 54, 0.7);
 }
-.historic-page .historic-location__tip svg {
+.historic-page .historic-location__tip svg,
+.gastronomy-page .historic-location__tip svg {
   flex-shrink: 0;
   width: 16px;
   height: 16px;
   margin-top: 2px;
   color: #d87c55;
 }
-.historic-page .historic-location__save {
+.historic-page .historic-location__save,
+.gastronomy-page .historic-location__save {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
@@ -2154,47 +2214,56 @@ body {
   cursor: pointer;
   transition: all 0.2s;
 }
-.historic-page .historic-location__save:hover {
+.historic-page .historic-location__save:hover,
+.gastronomy-page .historic-location__save:hover {
   background: rgba(10, 46, 54, 0.05);
 }
-.historic-page .historic-location__save.is-saved {
+.historic-page .historic-location__save.is-saved,
+.gastronomy-page .historic-location__save.is-saved {
   background: #2c5926;
   border-color: #2c5926;
   color: #f9f6f1;
 }
-.historic-page .historic-location__save svg {
+.historic-page .historic-location__save svg,
+.gastronomy-page .historic-location__save svg {
   width: 16px;
   height: 16px;
 }
-.historic-page .historic-plan {
+.historic-page .historic-plan,
+.gastronomy-page .historic-plan {
   max-width: 1400px;
   margin: 0 auto;
   padding: 1rem 2.5rem 5rem;
 }
-.historic-page .historic-plan__inner {
+.historic-page .historic-plan__inner,
+.gastronomy-page .historic-plan__inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: start;
 }
-.historic-page .historic-plan__kicker {
+.historic-page .historic-plan__kicker,
+.gastronomy-page .historic-plan__kicker {
   margin-bottom: 0.75rem;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: #0a2e36;
 }
-.historic-page .historic-plan__title {
+.historic-page .historic-plan__title,
+.gastronomy-page .historic-plan__title {
   font-size: clamp(2.5rem, 4.5vw, 3.5rem);
   line-height: 1.05;
   color: #0a2e36;
 }
-.historic-page .historic-plan__text {
+.historic-page .historic-plan__text,
+.gastronomy-page .historic-plan__text {
   max-width: 28rem;
   margin-top: 1.25rem;
   color: #0a2e36;
 }
-.historic-page .historic-plan__cta {
+.historic-page .historic-plan__cta,
+.gastronomy-page .historic-plan__cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -2206,75 +2275,96 @@ body {
   text-decoration: none;
   transition: background 0.2s;
 }
-.historic-page .historic-plan__cta svg {
+.historic-page .historic-plan__cta svg,
+.gastronomy-page .historic-plan__cta svg {
   width: 16px;
   height: 16px;
   transition: transform 0.2s;
 }
-.historic-page .historic-plan__cta:hover {
+.historic-page .historic-plan__cta:hover,
+.gastronomy-page .historic-plan__cta:hover {
   background: rgba(10, 46, 54, 0.05);
   color: #0a2e36;
 }
-.historic-page .historic-plan__cta:hover svg {
+.historic-page .historic-plan__cta:hover svg,
+.gastronomy-page .historic-plan__cta:hover svg {
   transform: translateX(3px);
 }
-.historic-page .historic-plan__cards {
+.historic-page .historic-plan__cards,
+.gastronomy-page .historic-plan__cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
-.historic-page .historic-plan__card {
+.historic-page .historic-plan__card,
+.gastronomy-page .historic-plan__card {
   padding: 1.5rem;
   border: 1px solid #d3dcde;
   border-radius: 1rem;
   transition: background 0.4s, border-color 0.4s;
 }
-.historic-page .historic-plan__card--clear {
+.historic-page .historic-plan__card--clear,
+.gastronomy-page .historic-plan__card--clear {
   background: linear-gradient(160deg, rgba(216, 124, 85, 0.16), rgba(216, 124, 85, 0) 65%);
   border-color: rgba(216, 124, 85, 0.31);
 }
-.historic-page .historic-plan__card--clear .historic-plan__card-label svg {
+.historic-page .historic-plan__card--clear .historic-plan__card-label svg,
+.gastronomy-page .historic-plan__card--clear .historic-plan__card-label svg {
   color: #d87c55;
 }
-.historic-page .historic-plan__card--partly {
+.historic-page .historic-plan__card--partly,
+.gastronomy-page .historic-plan__card--partly {
   background: linear-gradient(160deg, rgba(216, 124, 85, 0.1), rgba(216, 124, 85, 0) 65%);
   border-color: rgba(216, 124, 85, 0.25);
 }
-.historic-page .historic-plan__card--partly .historic-plan__card-label svg {
+.historic-page .historic-plan__card--partly .historic-plan__card-label svg,
+.gastronomy-page .historic-plan__card--partly .historic-plan__card-label svg {
   color: #d87c55;
 }
-.historic-page .historic-plan__card--night {
+.historic-page .historic-plan__card--night,
+.gastronomy-page .historic-plan__card--night {
   background: linear-gradient(160deg, rgba(10, 46, 54, 0.1), rgba(10, 46, 54, 0) 65%);
   border-color: rgba(10, 46, 54, 0.25);
 }
-.historic-page .historic-plan__card--night .historic-plan__card-label svg {
+.historic-page .historic-plan__card--night .historic-plan__card-label svg,
+.gastronomy-page .historic-plan__card--night .historic-plan__card-label svg {
   color: #0a2e36;
 }
-.historic-page .historic-plan__card--cloud, .historic-page .historic-plan__card--fog {
+.historic-page .historic-plan__card--cloud, .historic-page .historic-plan__card--fog,
+.gastronomy-page .historic-plan__card--cloud,
+.gastronomy-page .historic-plan__card--fog {
   background: linear-gradient(160deg, rgba(78, 109, 116, 0.12), rgba(78, 109, 116, 0) 65%);
   border-color: rgba(78, 109, 116, 0.27);
 }
-.historic-page .historic-plan__card--cloud .historic-plan__card-label svg, .historic-page .historic-plan__card--fog .historic-plan__card-label svg {
+.historic-page .historic-plan__card--cloud .historic-plan__card-label svg, .historic-page .historic-plan__card--fog .historic-plan__card-label svg,
+.gastronomy-page .historic-plan__card--cloud .historic-plan__card-label svg,
+.gastronomy-page .historic-plan__card--fog .historic-plan__card-label svg {
   color: #4e6d74;
 }
-.historic-page .historic-plan__card--rain {
+.historic-page .historic-plan__card--rain,
+.gastronomy-page .historic-plan__card--rain {
   background: linear-gradient(160deg, rgba(78, 109, 116, 0.2), rgba(78, 109, 116, 0) 65%);
   border-color: rgba(78, 109, 116, 0.35);
 }
-.historic-page .historic-plan__card--rain .historic-plan__card-label svg {
+.historic-page .historic-plan__card--rain .historic-plan__card-label svg,
+.gastronomy-page .historic-plan__card--rain .historic-plan__card-label svg {
   color: #4e6d74;
 }
-.historic-page .historic-plan__card--storm {
+.historic-page .historic-plan__card--storm,
+.gastronomy-page .historic-plan__card--storm {
   background: linear-gradient(160deg, rgba(10, 46, 54, 0.18), rgba(10, 46, 54, 0) 65%);
   border-color: rgba(10, 46, 54, 0.33);
 }
-.historic-page .historic-plan__card--storm .historic-plan__card-label svg {
+.historic-page .historic-plan__card--storm .historic-plan__card-label svg,
+.gastronomy-page .historic-plan__card--storm .historic-plan__card-label svg {
   color: #0a2e36;
 }
-.historic-page .historic-plan__icon {
+.historic-page .historic-plan__icon,
+.gastronomy-page .historic-plan__icon {
   display: inline-flex;
 }
-.historic-page .historic-plan__card-label {
+.historic-page .historic-plan__card-label,
+.gastronomy-page .historic-plan__card-label {
   display: flex;
   align-items: center;
   gap: 0.625rem;
@@ -2283,12 +2373,14 @@ body {
   letter-spacing: 0.18em;
   color: #0a2e36;
 }
-.historic-page .historic-plan__card-label svg {
+.historic-page .historic-plan__card-label svg,
+.gastronomy-page .historic-plan__card-label svg {
   flex-shrink: 0;
   width: 18px;
   height: 18px;
 }
-.historic-page .historic-plan__card-value {
+.historic-page .historic-plan__card-value,
+.gastronomy-page .historic-plan__card-value {
   margin-top: 0.75rem;
   font-family: "Cormorant Garamond", ui-serif, Georgia, serif;
   font-size: 1.5rem;
@@ -2296,7 +2388,8 @@ body {
   line-height: 1.4;
   color: #0a2e36;
 }
-.historic-page .historic-plan__card--weather .historic-plan__card-value {
+.historic-page .historic-plan__card--weather .historic-plan__card-value,
+.gastronomy-page .historic-plan__card--weather .historic-plan__card-value {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -2304,17 +2397,20 @@ body {
        column-gap: 0.625rem;
   margin-top: 0.5rem;
 }
-.historic-page .historic-plan__temp {
+.historic-page .historic-plan__temp,
+.gastronomy-page .historic-plan__temp {
   font-size: 3rem;
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.02em;
 }
-.historic-page .historic-plan__cond {
+.historic-page .historic-plan__cond,
+.gastronomy-page .historic-plan__cond {
   font-size: 1.25rem;
   line-height: 1.2;
 }
-.historic-page .historic-plan__stats {
+.historic-page .historic-plan__stats,
+.gastronomy-page .historic-plan__stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
@@ -2322,66 +2418,80 @@ body {
   padding-top: 0.875rem;
   border-top: 1px solid rgba(10, 46, 54, 0.1);
 }
-.historic-page .historic-plan__stats dt {
+.historic-page .historic-plan__stats dt,
+.gastronomy-page .historic-plan__stats dt {
   font-size: 12px;
   font-weight: 400;
   color: #4e6d74;
 }
-.historic-page .historic-plan__stats dd {
+.historic-page .historic-plan__stats dd,
+.gastronomy-page .historic-plan__stats dd {
   margin: 0;
   font-size: 15px;
   font-weight: 500;
   color: #0a2e36;
 }
-.historic-page .historic-plan__caption {
+.historic-page .historic-plan__caption,
+.gastronomy-page .historic-plan__caption {
   margin-top: 0.75rem;
   font-size: 12px;
   color: #4e6d74;
 }
-.historic-page .historic-plan__skeleton {
+.historic-page .historic-plan__skeleton,
+.gastronomy-page .historic-plan__skeleton {
   display: block;
   border-radius: 0.5rem;
   background: linear-gradient(90deg, rgba(10, 46, 54, 0.06) 25%, rgba(10, 46, 54, 0.12) 50%, rgba(10, 46, 54, 0.06) 75%);
   background-size: 200% 100%;
   animation: historic-shimmer 1.4s ease-in-out infinite;
 }
-.historic-page .historic-plan__skeleton--temp {
+.historic-page .historic-plan__skeleton--temp,
+.gastronomy-page .historic-plan__skeleton--temp {
   width: 7rem;
   height: 2.75rem;
   margin-top: 0.75rem;
 }
-.historic-page .historic-plan__skeleton--stats {
+.historic-page .historic-plan__skeleton--stats,
+.gastronomy-page .historic-plan__skeleton--stats {
   width: 100%;
   height: 2.75rem;
   margin-top: 1rem;
 }
 @media (max-width: 1024px) {
-  .historic-page .historic-hero__content {
+  .historic-page .historic-hero__content,
+  .gastronomy-page .historic-hero__content {
     padding: 9rem 1.25rem 3rem;
   }
-  .historic-page .historic-split {
+  .historic-page .historic-split,
+  .gastronomy-page .historic-split {
     grid-template-columns: 1fr;
     padding: 3rem 1.25rem 4rem;
   }
-  .historic-page .historic-guide {
+  .historic-page .historic-guide,
+  .gastronomy-page .historic-guide {
     position: static;
   }
-  .historic-page .historic-plan {
+  .historic-page .historic-plan,
+  .gastronomy-page .historic-plan {
     padding: 1rem 1.25rem 4rem;
   }
-  .historic-page .historic-plan__inner {
+  .historic-page .historic-plan__inner,
+  .gastronomy-page .historic-plan__inner {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
 }
 @media (max-width: 640px) {
-  .historic-page .historic-location {
+  .historic-page .historic-location,
+  .gastronomy-page .historic-location {
     grid-template-columns: 1fr;
   }
-  .historic-page .historic-location__body {
+  .historic-page .historic-location__body,
+  .gastronomy-page .historic-location__body {
     margin-top: 1.5rem;
   }
-  .historic-page .historic-plan__cards {
+  .historic-page .historic-plan__cards,
+  .gastronomy-page .historic-plan__cards {
     grid-template-columns: 1fr;
   }
 }
@@ -2392,16 +2502,26 @@ body {
   .historic-page .historic-location__more,
   .historic-page .historic-location__more.is-open,
   .historic-page .historic-plan__cta,
-  .historic-page .historic-plan__cta svg {
+  .historic-page .historic-plan__cta svg,
+  .gastronomy-page .historic-location__img,
+  .gastronomy-page .historic-location__save,
+  .gastronomy-page .historic-location__toggle svg,
+  .gastronomy-page .historic-location__more,
+  .gastronomy-page .historic-location__more.is-open,
+  .gastronomy-page .historic-plan__cta,
+  .gastronomy-page .historic-plan__cta svg {
     transition: none;
   }
-  .historic-page .historic-plan__cta:hover svg {
+  .historic-page .historic-plan__cta:hover svg,
+  .gastronomy-page .historic-plan__cta:hover svg {
     transform: none;
   }
-  .historic-page .historic-plan__skeleton {
+  .historic-page .historic-plan__skeleton,
+  .gastronomy-page .historic-plan__skeleton {
     animation: none;
   }
-  .historic-page .historic-location:hover .historic-location__img {
+  .historic-page .historic-location:hover .historic-location__img,
+  .gastronomy-page .historic-location:hover .historic-location__img {
     transform: none;
   }
 }

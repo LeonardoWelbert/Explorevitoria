@@ -10,7 +10,6 @@
   }
 
   function resolveUrl(url) {
-    // URLs externas (http, https, //) nunca devem ser alteradas
     if (/^(https?:)?\/\//i.test(url)) return url;
 
     const basePath = getBasePath();
@@ -188,78 +187,107 @@
     setTimeout(() => clearInterval(checkLoaded), 5000);
   }
 
+  // ==========================================
+  // CORREÇÃO PRINCIPAL: loadPageComponents()
+  // Agora aguardamos TODOS os componentes (header, footer,
+  // partners, contact, hero) carregarem antes de aplicar o
+  // idioma salvo. Antes, o mudarIdioma() só era chamado dentro
+  // do .then() do header, então footer/partners/contact/hero
+  // (que carregam em paralelo e podem terminar depois) nunca
+  // recebiam a tradução.
+  // ==========================================
   function loadPageComponents() {
     const isSolutions = window.location.pathname.includes("/solucoes/");
 
-    loadComponent("components/header.html", "header-container").then(
-      (container) => {
-        fixContainerPaths(container);
-        highlightActiveNavLink(container);
+    const headerPromise = loadComponent(
+      "components/header.html",
+      "header-container",
+    ).then((container) => {
+      fixContainerPaths(container);
+      highlightActiveNavLink(container);
 
-        if (container && isSolutions) {
-          const logoImg = container.querySelector(".logo-header");
-          if (logoImg) {
-            logoImg.setAttribute(
-              "src",
-              "../assets/img/logo-exploretevitoria.png",
-            );
-          }
+      if (container && isSolutions) {
+        const logoImg = container.querySelector(".logo-header");
+        if (logoImg) {
+          logoImg.setAttribute(
+            "src",
+            "../assets/img/logo-exploretevitoria.png",
+          );
         }
+      }
 
-        // Aplica o idioma salvo imediatamente após o header injetado carregar na tela
-        const idiomaSalvo =
-          localStorage.getItem("idioma-selecionado") || "pt-BR";
-        if (typeof mudarIdioma === "function") {
-          mudarIdioma(idiomaSalvo);
+      return container;
+    });
+
+    const footerPromise = loadComponent(
+      "components/footer.html",
+      "footer-container",
+    ).then(fixContainerPaths);
+
+    const partnersPromise = loadComponent(
+      "components/partners.html",
+      "partners-container",
+    ).then(fixContainerPaths);
+
+    const contactPromise = loadComponent(
+      "components/contact.html",
+      "contact-container",
+    ).then((container) => {
+      fixContainerPaths(container);
+      if (!container) return container;
+
+      const recaptchaEl = container.querySelector(".g-recaptcha");
+      if (recaptchaEl) {
+        loadRecaptchaScript(() => {
+          try {
+            window.grecaptcha.render(recaptchaEl, {
+              sitekey:
+                recaptchaEl.getAttribute("data-sitekey") ||
+                "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+            });
+          } catch (e) {}
+        });
+      }
+
+      return container;
+    });
+
+    const heroPromise = loadComponent(
+      "components/banner-video.html",
+      "hero-banner-container",
+    ).then((container) => {
+      fixContainerPaths(container);
+      populateHeroBanner(container);
+
+      if (container && isSolutions) {
+        const videoSource = container.querySelector("video source");
+        if (videoSource) {
+          videoSource.setAttribute(
+            "src",
+            "../assets/img/winter_nexus_espelhado.mp4",
+          );
+          const videoEl = container.querySelector("video");
+          if (videoEl) videoEl.load();
         }
-      },
-    );
+      }
 
-    loadComponent("components/footer.html", "footer-container").then(
-      fixContainerPaths,
-    );
-    loadComponent("components/partners.html", "partners-container").then(
-      fixContainerPaths,
-    );
+      return container;
+    });
 
-    loadComponent("components/contact.html", "contact-container").then(
-      (container) => {
-        fixContainerPaths(container);
-        if (!container) return;
-
-        const recaptchaEl = container.querySelector(".g-recaptcha");
-        if (recaptchaEl) {
-          loadRecaptchaScript(() => {
-            try {
-              window.grecaptcha.render(recaptchaEl, {
-                sitekey:
-                  recaptchaEl.getAttribute("data-sitekey") ||
-                  "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
-              });
-            } catch (e) {}
-          });
-        }
-      },
-    );
-
-    loadComponent("components/banner-video.html", "hero-banner-container").then(
-      (container) => {
-        fixContainerPaths(container);
-        populateHeroBanner(container);
-
-        if (container && isSolutions) {
-          const videoSource = container.querySelector("video source");
-          if (videoSource) {
-            videoSource.setAttribute(
-              "src",
-              "../assets/img/winter_nexus_espelhado.mp4",
-            );
-            const videoEl = container.querySelector("video");
-            if (videoEl) videoEl.load();
-          }
-        }
-      },
-    );
+    // Só aplica o idioma salvo depois que TODOS os componentes
+    // já estiverem no DOM (inclusive o footer).
+    Promise.all([
+      headerPromise,
+      footerPromise,
+      partnersPromise,
+      contactPromise,
+      heroPromise,
+    ]).then(() => {
+      const idiomaSalvo = localStorage.getItem("idioma-selecionado") || "pt-BR";
+      if (typeof mudarIdioma === "function") {
+        mudarIdioma(idiomaSalvo);
+      }
+    });
   }
 
   function initDraggableCarousel(
@@ -1039,70 +1067,85 @@
         },
       ],
     },
+
     gastronomia: {
       hero: {
-        image: "../assets/img/gastronomia-hero.jpg",
-        alt: "Moqueca capixaba servida em panela de barro",
+        image: "/assets/img/b061a3a177a27f9a8fa3687f2ac27294.jpg",
+        alt: "Gastronomia Capixaba e Moqueca",
       },
       kicker: "Sabores",
-      title: "Gastronomia Capixaba",
+      title: "Turismo Gastronômico e Culinária Típica",
       subtitle:
-        "Moqueca na panela de barro, torta capixaba e frutos do mar direto das comunidades de pescadores.",
+        "Da tradicional panela de barro à fusão de sabores do mar e da terra, a gastronomia capixaba preserva receitas centenárias, frutos do mar frescos e uma identidade única reconhecida nacionalmente.",
       guide: {
         title: "Dicas práticas para visitantes estrangeiros",
         items: [
           {
             icon: "clock",
             label: "Melhor momento",
-            text: "O almoço é a refeição principal; muitas casas de frutos do mar enchem no fim de semana, então chegue cedo.",
+            text: "O horário do almoço é ideal para desfrutar da tradicional Moqueca Capixaba acompanhada de pirão e arroz. À noite, os polos gastronômicos da Praia do Canto oferecem excelentes opções de petiscos e jantares.",
           },
           {
             icon: "shield",
             label: "Segurança",
-            text: "Prefira restaurantes movimentados, onde os frutos do mar têm giro rápido; em mercados, mantenha bolsa e celular à vista.",
+            text: "Os polos gastronômicos e restaurantes recomendados estão localizados em áreas seguras e movimentadas de Vitória e Vila Velha. Mantenha seus pertences monitorados ao sentar em mesas nas calçadas.",
           },
           {
             icon: "language",
             label: "Idioma",
-            text: "Nem todo cardápio tem versão em inglês — use o tradutor do celular e pergunte pelo prato do dia. Muitos pratos servem duas pessoas.",
+            text: "O idioma oficial é o português. Muitos restaurantes nos principais polos turísticos possuem cardápios bilíngues (inglês/espanhol) e equipes capacitadas para atender turistas estrangeiros.",
           },
           {
             icon: "navigation",
             label: "Como chegar",
-            text: "O Mercado da Vila Rubim dá para fazer a pé pelo Centro; para Goiabeiras e Ilha das Caieiras, use app de transporte.",
+            text: "Os principais restaurantes e galpões de culinária típica estão concentrados em regiões de fácil acesso, como a Ilha das Caieiras, a Praia do Canto e a orla de Camburi, acessíveis por táxi ou aplicativos de transporte.",
           },
         ],
-        note: "A moqueca capixaba leva urucum e não leva dendê nem leite de coco. A torta capixaba é tradição da Semana Santa, mas muitas casas servem o ano todo.",
+        note: "A autêntica Moqueca Capixaba é preparada exclusivamente em panela de barro feita por paneleiras artesãs de Goiabeiras, patrimônio cultural do Brasil. A receita não leva azeite de dendê nem leite de coco.",
       },
-      galleryTitle: "Onde provar",
+      galleryTitle: "Onde comer e o que saborear",
       locations: [
+        {
+          name: "Ilha das Caieiras (Polo da Moqueca)",
+          description:
+            "A Ilha das Caieiras é o berço da tradicional moqueca capixaba e do famoso siri. Localizada na parte continental de Vitória, a região mantém viva a tradição da catação de siri e o preparo artesanal de pratos à base de frutos do mar. Além da culinária ímpar com vista para o manguezal e para a Baía de Vitória, o local é um verdadeiro reduto cultural onde se encontram as mestras da gastronomia e da panela.",
+          tip: "Visite os restaurantes locais na hora do almoço nos finais de semana para aproveitar o visual do pôr do sol sobre o manguezal acompanhado de uma boa moqueca.",
+          image: "/assets/img/gastronomia_ilha_caieiras.jpg",
+        },
+        {
+          name: "Praia do Canto (Polo Gastronômico)",
+          description:
+            "O bairro da Praia do Canto abriga alguns dos restaurantes, bistrôs, cafeterias e bares mais sofisticados e diversificados de Vitória. Conhecido por ruas charmosas e praças acolhedoras, o bairro reúne desde a alta gastronomia internacional até petiscos tradicionais de boteco e cervejas artesanais capixabas.",
+          tip: "Excelente opção para o jantar ou para um café da tarde especial nos cafés refinados da região.",
+          image: "/assets/img/gastronomia_praia_canto.jpg",
+        },
         {
           name: "Galpão das Paneleiras de Goiabeiras",
           description:
-            "Onde nasce a panela da moqueca capixaba. As paneleiras moldam a argila à mão e finalizam a peça com tinta natural extraída da casca do mangue — um ofício reconhecido como patrimônio cultural imaterial do Brasil. Nas redondezas, restaurantes servem a moqueca na própria panela.",
-          tip: "Vá pela manhã para ver o trabalho das paneleiras e confirme os dias de funcionamento antes.",
-          image: "../assets/img/paneleiras-goiabeiras.jpg",
+            "Embora seja o local de fabricação das legítimas panelas de barro — patrimônio imaterial do Brasil —, o Galpão das Paneleiras e seu entorno oferecem uma imersão direta na cultura gastronômica capixaba. É ali que nascem os utensílios fundamentais sem os quais a verdadeira moqueca capixaba não existe, unindo o saber ancestral indígena e africano.",
+          tip: "Aproveite para conversar com as paneleiras, conhecer o processo de fabricação artesanal e comprar sua própria panela de barro com certificação de origem.",
+          image: "/assets/img/gastronomia_paneleiras.jpg",
         },
         {
-          name: "Ilha das Caieiras",
+          name: "Torta Capixaba",
           description:
-            "Comunidade de pescadores à beira do manguezal, conhecida pelos restaurantes de frutos do mar. Ponto tradicional para moqueca de peixe, casquinha de siri e torta capixaba.",
-          tip: "Fins de semana costumam lotar; chegue cedo ou reserve mesa para o almoço.",
-          image: "../assets/img/ilha-das-caieiras.jpg",
+            "Prato típico indispensável consumido tradicionalmente na Semana Santa, mas encontrado em restaurantes especializados o ano todo, a torta capixaba mistura bacalhau, siri, camarão, ostras, marisco, palmito fresco e temperos verdes, tudo levado ao forno em panela de barro com claras em neve por cima. Uma verdadeira explosão de sabores do mar.",
+          tip: "Experimente a torta acompanhada de um toque de pimenta malagueta caseira e vinho branco ou suco de frutas locais.",
+          image: "/assets/img/gastronomia_torta_capixaba.jpg",
         },
         {
-          name: "Mercado da Vila Rubim",
+          name: "Polos de Cervejas Artesanais",
           description:
-            "Mercado tradicional na região central de Vitória. Nos corredores há queijos, temperos, cafés, cachaças e produtos regionais — boa parada para sentir o cotidiano da cidade e levar lembranças comestíveis.",
-          tip: "Vá de manhã, quando o movimento é maior, e combine com um passeio a pé pelo Centro.",
-          image: "../assets/img/mercado-vila-rubim.jpg",
+            "O Espírito Santo tem se destacado nacionalmente na produção de cervejas artesanais de alta qualidade. Várias cervejarias locais possuem taprooms e bares próprios espalhados por Vitória e Vila Velha, oferecendo rótulos premiados que harmonizam perfeitamente com petiscos de frutos do mar e com a culinária de boteco capixaba.",
+          tip: "Perfeito para o happy hour ou para um roteiro de degustação guiada de cervejas locais nos fins de tarde.",
+          image: "/assets/img/gastronomia_cervejarias.jpg",
         },
         {
-          name: "Praia do Canto",
+          name: "Restaurantes na Orla de Camburi",
           description:
-            "Bairro com grande concentração de restaurantes e bares, ótimo para provar a moqueca em ambiente mais moderno e esticar a noite com uma caminhada.",
-          tip: "Compare cardápios e preços na porta antes de escolher a casa.",
-          image: "../assets/img/praia-do-canto.jpg",
+            "A Praia de Camburi concentra uma excelente infraestrutura de quiosques modernos e restaurantes de alta qualidade à beira-mar. É o lugar perfeito para saborear petiscos como a casquinha de siri, o peixe frito com aipim e os tradicionais caldos de frutos do mar, comendo com os pés na areia ou apreciando a brisa do oceano.",
+          tip: "Ideal para o fim de tarde e início da noite, aproveitando a calçada revitalizada para uma caminhada pós-refeição.",
+          image: "/assets/img/gastronomia_camburi.jpg",
         },
       ],
     },
@@ -1128,8 +1171,6 @@
         <div class="historic-hero__overlay"></div>
         <div class="historic-hero__content">
           <a href="${EXPERIENCE_BACK_URL}" class="historic-hero__back">
-            ${experienceSvg(EXPERIENCE_ICONS.back)}
-            Todas as experiências
           </a>
           <p class="historic-hero__kicker">${esc(d.kicker)}</p>
           <h1 class="historic-hero__title">${esc(d.title)}</h1>
@@ -1538,6 +1579,19 @@
 // ==========================================
 // SISTEMA DE TRADUÇÃO (PT-BR, PT-PT, EN)
 // ==========================================
+//
+// OBSERVAÇÃO: este objeto só tem chaves para o menu (nav.* / exp.*).
+// O footer e o conteúdo interno das páginas (sobre.html, mochilao.html,
+// etc.) ainda não têm nenhum atributo data-i18n nem entradas aqui —
+// por isso continuam em português mesmo com o fix de timing acima.
+// Me mande o footer.html (e quais páginas você quer traduzir) que eu
+// adiciono os data-i18n e as chaves correspondentes nos 3 idiomas.
+//
+// O conteúdo das páginas de experiência (historia-cultura.html,
+// gastronomia-capixaba.html, etc.) é montado via EXPERIENCIAS, que é
+// texto fixo em português — esse conteúdo também não é traduzido por
+// este sistema e precisaria de uma estrutura separada por idioma.
+// ==========================================
 
 const translations = {
   "pt-BR": {
@@ -1599,8 +1653,3 @@ function mudarIdioma(idioma) {
 
   localStorage.setItem("idioma-selecionado", idioma);
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  const idiomaSalvo = localStorage.getItem("idioma-selecionado") || "pt-BR";
-  mudarIdioma(idiomaSalvo);
-});

@@ -35,7 +35,8 @@ $hist-bp-sm: 640px;
   }
 }
 
-.historic-page {
+.historic-page,
+.gastronomy-page {
   background: $hist-sand;
   color: $hist-atlantic;
   font-family: $hist-font-body;
@@ -43,7 +44,7 @@ $hist-bp-sm: 640px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 
-  // Reset local (só dentro da página): neutraliza as margens do Bootstrap
+  // Reset local
   h1,
   h2,
   h3,
@@ -112,7 +113,6 @@ $hist-bp-sm: 640px;
       );
     }
 
-    // padding-top grande = espaço para o seu header flutuante não cobrir o título
     &__content {
       position: relative;
       height: 100%;
