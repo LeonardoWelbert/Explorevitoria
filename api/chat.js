@@ -20,7 +20,7 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     return res.status(500).json({ error: "Configuração ausente no servidor" });
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
 
   try {
     const response = await fetch(url, {
