@@ -14,6 +14,12 @@ Considere opções gastronômicas (moqueca, torta capixaba), passeios histórico
 Seja amigável, direto, contextualizado e formate o roteiro de forma bem organizada com tópicos.`;
 
   const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey) {
+    console.error("GEMINI_API_KEY não está definida no ambiente.");
+    return res.status(500).json({ error: "Configuração ausente no servidor" });
+  }
+
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
   try {
@@ -22,21 +28,34 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [
-          { parts: [{ text: `${systemInstruction}\n\nSolicitação do usuário: ${message}` }] },
+          {
+            parts: [
+              {
+                text: `${systemInstruction}\n\nSolicitação do usuário: ${message}`,
+              },
+            ],
+          },
         ],
       }),
     });
 
-    if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
-
     const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Erro da API Gemini:", JSON.stringify(data));
+      return res.status(response.status).json({
+        error: "Erro na API do Gemini",
+        detalhe: data.error?.message || "Sem detalhe",
+      });
+    }
+
     const texto =
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
       "Desculpe, ocorreu um erro ao gerar seu roteiro. Tente novamente!";
 
     return res.status(200).json({ resposta: texto });
   } catch (error) {
-    console.error("Erro Gemini:", error);
+    console.error("Erro Gemini (catch):", error.message);
     return res.status(500).json({ error: "Erro ao gerar roteiro" });
   }
 }
