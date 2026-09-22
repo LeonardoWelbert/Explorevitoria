@@ -57,13 +57,15 @@
     align-items: center;
     gap: 72px;
     width: max-content;
-    animation: partners-scroll 8s linear infinite alternate;
+    /* Aumentei levemente o tempo de 8s para 15s para evitar que a velocidade gere "engasgos" visuais com imagens pesadas */
+    animation: partners-scroll 15s linear infinite alternate;
+    will-change: transform; /* Avisa ao navegador para usar a GPU */
   }
 
   @media (max-width: $breakpoint-md) {
     &__track {
       gap: 48px;
-      animation-duration: 12s;
+      animation-duration: 20s;
     }
   }
 }
@@ -73,16 +75,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 38px;
+  height: 60px; /* Aumentado levemente para fotos ficarem mais visíveis */
+  width: 140px; /* Fixar a largura previne o navegador de recalcular o layout */
 
   img {
-    height: 100%;
-    width: auto;
+    max-height: 100%;
+    max-width: 100%;
     object-fit: contain;
+    border-radius: 8px; /* Arredonda os cantos das fotos JPG */
+    transform: translateZ(0); /* Força a renderização em hardware (GPU) */
+    will-change: transform;
   }
 
   @media (max-width: $breakpoint-md) {
-    height: 28px;
+    height: 45px;
+    width: 110px;
   }
 }
 

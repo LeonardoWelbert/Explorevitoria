@@ -1,8 +1,6 @@
 (function () {
   "use strict";
 
-  const GEMINI_API_KEY = "SUA_CHAVE_GEMINI";
-
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
@@ -821,31 +819,10 @@
     }
 
     async function fetchGeminiResponse(userPrompt) {
-      const systemInstruction = `Você é o guia turístico virtual 'IA Explore Vitória'. Seu objetivo é fornecer roteiros de viagem práticos, organizados e personalizados em Vitória (Espírito Santo) e região metropolitana (Vila Velha, Serra, Guarapari). 
-Considere opções gastronômicas (moqueca, torta capixaba), passeios históricos, praias e transporte (Sistema Transcol e Aquaviário).
-Seja amigável, direto, contextualizado e formate o roteiro de forma bem organizada com tópicos.`;
-
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-      const response = await fetch(url, {
+      const response = await fetch("/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text:
-                    systemInstruction +
-                    "\n\nSolicitação do usuário: " +
-                    userPrompt,
-                },
-              ],
-            },
-          ],
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userPrompt }),
       });
 
       if (!response.ok) {
@@ -854,11 +831,10 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
 
       const data = await response.json();
       return (
-        data.candidates?.[0]?.content?.parts?.[0]?.text ||
+        data.resposta ||
         "Desculpe, ocorreu um erro ao gerar seu roteiro. Tente novamente!"
       );
     }
-
     async function handleUserMessage(texto) {
       if (!texto.trim()) return;
 
@@ -1013,12 +989,11 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
           image: "/assets/img/ef3c9bbe8ce466af0345944f3e4cff23.jpg",
         },
         {
-          name: "Igreja Nossa Senhora do Rosário",
+          name: "Farol de Santa Luzia",
           description:
-            "A Igreja de Nossa Senhora do Rosário dos Pretos é um dos monumentos mais importantes para compreender a história religiosa e afro-brasileira de Vitória. Sua construção começou em 1765 por iniciativa da Irmandade de Nossa Senhora do Rosário dos Pretos. A irmandade teve papel importante na vida religiosa e social da população negra da cidade durante o período colonial. Localizada na Cidade Alta, a igreja integra o conjunto de patrimônios históricos do Centro de Vitória.",
-          tip: "O monumento integra o roteiro histórico-cultural do Centro de Vitória. Para visitação interna e monitoria, consulte previamente o funcionamento do programa Visitar.",
-          image:
-            "/assets/img/01-Igreja-Historica-de-Nossa-Senhora-do-Rosario-em-Vitoria.jpeg",
+            "Inaugurado em 1871 durante o reinado de Dom Pedro II, o Farol de Santa Luzia é um dos principais cartões-postais de Vila Velha e guarda a entrada da Baía de Vitória. A torre octogonal de 12 metros de altura, feita em ferro fundido, foi fabricada na Escócia (Glasgow) e trazida de navio para o Brasil. Além da sua importância histórica e naval para a orientação das embarcações, o local oferece uma vista panorâmica espetacular do mar, da orla de Vila Velha e de Vitória, cercado por um belo ambiente preservado.",
+          tip: "A entrada é gratuita, mas há limite de pessoas simultâneas e o farol costuma fechar às segundas-feiras para manutenção. Chegue cedo para garantir boas fotos e evitar filas nos finais de semana.",
+          image: "/assets/img/905364d20d717798d9afbba811e28584.jpg",
         },
         {
           name: "Igreja de São Gonçalo",
@@ -1035,12 +1010,11 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
           image: "/assets/img/0ac0e89eb4e6ab9019b732280c5a984b.jpg",
         },
         {
-          name: "Capela de Santa Luzia",
+          name: "Parque Pedra da Cebola",
           description:
-            "Construída no século XVI, a Capela de Santa Luzia é considerada pela Prefeitura de Vitória a construção mais antiga da capital. Erguida em pedra e cal de ostra e coberta com telhas de barro, a pequena capela foi construída sobre uma formação rochosa e fazia parte da antiga propriedade de Duarte Lemos. Sua arquitetura simples representa um dos primeiros momentos da ocupação portuguesa na região de Vitória. O monumento está localizado na Cidade Alta e possui grande importância para a preservação da memória histórica da cidade.",
-          tip: "A Capela de Santa Luzia integra o conjunto histórico da Cidade Alta. Consulte previamente a situação de visitação e eventuais obras de restauração antes de programar a visita interna.",
-          image:
-            "/assets/img/Vitória-Capela-de-Santa-Luzia-Imagem-SeCult-ES.jpg",
+            "Um dos parques mais famosos e visitados de Vitória, o Parque Pedra da Cebola leva esse nome devido a uma curiosa formação rochosa esculpida pela natureza que lembra uma cebola descascando. O espaço, que antigamente abrigava uma pedreira, hoje é um grande refúgio verde localizado entre os bairros Jardim da Penha e Mata da Praia. O parque oferece uma rica biodiversidade com vegetação de Mata Atlântica e restinga, um belo jardim oriental, lagos, campo de futebol, parquinhos e amplos gramados. É comum cruzar com animais silvestres soltos pelo local, como iguanas, tartarugas e diversas espécies de aves.",
+          tip: "O lugar é perfeito para fazer um piquenique ou caminhar no fim da tarde. Leve sua canga para relaxar no gramado, mas lembre-se da regra principal do parque: é proibido alimentar os animais silvestres.",
+          image: "/assets/img/57ef4c891bca1bdf0ace1a6e0a1e4f84.jpg",
         },
         {
           name: "Igreja Nossa Senhora do Carmo",
