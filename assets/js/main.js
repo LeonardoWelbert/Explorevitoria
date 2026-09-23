@@ -236,6 +236,7 @@
       fixContainerPaths(container);
       if (!container) return container;
 
+      // 1. Renderiza o reCAPTCHA se existir
       const recaptchaEl = container.querySelector(".g-recaptcha");
       if (recaptchaEl) {
         loadRecaptchaScript(() => {
@@ -246,6 +247,65 @@
                 "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
             });
           } catch (e) {}
+        });
+      }
+
+      // 2. CORREÇÃO: Adiciona o evento de submit SOMENTE APÓS o container carregar no DOM
+      const contactForm = container.querySelector("#contactForm");
+      if (contactForm) {
+        contactForm.addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const submitBtn = document.getElementById("btnSubmit");
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerText = "A enviar...";
+          }
+
+          const dados = {
+            nome: document.getElementById("name")?.value || "",
+            email: document.getElementById("email")?.value || "",
+            telefone: document.getElementById("phone")?.value || "",
+            mensagem: document.getElementById("message")?.value || "",
+          };
+
+          try {
+            const resposta = await fetch("http://localhost:3000/salvar-contato", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(dados),
+            });
+
+            const resultado = await resposta.json();
+
+            if (resultado.sucesso) {
+              const numeroWhats = "5527996461183";
+
+              const texto =
+                `Olá! Vim pelo site Explore Vitória.%0A%0A` +
+                `*Nome:* ${encodeURIComponent(dados.nome)}%0A` +
+                `*E-mail:* ${encodeURIComponent(dados.email)}%0A` +
+                `*Telefone:* ${encodeURIComponent(dados.telefone)}%0A` +
+                `*Mensagem:* ${encodeURIComponent(dados.mensagem)}`;
+
+              window.open(
+                `https://api.whatsapp.com/send?phone=${numeroWhats}&text=${texto}`,
+                "_blank"
+              );
+
+              contactForm.reset();
+            } else {
+              alert("Ocorreu um erro ao guardar na base de dados: " + resultado.erro);
+            }
+          } catch (error) {
+            console.error("Erro de ligação:", error);
+            alert("Não foi possível conectar ao servidor Node.js.");
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerText = "Enviar";
+            }
+          }
         });
       }
 
@@ -1104,49 +1164,48 @@
         note: "A autêntica Moqueca Capixaba é preparada exclusivamente em panela de barro feita por paneleiras artesãs de Goiabeiras, patrimônio cultural do Brasil. A receita não leva azeite de dendê nem leite de coco.",
       },
       galleryTitle: "Onde comer e o que saborear",
-      locations: [
+      locations: [{
+        name: "Panela Capixaba",
+ description:
+    "Restaurante tradicional no HortoMercado, referência em moqueca e culinária típica capixaba com excelente custo-benefício.Situado no tradicional HortoMercado da Enseada do Suá, o Panela Capixaba é um dos grandes guardiões da gastronomia regional em Vitória. O restaurante nasceu com o compromisso de resgatar e valorizar as receitas raízes do Espírito Santo, trazendo a autêntica Moqueca Capixaba preparada em panelas de barro artesanais produzidas pelas paneleiras de Goiabeiras. O ambiente é acolhedor, espaçoso e descontraído, ideal para reuniões de família e almoços em grupo. Além da moqueca de peixe e camarão, a experiência se completa com a famosa Torta Capixaba, moquequinha de banana, casquinha de siri e petiscos de frutos do mar bem servidos, consolidando o local como uma das opções de melhor custo-benefício para provar a verdadeira culinária capixaba com sabor caseiro e regional.",
+  tip: "Aberto de segunda a sábado das 11h às 23h e aos domingos das 11h às 16h.",
+  image: "/assets/img/panelacapi.webp",
+},
+       {
+  name: "Partido Alto",
+  description:
+    "Fundado em 1983, o Restaurante Partido Alto é uma das maiores referências em culinária capixaba e frutos do mar em Vitória. Localizado na Praia do Canto (na movimentada Rua João da Cruz), o estabelecimento destaca-se pelo preparo da autêntica Moqueca Capixaba servida na panela de barro, além de casquinha de siri, torta capixaba e pratos com peixes e mariscos frescos.",
+  tip: "Aberto de segunda a sábado das 11h às 01h e aos domingos das 11h às 00h, é ideal tanto para o almoço quanto para o jantar na Praia do Canto.",
+  image: "/assets/img/partidoalto.jpg",
+},
+ {
+  name: "Don Camaleone",
+  description:
+    "Forneria e pizzaria descolada na Praia do Canto, famosa pelas pizzas artesanais de massa fina, drinks autorais e ambiente moderno.Inaugurada no final dos anos 2000 no coração da Praia do Canto, a Don Camaleone surgiu com a proposta de unir a tradição da pizza italiana ao conceito de forneria moderna e cosmopolita. A casa é famosa por sua arquitetura marcante e urbana, combinando iluminação aconchegante, arte e uma atmosfera jovem e animada. No cardápio, o grande destaque são as pizzas assadas no forno a lenha, preparadas com massa fina e crocante e recheios nobres, além de entradas clássicas como focaccias e arancinis, massas bem elaboradas e uma das cartas de drinks e cervejas mais movimentadas do bairro.", 
+  tip: "Aberto diariamente a partir das 17h30 até as 23h30. É recomendável chegar cedo nos fins de semana, pois o local costuma ter fila de espera devido à grande popularidade.",
+  image: "/assets/img/doncamaleone.jpeg",
+},
         {
-          name: "Ilha das Caieiras (Polo da Moqueca)",
-          description:
-            "A Ilha das Caieiras é o berço da tradicional moqueca capixaba e do famoso siri. Localizada na parte continental de Vitória, a região mantém viva a tradição da catação de siri e o preparo artesanal de pratos à base de frutos do mar. Além da culinária ímpar com vista para o manguezal e para a Baía de Vitória, o local é um verdadeiro reduto cultural onde se encontram as mestras da gastronomia e da panela.",
-          tip: "Visite os restaurantes locais na hora do almoço nos finais de semana para aproveitar o visual do pôr do sol sobre o manguezal acompanhado de uma boa moqueca.",
-          image: "/assets/img/gastronomia_ilha_caieiras.jpg",
-        },
+  name: "A Oca - Botequim & Aconchego",
+ description:
+  "Espaço cultural e gastronômico no Centro Histórico de Vitória, famoso por pratos executivos saborosos, petiscos brasileiros e ambiente acolhedor.Localizada em um casarão charmoso no Centro Histórico de Vitória, A Oca é muito mais do que um restaurante: é um ponto de encontro cultural que celebra a brasilidade, a arte e a boa gastronomia. O espaço surgiu com a proposta de revitalizar a experiência no centro da capital, oferecendo um ambiente aconchegante, repleto de elementos artísticos, música ao vivo e vegetação. Durante o dia, destaca-se pelos almoços executivos com tempero caseiro sofisticado e preços bastante acessíveis. À noite e nos fins de semana, o local se transforma em um botequim descontraído, servindo petiscos brasileiros criativos, opções vegetarianas e veganas, chope gelado e drinks autorais. A experiência na Oca combina sabor, preços justos e uma imersão na efervescência cultural e boêmia de Vitória.",
+  tip: "Aberto de terça a quinta das 12h às 15h, sextas e sábados das 12h às 23h e domingos das 12h às 17h. Excelente escolha para almoços durante a semana ou para curtir o fim de tarde no Centro Histórico.",
+  image: "/assets/img/aoca.jpg",
+},
+       {
+  name: "Divino Botequim",
+ description:
+    "Boteco clássico e boêmio em Jardim da Penha, famoso pela comida de boteco premiada, feijoada aos sábados e chope trincando.Fundado no tradicional bairro de Jardim da Penha, o Divino Botequim é uma das grandes instituições da boemia e da cultura de boteco em Vitória. Com mesas espalhadas pela calçada e um clima super urbano, acolhedor e descontraído, o local atrai desde turmas de amigos para o happy hour até famílias em almoços de fim de semana. O grande destaque da casa é a gastronomia de botequim raiz elevada a outro patamar, com petiscos premiados no festival Roda de Boteco, como torresmo crocante, bolinhos recheados, gurjões de peixe e moquequinhas. Aos sábados, o local vira ponto de encontro para a tradicional feijoada completa servida com samba e cerveja bem gelada, proporcionando uma experiência legitimamente capixaba, boêmia e de preço justo.",
+  tip: "Aberto de terça a sexta das 17h às 00h, sábados das 11h30 às 00h e domingos das 11h30 às 17h. A feijoada de sábado é concorridíssima, então vale a pena chegar cedo.",
+  image: "/assets/img/divinobutequin.jpg",
+},
         {
-          name: "Praia do Canto (Polo Gastronômico)",
-          description:
-            "O bairro da Praia do Canto abriga alguns dos restaurantes, bistrôs, cafeterias e bares mais sofisticados e diversificados de Vitória. Conhecido por ruas charmosas e praças acolhedoras, o bairro reúne desde a alta gastronomia internacional até petiscos tradicionais de boteco e cervejas artesanais capixabas.",
-          tip: "Excelente opção para o jantar ou para um café da tarde especial nos cafés refinados da região.",
-          image: "/assets/img/gastronomia_praia_canto.jpg",
-        },
-        {
-          name: "Galpão das Paneleiras de Goiabeiras",
-          description:
-            "Embora seja o local de fabricação das legítimas panelas de barro — patrimônio imaterial do Brasil —, o Galpão das Paneleiras e seu entorno oferecem uma imersão direta na cultura gastronômica capixaba. É ali que nascem os utensílios fundamentais sem os quais a verdadeira moqueca capixaba não existe, unindo o saber ancestral indígena e africano.",
-          tip: "Aproveite para conversar com as paneleiras, conhecer o processo de fabricação artesanal e comprar sua própria panela de barro com certificação de origem.",
-          image: "/assets/img/gastronomia_paneleiras.jpg",
-        },
-        {
-          name: "Torta Capixaba",
-          description:
-            "Prato típico indispensável consumido tradicionalmente na Semana Santa, mas encontrado em restaurantes especializados o ano todo, a torta capixaba mistura bacalhau, siri, camarão, ostras, marisco, palmito fresco e temperos verdes, tudo levado ao forno em panela de barro com claras em neve por cima. Uma verdadeira explosão de sabores do mar.",
-          tip: "Experimente a torta acompanhada de um toque de pimenta malagueta caseira e vinho branco ou suco de frutas locais.",
-          image: "/assets/img/gastronomia_torta_capixaba.jpg",
-        },
-        {
-          name: "Polos de Cervejas Artesanais",
-          description:
-            "O Espírito Santo tem se destacado nacionalmente na produção de cervejas artesanais de alta qualidade. Várias cervejarias locais possuem taprooms e bares próprios espalhados por Vitória e Vila Velha, oferecendo rótulos premiados que harmonizam perfeitamente com petiscos de frutos do mar e com a culinária de boteco capixaba.",
-          tip: "Perfeito para o happy hour ou para um roteiro de degustação guiada de cervejas locais nos fins de tarde.",
-          image: "/assets/img/gastronomia_cervejarias.jpg",
-        },
-        {
-          name: "Restaurantes na Orla de Camburi",
-          description:
-            "A Praia de Camburi concentra uma excelente infraestrutura de quiosques modernos e restaurantes de alta qualidade à beira-mar. É o lugar perfeito para saborear petiscos como a casquinha de siri, o peixe frito com aipim e os tradicionais caldos de frutos do mar, comendo com os pés na areia ou apreciando a brisa do oceano.",
-          tip: "Ideal para o fim de tarde e início da noite, aproveitando a calçada revitalizada para uma caminhada pós-refeição.",
-          image: "/assets/img/gastronomia_camburi.jpg",
-        },
+  name: "Casa de Bamba",
+  description:
+    "Ponto de encontro cultural e boêmio no Centro de Vitória, combinando roda de samba, brasilidade, comida de boteco gourmet e drinks.A Casa de Bamba é um dos centros culturais e gastronômicos mais vibrantes do Centro Histórico de Vitória. Com uma pegada totalmente urbana e focada na valorização da música e da brasilidade, o espaço atrai artistas, estudantes e amantes da boemia. A experiência combina apresentações ao vivo — que variam do samba de raiz ao choro e MPB — com uma gastronomia de boteco bem executada. O cardápio conta com porções fartas, caldos, arrumadinhos, opções vegetarianas e petiscos regionais a preços honestos, além de cerveja bem gelada e cachaças artesanais. É a escolha ideal para quem quer sentir a energia cultural noturna do centro da cidade.",
+  tip: "Aberto de quarta a sábado das 18h às 00h. Vale a pena conferir a programação musical nas redes sociais antes de ir, pois costuma ter rodas de samba bastante movimentadas.",
+  image: "/assets/img/casadabamba.jpg",
+},
       ],
     },
   };
