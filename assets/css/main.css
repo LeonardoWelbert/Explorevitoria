@@ -6,8 +6,8 @@
   border-radius: 71.85px;
 }
 .btn-primary:hover {
-  background-color: rgb(37.1358024691, 77.4320987654, 154.8641975309);
-  border-color: rgb(37.1358024691, 77.4320987654, 154.8641975309);
+  background-color: rgb(14.5630597918%, 30.3655289276%, 60.7310578552%);
+  border-color: rgb(14.5630597918%, 30.3655289276%, 60.7310578552%);
 }
 
 .text-cyan {
@@ -243,10 +243,8 @@ body {
   width: 100%;
   height: auto;
   display: block;
-  -o-object-fit: cover;
-     object-fit: cover;
-  -o-object-position: top;
-     object-position: top;
+  object-fit: cover;
+  object-position: top;
   margin-top: -20px;
   margin-left: -10px;
 }
@@ -288,8 +286,7 @@ body {
   height: 18px;
   max-width: 18px;
   max-height: 18px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   flex-shrink: 0;
 }
 .site-footer__social-icon:hover {
@@ -469,7 +466,6 @@ body {
   display: flex;
   align-items: center;
   gap: 72px;
-  width: -moz-max-content;
   width: max-content;
   /* Aumentei levemente o tempo de 8s para 15s para evitar que a velocidade gere "engasgos" visuais com imagens pesadas */
   animation: partners-scroll 15s linear infinite alternate;
@@ -493,8 +489,7 @@ body {
 .partners-logo img {
   max-height: 100%;
   max-width: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   border-radius: 8px; /* Arredonda os cantos das fotos JPG */
   transform: translateZ(0); /* Força a renderização em hardware (GPU) */
   will-change: transform;
@@ -563,11 +558,6 @@ body {
   outline: none;
   transition: border-color 0.2s ease;
 }
-.contact-form__input::-moz-placeholder, .contact-form__textarea::-moz-placeholder {
-  color: #2f62c4;
-  font-weight: 300;
-  text-align: left;
-}
 .contact-form__input::placeholder, .contact-form__textarea::placeholder {
   color: #2f62c4;
   font-weight: 300;
@@ -622,8 +612,7 @@ body {
   z-index: 1;
   width: 150%;
   height: 180%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   transform: translate(-50%, -50%);
 }
 .page-banner__overlay {
@@ -727,8 +716,7 @@ body {
   left: 50%;
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   transform: translate(-50%, -50%);
   z-index: 0;
 }
@@ -868,113 +856,6 @@ body {
   font-size: 1.4rem;
 }
 
-.video-gallery {
-  padding: 80px 0 100px;
-  background-color: #ffffff;
-}
-
-.video-gallery-carousel {
-  width: 100%;
-  overflow: hidden;
-  margin-top: 48px;
-}
-
-.video-gallery-carousel__track {
-  display: flex;
-  gap: 20px;
-  padding: 4px max(24px, (100% - 1376px) / 2 + 24px) 12px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-.video-gallery-carousel__track::-webkit-scrollbar {
-  display: none;
-}
-
-.video-card {
-  flex: 0 0 auto;
-  width: 300px;
-  text-decoration: none;
-  scroll-snap-align: start;
-}
-
-.video-card__thumb {
-  position: relative;
-  width: 100%;
-  height: 200px;
-  border-radius: 26px;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  padding: 16px;
-  background: linear-gradient(135deg, #003caf 0%, #2f62c4 100%);
-}
-.video-card__thumb--2 {
-  background: linear-gradient(135deg, #0b6e99 0%, #4ac1f0 100%);
-}
-.video-card__thumb--3 {
-  background: linear-gradient(135deg, #1a2b4c 0%, #34528a 100%);
-}
-.video-card__thumb--4 {
-  background: linear-gradient(135deg, #14324f 0%, #2f7ea8 100%);
-}
-.video-card__thumb--5 {
-  background: linear-gradient(135deg, #0f3d3e 0%, #1f7a7c 100%);
-}
-.video-card__thumb--6 {
-  background: linear-gradient(135deg, #241b3a 0%, #4a2f6e 100%);
-}
-.video-card__thumb::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.55) 100%);
-}
-
-.video-card__play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #003caf;
-  z-index: 1;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.video-card__tag {
-  position: relative;
-  z-index: 1;
-  display: inline-block;
-  padding: 5px 14px;
-  border-radius: 71.85px;
-  background-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(6px);
-  color: #ffffff;
-  font-size: 0.8375rem;
-  font-weight: 300;
-}
-
-.video-card__title {
-  margin-top: 16px;
-  font-size: 1.4rem;
-  font-weight: 700;
-  line-height: 100%;
-  color: #003caf;
-}
-
-.video-card:hover .video-card__play {
-  transform: translate(-50%, -50%) scale(1.08);
-  background-color: #ffffff;
-}
-
 .backpack-cta {
   padding: 100px 0;
   background-color: #ffffff;
@@ -1025,12 +906,10 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   z-index: -1;
   transform: none;
-  -o-object-position: center center;
-     object-position: center center;
+  object-position: center center;
 }
 
 .value-prop__overlay {
@@ -1152,8 +1031,7 @@ body {
   scroll-behavior: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  -moz-user-select: none;
-       user-select: none;
+  user-select: none;
   -webkit-user-select: none;
   touch-action: pan-y;
 }
@@ -1242,8 +1120,7 @@ body {
 .segmentos__card__image img {
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .segmentos__card__content {
   display: flex;
@@ -1382,8 +1259,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   z-index: 0;
 }
 
@@ -1406,8 +1282,7 @@ body {
   left: 30%;
   width: 150%;
   height: 140%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   transform: translate(-50%, -50%);
   z-index: 0;
 }
@@ -1476,8 +1351,7 @@ body {
   transform-style: preserve-3d;
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease, filter 0.55s ease, border-color 0.55s ease, box-shadow 0.55s ease;
   cursor: pointer;
-  -moz-user-select: none;
-       user-select: none;
+  user-select: none;
   -webkit-user-select: none;
   -webkit-user-drag: none;
   user-drag: none;
@@ -1820,7 +1694,11 @@ body {
 }
 
 .historic-page,
-.gastronomy-page {
+.gastronomy-page,
+.praias-page,
+.vidanortuna-page,
+.comprasartesanato-page,
+.aventuranatureza-page {
   background: #f9f6f1;
   color: #0a2e36;
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -1837,7 +1715,27 @@ body {
 .gastronomy-page h2,
 .gastronomy-page h3,
 .gastronomy-page p,
-.gastronomy-page ul {
+.gastronomy-page ul,
+.praias-page h1,
+.praias-page h2,
+.praias-page h3,
+.praias-page p,
+.praias-page ul,
+.vidanortuna-page h1,
+.vidanortuna-page h2,
+.vidanortuna-page h3,
+.vidanortuna-page p,
+.vidanortuna-page ul,
+.comprasartesanato-page h1,
+.comprasartesanato-page h2,
+.comprasartesanato-page h3,
+.comprasartesanato-page p,
+.comprasartesanato-page ul,
+.aventuranatureza-page h1,
+.aventuranatureza-page h2,
+.aventuranatureza-page h3,
+.aventuranatureza-page p,
+.aventuranatureza-page ul {
   margin: 0;
   padding: 0;
 }
@@ -1846,60 +1744,111 @@ body {
 .historic-page h3,
 .gastronomy-page h1,
 .gastronomy-page h2,
-.gastronomy-page h3 {
+.gastronomy-page h3,
+.praias-page h1,
+.praias-page h2,
+.praias-page h3,
+.vidanortuna-page h1,
+.vidanortuna-page h2,
+.vidanortuna-page h3,
+.comprasartesanato-page h1,
+.comprasartesanato-page h2,
+.comprasartesanato-page h3,
+.aventuranatureza-page h1,
+.aventuranatureza-page h2,
+.aventuranatureza-page h3 {
   font-family: "Cormorant Garamond", ui-serif, Georgia, serif;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 .historic-page ul,
-.gastronomy-page ul {
+.gastronomy-page ul,
+.praias-page ul,
+.vidanortuna-page ul,
+.comprasartesanato-page ul,
+.aventuranatureza-page ul {
   list-style: none;
 }
 .historic-page img,
-.gastronomy-page img {
+.gastronomy-page img,
+.praias-page img,
+.vidanortuna-page img,
+.comprasartesanato-page img,
+.aventuranatureza-page img {
   display: block;
   max-width: 100%;
 }
 .historic-page a:focus-visible,
 .historic-page button:focus-visible,
 .gastronomy-page a:focus-visible,
-.gastronomy-page button:focus-visible {
+.gastronomy-page button:focus-visible,
+.praias-page a:focus-visible,
+.praias-page button:focus-visible,
+.vidanortuna-page a:focus-visible,
+.vidanortuna-page button:focus-visible,
+.comprasartesanato-page a:focus-visible,
+.comprasartesanato-page button:focus-visible,
+.aventuranatureza-page a:focus-visible,
+.aventuranatureza-page button:focus-visible {
   outline: 2px solid #d87c55;
   outline-offset: 2px;
 }
 .historic-page .historic-line,
-.gastronomy-page .historic-line {
+.gastronomy-page .historic-line,
+.praias-page .historic-line,
+.vidanortuna-page .historic-line,
+.comprasartesanato-page .historic-line,
+.aventuranatureza-page .historic-line {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(216, 124, 85, 0.6), transparent);
 }
 .historic-page .historic-line--soft,
-.gastronomy-page .historic-line--soft {
+.gastronomy-page .historic-line--soft,
+.praias-page .historic-line--soft,
+.vidanortuna-page .historic-line--soft,
+.comprasartesanato-page .historic-line--soft,
+.aventuranatureza-page .historic-line--soft {
   background: linear-gradient(90deg, transparent, rgba(216, 124, 85, 0.3), transparent);
 }
 .historic-page .historic-hero,
-.gastronomy-page .historic-hero {
+.gastronomy-page .historic-hero,
+.praias-page .historic-hero,
+.vidanortuna-page .historic-hero,
+.comprasartesanato-page .historic-hero,
+.aventuranatureza-page .historic-hero {
   position: relative;
   height: 60vh;
   min-height: 520px;
   overflow: hidden;
 }
 .historic-page .historic-hero__img,
-.gastronomy-page .historic-hero__img {
+.gastronomy-page .historic-hero__img,
+.praias-page .historic-hero__img,
+.vidanortuna-page .historic-hero__img,
+.comprasartesanato-page .historic-hero__img,
+.aventuranatureza-page .historic-hero__img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .historic-page .historic-hero__overlay,
-.gastronomy-page .historic-hero__overlay {
+.gastronomy-page .historic-hero__overlay,
+.praias-page .historic-hero__overlay,
+.vidanortuna-page .historic-hero__overlay,
+.comprasartesanato-page .historic-hero__overlay,
+.aventuranatureza-page .historic-hero__overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, rgba(10, 46, 54, 0.9), rgba(10, 46, 54, 0.5) 50%, rgba(10, 46, 54, 0.3));
 }
 .historic-page .historic-hero__content,
-.gastronomy-page .historic-hero__content {
+.gastronomy-page .historic-hero__content,
+.praias-page .historic-hero__content,
+.vidanortuna-page .historic-hero__content,
+.comprasartesanato-page .historic-hero__content,
+.aventuranatureza-page .historic-hero__content {
   position: relative;
   height: 100%;
   max-width: 1400px;
@@ -1910,11 +1859,14 @@ body {
   justify-content: flex-end;
 }
 .historic-page .historic-hero__back,
-.gastronomy-page .historic-hero__back {
+.gastronomy-page .historic-hero__back,
+.praias-page .historic-hero__back,
+.vidanortuna-page .historic-hero__back,
+.comprasartesanato-page .historic-hero__back,
+.aventuranatureza-page .historic-hero__back {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  width: -moz-fit-content;
   width: fit-content;
   margin-bottom: 1.25rem;
   font-size: 14px;
@@ -1923,16 +1875,28 @@ body {
   transition: color 0.2s;
 }
 .historic-page .historic-hero__back:hover,
-.gastronomy-page .historic-hero__back:hover {
+.gastronomy-page .historic-hero__back:hover,
+.praias-page .historic-hero__back:hover,
+.vidanortuna-page .historic-hero__back:hover,
+.comprasartesanato-page .historic-hero__back:hover,
+.aventuranatureza-page .historic-hero__back:hover {
   color: #f9f6f1;
 }
 .historic-page .historic-hero__back svg,
-.gastronomy-page .historic-hero__back svg {
+.gastronomy-page .historic-hero__back svg,
+.praias-page .historic-hero__back svg,
+.vidanortuna-page .historic-hero__back svg,
+.comprasartesanato-page .historic-hero__back svg,
+.aventuranatureza-page .historic-hero__back svg {
   width: 16px;
   height: 16px;
 }
 .historic-page .historic-hero__kicker,
-.gastronomy-page .historic-hero__kicker {
+.gastronomy-page .historic-hero__kicker,
+.praias-page .historic-hero__kicker,
+.vidanortuna-page .historic-hero__kicker,
+.comprasartesanato-page .historic-hero__kicker,
+.aventuranatureza-page .historic-hero__kicker {
   margin-bottom: 0.75rem;
   font-size: 12px;
   text-transform: uppercase;
@@ -1940,21 +1904,33 @@ body {
   color: #d87c55;
 }
 .historic-page .historic-hero__title,
-.gastronomy-page .historic-hero__title {
+.gastronomy-page .historic-hero__title,
+.praias-page .historic-hero__title,
+.vidanortuna-page .historic-hero__title,
+.comprasartesanato-page .historic-hero__title,
+.aventuranatureza-page .historic-hero__title {
   max-width: 48rem;
   font-size: clamp(3rem, 6vw, 4.5rem);
   line-height: 0.98;
   color: #f9f6f1;
 }
 .historic-page .historic-hero__subtitle,
-.gastronomy-page .historic-hero__subtitle {
+.gastronomy-page .historic-hero__subtitle,
+.praias-page .historic-hero__subtitle,
+.vidanortuna-page .historic-hero__subtitle,
+.comprasartesanato-page .historic-hero__subtitle,
+.aventuranatureza-page .historic-hero__subtitle {
   max-width: 32rem;
   margin-top: 1rem;
   font-size: 18px;
   color: rgba(249, 246, 241, 0.8);
 }
 .historic-page .historic-split,
-.gastronomy-page .historic-split {
+.gastronomy-page .historic-split,
+.praias-page .historic-split,
+.vidanortuna-page .historic-split,
+.comprasartesanato-page .historic-split,
+.aventuranatureza-page .historic-split {
   max-width: 1400px;
   margin: 0 auto;
   padding: 4rem 2.5rem 6rem;
@@ -1963,13 +1939,21 @@ body {
   gap: 3rem;
 }
 .historic-page .historic-guide,
-.gastronomy-page .historic-guide {
+.gastronomy-page .historic-guide,
+.praias-page .historic-guide,
+.vidanortuna-page .historic-guide,
+.comprasartesanato-page .historic-guide,
+.aventuranatureza-page .historic-guide {
   align-self: start;
   position: sticky;
   top: 11rem;
 }
 .historic-page .historic-guide__card,
-.gastronomy-page .historic-guide__card {
+.gastronomy-page .historic-guide__card,
+.praias-page .historic-guide__card,
+.vidanortuna-page .historic-guide__card,
+.comprasartesanato-page .historic-guide__card,
+.aventuranatureza-page .historic-guide__card {
   position: relative;
   background: #fbfaf8;
   border: 1px solid rgba(10, 46, 54, 0.1);
@@ -1977,7 +1961,11 @@ body {
   padding: 1.75rem;
 }
 .historic-page .historic-guide__card::after,
-.gastronomy-page .historic-guide__card::after {
+.gastronomy-page .historic-guide__card::after,
+.praias-page .historic-guide__card::after,
+.vidanortuna-page .historic-guide__card::after,
+.comprasartesanato-page .historic-guide__card::after,
+.aventuranatureza-page .historic-guide__card::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1987,7 +1975,11 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E");
 }
 .historic-page .historic-guide__label,
-.gastronomy-page .historic-guide__label {
+.gastronomy-page .historic-guide__label,
+.praias-page .historic-guide__label,
+.vidanortuna-page .historic-guide__label,
+.comprasartesanato-page .historic-guide__label,
+.aventuranatureza-page .historic-guide__label {
   margin-bottom: 0.25rem;
   font-size: 12px;
   text-transform: uppercase;
@@ -1995,28 +1987,48 @@ body {
   color: #d87c55;
 }
 .historic-page .historic-guide__title,
-.gastronomy-page .historic-guide__title {
+.gastronomy-page .historic-guide__title,
+.praias-page .historic-guide__title,
+.vidanortuna-page .historic-guide__title,
+.comprasartesanato-page .historic-guide__title,
+.aventuranatureza-page .historic-guide__title {
   font-size: 1.875rem;
   line-height: 1.2;
   color: #0a2e36;
 }
 .historic-page .historic-guide__divider,
-.gastronomy-page .historic-guide__divider {
+.gastronomy-page .historic-guide__divider,
+.praias-page .historic-guide__divider,
+.vidanortuna-page .historic-guide__divider,
+.comprasartesanato-page .historic-guide__divider,
+.aventuranatureza-page .historic-guide__divider {
   margin: 1.5rem 0;
 }
 .historic-page .historic-guide__list,
-.gastronomy-page .historic-guide__list {
+.gastronomy-page .historic-guide__list,
+.praias-page .historic-guide__list,
+.vidanortuna-page .historic-guide__list,
+.comprasartesanato-page .historic-guide__list,
+.aventuranatureza-page .historic-guide__list {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 .historic-page .historic-guide__item,
-.gastronomy-page .historic-guide__item {
+.gastronomy-page .historic-guide__item,
+.praias-page .historic-guide__item,
+.vidanortuna-page .historic-guide__item,
+.comprasartesanato-page .historic-guide__item,
+.aventuranatureza-page .historic-guide__item {
   display: flex;
   gap: 0.75rem;
 }
 .historic-page .historic-guide__icon,
-.gastronomy-page .historic-guide__icon {
+.gastronomy-page .historic-guide__icon,
+.praias-page .historic-guide__icon,
+.vidanortuna-page .historic-guide__icon,
+.comprasartesanato-page .historic-guide__icon,
+.aventuranatureza-page .historic-guide__icon {
   flex-shrink: 0;
   width: 20px;
   height: 20px;
@@ -2024,64 +2036,102 @@ body {
   color: #d87c55;
 }
 .historic-page .historic-guide__key,
-.gastronomy-page .historic-guide__key {
+.gastronomy-page .historic-guide__key,
+.praias-page .historic-guide__key,
+.vidanortuna-page .historic-guide__key,
+.comprasartesanato-page .historic-guide__key,
+.aventuranatureza-page .historic-guide__key {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: #4e6d74;
 }
 .historic-page .historic-guide__val,
-.gastronomy-page .historic-guide__val {
+.gastronomy-page .historic-guide__val,
+.praias-page .historic-guide__val,
+.vidanortuna-page .historic-guide__val,
+.comprasartesanato-page .historic-guide__val,
+.aventuranatureza-page .historic-guide__val {
   color: #0a2e36;
 }
 .historic-page .historic-guide__note,
-.gastronomy-page .historic-guide__note {
+.gastronomy-page .historic-guide__note,
+.praias-page .historic-guide__note,
+.vidanortuna-page .historic-guide__note,
+.comprasartesanato-page .historic-guide__note,
+.aventuranatureza-page .historic-guide__note {
   margin-top: 1.5rem;
   font-size: 14px;
   font-style: italic;
   color: #4e6d74;
 }
 .historic-page .historic-gallery__title,
-.gastronomy-page .historic-gallery__title {
+.gastronomy-page .historic-gallery__title,
+.praias-page .historic-gallery__title,
+.vidanortuna-page .historic-gallery__title,
+.comprasartesanato-page .historic-gallery__title,
+.aventuranatureza-page .historic-gallery__title {
   margin-bottom: 2rem;
   font-size: 2.5rem;
   color: #0a2e36;
 }
 .historic-page .historic-gallery__list,
-.gastronomy-page .historic-gallery__list {
+.gastronomy-page .historic-gallery__list,
+.praias-page .historic-gallery__list,
+.vidanortuna-page .historic-gallery__list,
+.comprasartesanato-page .historic-gallery__list,
+.aventuranatureza-page .historic-gallery__list {
   display: flex;
   flex-direction: column;
   gap: 3.5rem;
 }
 .historic-page .historic-location,
-.gastronomy-page .historic-location {
+.gastronomy-page .historic-location,
+.praias-page .historic-location,
+.vidanortuna-page .historic-location,
+.comprasartesanato-page .historic-location,
+.aventuranatureza-page .historic-location {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  -moz-column-gap: 1.5rem;
-       column-gap: 1.5rem;
+  column-gap: 1.5rem;
   row-gap: 0;
 }
 .historic-page .historic-location__media,
-.gastronomy-page .historic-location__media {
+.gastronomy-page .historic-location__media,
+.praias-page .historic-location__media,
+.vidanortuna-page .historic-location__media,
+.comprasartesanato-page .historic-location__media,
+.aventuranatureza-page .historic-location__media {
   position: relative;
   aspect-ratio: 4/3;
   overflow: hidden;
   border-radius: 1rem;
 }
 .historic-page .historic-location__img,
-.gastronomy-page .historic-location__img {
+.gastronomy-page .historic-location__img,
+.praias-page .historic-location__img,
+.vidanortuna-page .historic-location__img,
+.comprasartesanato-page .historic-location__img,
+.aventuranatureza-page .historic-location__img {
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   transition: transform 0.6s;
 }
 .historic-page .historic-location:hover .historic-location__img,
-.gastronomy-page .historic-location:hover .historic-location__img {
+.gastronomy-page .historic-location:hover .historic-location__img,
+.praias-page .historic-location:hover .historic-location__img,
+.vidanortuna-page .historic-location:hover .historic-location__img,
+.comprasartesanato-page .historic-location:hover .historic-location__img,
+.aventuranatureza-page .historic-location:hover .historic-location__img {
   transform: scale(1.05);
 }
 .historic-page .historic-location__badge,
-.gastronomy-page .historic-location__badge {
+.gastronomy-page .historic-location__badge,
+.praias-page .historic-location__badge,
+.vidanortuna-page .historic-location__badge,
+.comprasartesanato-page .historic-location__badge,
+.aventuranatureza-page .historic-location__badge {
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
@@ -2094,25 +2144,41 @@ body {
   font-weight: 500;
 }
 .historic-page .historic-location__body,
-.gastronomy-page .historic-location__body {
+.gastronomy-page .historic-location__body,
+.praias-page .historic-location__body,
+.vidanortuna-page .historic-location__body,
+.comprasartesanato-page .historic-location__body,
+.aventuranatureza-page .historic-location__body {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 .historic-page .historic-location__name,
-.gastronomy-page .historic-location__name {
+.gastronomy-page .historic-location__name,
+.praias-page .historic-location__name,
+.vidanortuna-page .historic-location__name,
+.comprasartesanato-page .historic-location__name,
+.aventuranatureza-page .historic-location__name {
   font-size: 1.875rem;
   line-height: 1.2;
   color: #0a2e36;
 }
 .historic-page .historic-location__desc,
-.gastronomy-page .historic-location__desc {
+.gastronomy-page .historic-location__desc,
+.praias-page .historic-location__desc,
+.vidanortuna-page .historic-location__desc,
+.comprasartesanato-page .historic-location__desc,
+.aventuranatureza-page .historic-location__desc {
   margin-top: 0.75rem;
   line-height: 1.6;
   color: #4e6d74;
 }
 .historic-page .historic-location__toggle,
-.gastronomy-page .historic-location__toggle {
+.gastronomy-page .historic-location__toggle,
+.praias-page .historic-location__toggle,
+.vidanortuna-page .historic-location__toggle,
+.comprasartesanato-page .historic-location__toggle,
+.aventuranatureza-page .historic-location__toggle {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
@@ -2128,24 +2194,40 @@ body {
   cursor: pointer;
 }
 .historic-page .historic-location__toggle svg,
-.gastronomy-page .historic-location__toggle svg {
+.gastronomy-page .historic-location__toggle svg,
+.praias-page .historic-location__toggle svg,
+.vidanortuna-page .historic-location__toggle svg,
+.comprasartesanato-page .historic-location__toggle svg,
+.aventuranatureza-page .historic-location__toggle svg {
   width: 18px;
   height: 18px;
   color: #d87c55;
   transition: transform 0.3s ease;
 }
 .historic-page .historic-location__toggle:hover,
-.gastronomy-page .historic-location__toggle:hover {
+.gastronomy-page .historic-location__toggle:hover,
+.praias-page .historic-location__toggle:hover,
+.vidanortuna-page .historic-location__toggle:hover,
+.comprasartesanato-page .historic-location__toggle:hover,
+.aventuranatureza-page .historic-location__toggle:hover {
   text-decoration: underline;
   text-decoration-color: rgba(216, 124, 85, 0.7);
   text-underline-offset: 4px;
 }
 .historic-page .historic-location__toggle[aria-expanded=true] svg,
-.gastronomy-page .historic-location__toggle[aria-expanded=true] svg {
+.gastronomy-page .historic-location__toggle[aria-expanded=true] svg,
+.praias-page .historic-location__toggle[aria-expanded=true] svg,
+.vidanortuna-page .historic-location__toggle[aria-expanded=true] svg,
+.comprasartesanato-page .historic-location__toggle[aria-expanded=true] svg,
+.aventuranatureza-page .historic-location__toggle[aria-expanded=true] svg {
   transform: rotate(180deg);
 }
 .historic-page .historic-location__more,
-.gastronomy-page .historic-location__more {
+.gastronomy-page .historic-location__more,
+.praias-page .historic-location__more,
+.vidanortuna-page .historic-location__more,
+.comprasartesanato-page .historic-location__more,
+.aventuranatureza-page .historic-location__more {
   grid-column: 1/-1;
   display: grid;
   grid-template-rows: 0fr;
@@ -2153,18 +2235,30 @@ body {
   transition: grid-template-rows 0.4s ease, visibility 0s linear 0.4s;
 }
 .historic-page .historic-location__more.is-open,
-.gastronomy-page .historic-location__more.is-open {
+.gastronomy-page .historic-location__more.is-open,
+.praias-page .historic-location__more.is-open,
+.vidanortuna-page .historic-location__more.is-open,
+.comprasartesanato-page .historic-location__more.is-open,
+.aventuranatureza-page .historic-location__more.is-open {
   grid-template-rows: 1fr;
   visibility: visible;
   transition: grid-template-rows 0.4s ease, visibility 0s linear 0s;
 }
 .historic-page .historic-location__more-inner,
-.gastronomy-page .historic-location__more-inner {
+.gastronomy-page .historic-location__more-inner,
+.praias-page .historic-location__more-inner,
+.vidanortuna-page .historic-location__more-inner,
+.comprasartesanato-page .historic-location__more-inner,
+.aventuranatureza-page .historic-location__more-inner {
   min-height: 0;
   overflow: hidden;
 }
 .historic-page .historic-location__more-content,
-.gastronomy-page .historic-location__more-content {
+.gastronomy-page .historic-location__more-content,
+.praias-page .historic-location__more-content,
+.vidanortuna-page .historic-location__more-content,
+.comprasartesanato-page .historic-location__more-content,
+.aventuranatureza-page .historic-location__more-content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -2173,12 +2267,20 @@ body {
   border-top: 1px solid rgba(10, 46, 54, 0.1);
 }
 .historic-page .historic-location__more-content p,
-.gastronomy-page .historic-location__more-content p {
+.gastronomy-page .historic-location__more-content p,
+.praias-page .historic-location__more-content p,
+.vidanortuna-page .historic-location__more-content p,
+.comprasartesanato-page .historic-location__more-content p,
+.aventuranatureza-page .historic-location__more-content p {
   line-height: 1.7;
   color: #4e6d74;
 }
 .historic-page .historic-location__tip,
-.gastronomy-page .historic-location__tip {
+.gastronomy-page .historic-location__tip,
+.praias-page .historic-location__tip,
+.vidanortuna-page .historic-location__tip,
+.comprasartesanato-page .historic-location__tip,
+.aventuranatureza-page .historic-location__tip {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
@@ -2190,7 +2292,11 @@ body {
   color: rgba(10, 46, 54, 0.7);
 }
 .historic-page .historic-location__tip svg,
-.gastronomy-page .historic-location__tip svg {
+.gastronomy-page .historic-location__tip svg,
+.praias-page .historic-location__tip svg,
+.vidanortuna-page .historic-location__tip svg,
+.comprasartesanato-page .historic-location__tip svg,
+.aventuranatureza-page .historic-location__tip svg {
   flex-shrink: 0;
   width: 16px;
   height: 16px;
@@ -2198,7 +2304,11 @@ body {
   color: #d87c55;
 }
 .historic-page .historic-location__save,
-.gastronomy-page .historic-location__save {
+.gastronomy-page .historic-location__save,
+.praias-page .historic-location__save,
+.vidanortuna-page .historic-location__save,
+.comprasartesanato-page .historic-location__save,
+.aventuranatureza-page .historic-location__save {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
@@ -2215,35 +2325,59 @@ body {
   transition: all 0.2s;
 }
 .historic-page .historic-location__save:hover,
-.gastronomy-page .historic-location__save:hover {
+.gastronomy-page .historic-location__save:hover,
+.praias-page .historic-location__save:hover,
+.vidanortuna-page .historic-location__save:hover,
+.comprasartesanato-page .historic-location__save:hover,
+.aventuranatureza-page .historic-location__save:hover {
   background: rgba(10, 46, 54, 0.05);
 }
 .historic-page .historic-location__save.is-saved,
-.gastronomy-page .historic-location__save.is-saved {
+.gastronomy-page .historic-location__save.is-saved,
+.praias-page .historic-location__save.is-saved,
+.vidanortuna-page .historic-location__save.is-saved,
+.comprasartesanato-page .historic-location__save.is-saved,
+.aventuranatureza-page .historic-location__save.is-saved {
   background: #2c5926;
   border-color: #2c5926;
   color: #f9f6f1;
 }
 .historic-page .historic-location__save svg,
-.gastronomy-page .historic-location__save svg {
+.gastronomy-page .historic-location__save svg,
+.praias-page .historic-location__save svg,
+.vidanortuna-page .historic-location__save svg,
+.comprasartesanato-page .historic-location__save svg,
+.aventuranatureza-page .historic-location__save svg {
   width: 16px;
   height: 16px;
 }
 .historic-page .historic-plan,
-.gastronomy-page .historic-plan {
+.gastronomy-page .historic-plan,
+.praias-page .historic-plan,
+.vidanortuna-page .historic-plan,
+.comprasartesanato-page .historic-plan,
+.aventuranatureza-page .historic-plan {
   max-width: 1400px;
   margin: 0 auto;
   padding: 1rem 2.5rem 5rem;
 }
 .historic-page .historic-plan__inner,
-.gastronomy-page .historic-plan__inner {
+.gastronomy-page .historic-plan__inner,
+.praias-page .historic-plan__inner,
+.vidanortuna-page .historic-plan__inner,
+.comprasartesanato-page .historic-plan__inner,
+.aventuranatureza-page .historic-plan__inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: start;
 }
 .historic-page .historic-plan__kicker,
-.gastronomy-page .historic-plan__kicker {
+.gastronomy-page .historic-plan__kicker,
+.praias-page .historic-plan__kicker,
+.vidanortuna-page .historic-plan__kicker,
+.comprasartesanato-page .historic-plan__kicker,
+.aventuranatureza-page .historic-plan__kicker {
   margin-bottom: 0.75rem;
   font-size: 12px;
   text-transform: uppercase;
@@ -2251,19 +2385,31 @@ body {
   color: #0a2e36;
 }
 .historic-page .historic-plan__title,
-.gastronomy-page .historic-plan__title {
+.gastronomy-page .historic-plan__title,
+.praias-page .historic-plan__title,
+.vidanortuna-page .historic-plan__title,
+.comprasartesanato-page .historic-plan__title,
+.aventuranatureza-page .historic-plan__title {
   font-size: clamp(2.5rem, 4.5vw, 3.5rem);
   line-height: 1.05;
   color: #0a2e36;
 }
 .historic-page .historic-plan__text,
-.gastronomy-page .historic-plan__text {
+.gastronomy-page .historic-plan__text,
+.praias-page .historic-plan__text,
+.vidanortuna-page .historic-plan__text,
+.comprasartesanato-page .historic-plan__text,
+.aventuranatureza-page .historic-plan__text {
   max-width: 28rem;
   margin-top: 1.25rem;
   color: #0a2e36;
 }
 .historic-page .historic-plan__cta,
-.gastronomy-page .historic-plan__cta {
+.gastronomy-page .historic-plan__cta,
+.praias-page .historic-plan__cta,
+.vidanortuna-page .historic-plan__cta,
+.comprasartesanato-page .historic-plan__cta,
+.aventuranatureza-page .historic-plan__cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -2276,95 +2422,179 @@ body {
   transition: background 0.2s;
 }
 .historic-page .historic-plan__cta svg,
-.gastronomy-page .historic-plan__cta svg {
+.gastronomy-page .historic-plan__cta svg,
+.praias-page .historic-plan__cta svg,
+.vidanortuna-page .historic-plan__cta svg,
+.comprasartesanato-page .historic-plan__cta svg,
+.aventuranatureza-page .historic-plan__cta svg {
   width: 16px;
   height: 16px;
   transition: transform 0.2s;
 }
 .historic-page .historic-plan__cta:hover,
-.gastronomy-page .historic-plan__cta:hover {
+.gastronomy-page .historic-plan__cta:hover,
+.praias-page .historic-plan__cta:hover,
+.vidanortuna-page .historic-plan__cta:hover,
+.comprasartesanato-page .historic-plan__cta:hover,
+.aventuranatureza-page .historic-plan__cta:hover {
   background: rgba(10, 46, 54, 0.05);
   color: #0a2e36;
 }
 .historic-page .historic-plan__cta:hover svg,
-.gastronomy-page .historic-plan__cta:hover svg {
+.gastronomy-page .historic-plan__cta:hover svg,
+.praias-page .historic-plan__cta:hover svg,
+.vidanortuna-page .historic-plan__cta:hover svg,
+.comprasartesanato-page .historic-plan__cta:hover svg,
+.aventuranatureza-page .historic-plan__cta:hover svg {
   transform: translateX(3px);
 }
 .historic-page .historic-plan__cards,
-.gastronomy-page .historic-plan__cards {
+.gastronomy-page .historic-plan__cards,
+.praias-page .historic-plan__cards,
+.vidanortuna-page .historic-plan__cards,
+.comprasartesanato-page .historic-plan__cards,
+.aventuranatureza-page .historic-plan__cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 .historic-page .historic-plan__card,
-.gastronomy-page .historic-plan__card {
+.gastronomy-page .historic-plan__card,
+.praias-page .historic-plan__card,
+.vidanortuna-page .historic-plan__card,
+.comprasartesanato-page .historic-plan__card,
+.aventuranatureza-page .historic-plan__card {
   padding: 1.5rem;
   border: 1px solid #d3dcde;
   border-radius: 1rem;
   transition: background 0.4s, border-color 0.4s;
 }
 .historic-page .historic-plan__card--clear,
-.gastronomy-page .historic-plan__card--clear {
+.gastronomy-page .historic-plan__card--clear,
+.praias-page .historic-plan__card--clear,
+.vidanortuna-page .historic-plan__card--clear,
+.comprasartesanato-page .historic-plan__card--clear,
+.aventuranatureza-page .historic-plan__card--clear {
   background: linear-gradient(160deg, rgba(216, 124, 85, 0.16), rgba(216, 124, 85, 0) 65%);
   border-color: rgba(216, 124, 85, 0.31);
 }
 .historic-page .historic-plan__card--clear .historic-plan__card-label svg,
-.gastronomy-page .historic-plan__card--clear .historic-plan__card-label svg {
+.gastronomy-page .historic-plan__card--clear .historic-plan__card-label svg,
+.praias-page .historic-plan__card--clear .historic-plan__card-label svg,
+.vidanortuna-page .historic-plan__card--clear .historic-plan__card-label svg,
+.comprasartesanato-page .historic-plan__card--clear .historic-plan__card-label svg,
+.aventuranatureza-page .historic-plan__card--clear .historic-plan__card-label svg {
   color: #d87c55;
 }
 .historic-page .historic-plan__card--partly,
-.gastronomy-page .historic-plan__card--partly {
+.gastronomy-page .historic-plan__card--partly,
+.praias-page .historic-plan__card--partly,
+.vidanortuna-page .historic-plan__card--partly,
+.comprasartesanato-page .historic-plan__card--partly,
+.aventuranatureza-page .historic-plan__card--partly {
   background: linear-gradient(160deg, rgba(216, 124, 85, 0.1), rgba(216, 124, 85, 0) 65%);
   border-color: rgba(216, 124, 85, 0.25);
 }
 .historic-page .historic-plan__card--partly .historic-plan__card-label svg,
-.gastronomy-page .historic-plan__card--partly .historic-plan__card-label svg {
+.gastronomy-page .historic-plan__card--partly .historic-plan__card-label svg,
+.praias-page .historic-plan__card--partly .historic-plan__card-label svg,
+.vidanortuna-page .historic-plan__card--partly .historic-plan__card-label svg,
+.comprasartesanato-page .historic-plan__card--partly .historic-plan__card-label svg,
+.aventuranatureza-page .historic-plan__card--partly .historic-plan__card-label svg {
   color: #d87c55;
 }
 .historic-page .historic-plan__card--night,
-.gastronomy-page .historic-plan__card--night {
+.gastronomy-page .historic-plan__card--night,
+.praias-page .historic-plan__card--night,
+.vidanortuna-page .historic-plan__card--night,
+.comprasartesanato-page .historic-plan__card--night,
+.aventuranatureza-page .historic-plan__card--night {
   background: linear-gradient(160deg, rgba(10, 46, 54, 0.1), rgba(10, 46, 54, 0) 65%);
   border-color: rgba(10, 46, 54, 0.25);
 }
 .historic-page .historic-plan__card--night .historic-plan__card-label svg,
-.gastronomy-page .historic-plan__card--night .historic-plan__card-label svg {
+.gastronomy-page .historic-plan__card--night .historic-plan__card-label svg,
+.praias-page .historic-plan__card--night .historic-plan__card-label svg,
+.vidanortuna-page .historic-plan__card--night .historic-plan__card-label svg,
+.comprasartesanato-page .historic-plan__card--night .historic-plan__card-label svg,
+.aventuranatureza-page .historic-plan__card--night .historic-plan__card-label svg {
   color: #0a2e36;
 }
 .historic-page .historic-plan__card--cloud, .historic-page .historic-plan__card--fog,
 .gastronomy-page .historic-plan__card--cloud,
-.gastronomy-page .historic-plan__card--fog {
+.gastronomy-page .historic-plan__card--fog,
+.praias-page .historic-plan__card--cloud,
+.praias-page .historic-plan__card--fog,
+.vidanortuna-page .historic-plan__card--cloud,
+.vidanortuna-page .historic-plan__card--fog,
+.comprasartesanato-page .historic-plan__card--cloud,
+.comprasartesanato-page .historic-plan__card--fog,
+.aventuranatureza-page .historic-plan__card--cloud,
+.aventuranatureza-page .historic-plan__card--fog {
   background: linear-gradient(160deg, rgba(78, 109, 116, 0.12), rgba(78, 109, 116, 0) 65%);
   border-color: rgba(78, 109, 116, 0.27);
 }
 .historic-page .historic-plan__card--cloud .historic-plan__card-label svg, .historic-page .historic-plan__card--fog .historic-plan__card-label svg,
 .gastronomy-page .historic-plan__card--cloud .historic-plan__card-label svg,
-.gastronomy-page .historic-plan__card--fog .historic-plan__card-label svg {
+.gastronomy-page .historic-plan__card--fog .historic-plan__card-label svg,
+.praias-page .historic-plan__card--cloud .historic-plan__card-label svg,
+.praias-page .historic-plan__card--fog .historic-plan__card-label svg,
+.vidanortuna-page .historic-plan__card--cloud .historic-plan__card-label svg,
+.vidanortuna-page .historic-plan__card--fog .historic-plan__card-label svg,
+.comprasartesanato-page .historic-plan__card--cloud .historic-plan__card-label svg,
+.comprasartesanato-page .historic-plan__card--fog .historic-plan__card-label svg,
+.aventuranatureza-page .historic-plan__card--cloud .historic-plan__card-label svg,
+.aventuranatureza-page .historic-plan__card--fog .historic-plan__card-label svg {
   color: #4e6d74;
 }
 .historic-page .historic-plan__card--rain,
-.gastronomy-page .historic-plan__card--rain {
+.gastronomy-page .historic-plan__card--rain,
+.praias-page .historic-plan__card--rain,
+.vidanortuna-page .historic-plan__card--rain,
+.comprasartesanato-page .historic-plan__card--rain,
+.aventuranatureza-page .historic-plan__card--rain {
   background: linear-gradient(160deg, rgba(78, 109, 116, 0.2), rgba(78, 109, 116, 0) 65%);
   border-color: rgba(78, 109, 116, 0.35);
 }
 .historic-page .historic-plan__card--rain .historic-plan__card-label svg,
-.gastronomy-page .historic-plan__card--rain .historic-plan__card-label svg {
+.gastronomy-page .historic-plan__card--rain .historic-plan__card-label svg,
+.praias-page .historic-plan__card--rain .historic-plan__card-label svg,
+.vidanortuna-page .historic-plan__card--rain .historic-plan__card-label svg,
+.comprasartesanato-page .historic-plan__card--rain .historic-plan__card-label svg,
+.aventuranatureza-page .historic-plan__card--rain .historic-plan__card-label svg {
   color: #4e6d74;
 }
 .historic-page .historic-plan__card--storm,
-.gastronomy-page .historic-plan__card--storm {
+.gastronomy-page .historic-plan__card--storm,
+.praias-page .historic-plan__card--storm,
+.vidanortuna-page .historic-plan__card--storm,
+.comprasartesanato-page .historic-plan__card--storm,
+.aventuranatureza-page .historic-plan__card--storm {
   background: linear-gradient(160deg, rgba(10, 46, 54, 0.18), rgba(10, 46, 54, 0) 65%);
   border-color: rgba(10, 46, 54, 0.33);
 }
 .historic-page .historic-plan__card--storm .historic-plan__card-label svg,
-.gastronomy-page .historic-plan__card--storm .historic-plan__card-label svg {
+.gastronomy-page .historic-plan__card--storm .historic-plan__card-label svg,
+.praias-page .historic-plan__card--storm .historic-plan__card-label svg,
+.vidanortuna-page .historic-plan__card--storm .historic-plan__card-label svg,
+.comprasartesanato-page .historic-plan__card--storm .historic-plan__card-label svg,
+.aventuranatureza-page .historic-plan__card--storm .historic-plan__card-label svg {
   color: #0a2e36;
 }
 .historic-page .historic-plan__icon,
-.gastronomy-page .historic-plan__icon {
+.gastronomy-page .historic-plan__icon,
+.praias-page .historic-plan__icon,
+.vidanortuna-page .historic-plan__icon,
+.comprasartesanato-page .historic-plan__icon,
+.aventuranatureza-page .historic-plan__icon {
   display: inline-flex;
 }
 .historic-page .historic-plan__card-label,
-.gastronomy-page .historic-plan__card-label {
+.gastronomy-page .historic-plan__card-label,
+.praias-page .historic-plan__card-label,
+.vidanortuna-page .historic-plan__card-label,
+.comprasartesanato-page .historic-plan__card-label,
+.aventuranatureza-page .historic-plan__card-label {
   display: flex;
   align-items: center;
   gap: 0.625rem;
@@ -2374,13 +2604,21 @@ body {
   color: #0a2e36;
 }
 .historic-page .historic-plan__card-label svg,
-.gastronomy-page .historic-plan__card-label svg {
+.gastronomy-page .historic-plan__card-label svg,
+.praias-page .historic-plan__card-label svg,
+.vidanortuna-page .historic-plan__card-label svg,
+.comprasartesanato-page .historic-plan__card-label svg,
+.aventuranatureza-page .historic-plan__card-label svg {
   flex-shrink: 0;
   width: 18px;
   height: 18px;
 }
 .historic-page .historic-plan__card-value,
-.gastronomy-page .historic-plan__card-value {
+.gastronomy-page .historic-plan__card-value,
+.praias-page .historic-plan__card-value,
+.vidanortuna-page .historic-plan__card-value,
+.comprasartesanato-page .historic-plan__card-value,
+.aventuranatureza-page .historic-plan__card-value {
   margin-top: 0.75rem;
   font-family: "Cormorant Garamond", ui-serif, Georgia, serif;
   font-size: 1.5rem;
@@ -2389,28 +2627,43 @@ body {
   color: #0a2e36;
 }
 .historic-page .historic-plan__card--weather .historic-plan__card-value,
-.gastronomy-page .historic-plan__card--weather .historic-plan__card-value {
+.gastronomy-page .historic-plan__card--weather .historic-plan__card-value,
+.praias-page .historic-plan__card--weather .historic-plan__card-value,
+.vidanortuna-page .historic-plan__card--weather .historic-plan__card-value,
+.comprasartesanato-page .historic-plan__card--weather .historic-plan__card-value,
+.aventuranatureza-page .historic-plan__card--weather .historic-plan__card-value {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  -moz-column-gap: 0.625rem;
-       column-gap: 0.625rem;
+  column-gap: 0.625rem;
   margin-top: 0.5rem;
 }
 .historic-page .historic-plan__temp,
-.gastronomy-page .historic-plan__temp {
+.gastronomy-page .historic-plan__temp,
+.praias-page .historic-plan__temp,
+.vidanortuna-page .historic-plan__temp,
+.comprasartesanato-page .historic-plan__temp,
+.aventuranatureza-page .historic-plan__temp {
   font-size: 3rem;
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.02em;
 }
 .historic-page .historic-plan__cond,
-.gastronomy-page .historic-plan__cond {
+.gastronomy-page .historic-plan__cond,
+.praias-page .historic-plan__cond,
+.vidanortuna-page .historic-plan__cond,
+.comprasartesanato-page .historic-plan__cond,
+.aventuranatureza-page .historic-plan__cond {
   font-size: 1.25rem;
   line-height: 1.2;
 }
 .historic-page .historic-plan__stats,
-.gastronomy-page .historic-plan__stats {
+.gastronomy-page .historic-plan__stats,
+.praias-page .historic-plan__stats,
+.vidanortuna-page .historic-plan__stats,
+.comprasartesanato-page .historic-plan__stats,
+.aventuranatureza-page .historic-plan__stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
@@ -2419,26 +2672,42 @@ body {
   border-top: 1px solid rgba(10, 46, 54, 0.1);
 }
 .historic-page .historic-plan__stats dt,
-.gastronomy-page .historic-plan__stats dt {
+.gastronomy-page .historic-plan__stats dt,
+.praias-page .historic-plan__stats dt,
+.vidanortuna-page .historic-plan__stats dt,
+.comprasartesanato-page .historic-plan__stats dt,
+.aventuranatureza-page .historic-plan__stats dt {
   font-size: 12px;
   font-weight: 400;
   color: #4e6d74;
 }
 .historic-page .historic-plan__stats dd,
-.gastronomy-page .historic-plan__stats dd {
+.gastronomy-page .historic-plan__stats dd,
+.praias-page .historic-plan__stats dd,
+.vidanortuna-page .historic-plan__stats dd,
+.comprasartesanato-page .historic-plan__stats dd,
+.aventuranatureza-page .historic-plan__stats dd {
   margin: 0;
   font-size: 15px;
   font-weight: 500;
   color: #0a2e36;
 }
 .historic-page .historic-plan__caption,
-.gastronomy-page .historic-plan__caption {
+.gastronomy-page .historic-plan__caption,
+.praias-page .historic-plan__caption,
+.vidanortuna-page .historic-plan__caption,
+.comprasartesanato-page .historic-plan__caption,
+.aventuranatureza-page .historic-plan__caption {
   margin-top: 0.75rem;
   font-size: 12px;
   color: #4e6d74;
 }
 .historic-page .historic-plan__skeleton,
-.gastronomy-page .historic-plan__skeleton {
+.gastronomy-page .historic-plan__skeleton,
+.praias-page .historic-plan__skeleton,
+.vidanortuna-page .historic-plan__skeleton,
+.comprasartesanato-page .historic-plan__skeleton,
+.aventuranatureza-page .historic-plan__skeleton {
   display: block;
   border-radius: 0.5rem;
   background: linear-gradient(90deg, rgba(10, 46, 54, 0.06) 25%, rgba(10, 46, 54, 0.12) 50%, rgba(10, 46, 54, 0.06) 75%);
@@ -2446,52 +2715,92 @@ body {
   animation: historic-shimmer 1.4s ease-in-out infinite;
 }
 .historic-page .historic-plan__skeleton--temp,
-.gastronomy-page .historic-plan__skeleton--temp {
+.gastronomy-page .historic-plan__skeleton--temp,
+.praias-page .historic-plan__skeleton--temp,
+.vidanortuna-page .historic-plan__skeleton--temp,
+.comprasartesanato-page .historic-plan__skeleton--temp,
+.aventuranatureza-page .historic-plan__skeleton--temp {
   width: 7rem;
   height: 2.75rem;
   margin-top: 0.75rem;
 }
 .historic-page .historic-plan__skeleton--stats,
-.gastronomy-page .historic-plan__skeleton--stats {
+.gastronomy-page .historic-plan__skeleton--stats,
+.praias-page .historic-plan__skeleton--stats,
+.vidanortuna-page .historic-plan__skeleton--stats,
+.comprasartesanato-page .historic-plan__skeleton--stats,
+.aventuranatureza-page .historic-plan__skeleton--stats {
   width: 100%;
   height: 2.75rem;
   margin-top: 1rem;
 }
 @media (max-width: 1024px) {
   .historic-page .historic-hero__content,
-  .gastronomy-page .historic-hero__content {
+  .gastronomy-page .historic-hero__content,
+  .praias-page .historic-hero__content,
+  .vidanortuna-page .historic-hero__content,
+  .comprasartesanato-page .historic-hero__content,
+  .aventuranatureza-page .historic-hero__content {
     padding: 9rem 1.25rem 3rem;
   }
   .historic-page .historic-split,
-  .gastronomy-page .historic-split {
+  .gastronomy-page .historic-split,
+  .praias-page .historic-split,
+  .vidanortuna-page .historic-split,
+  .comprasartesanato-page .historic-split,
+  .aventuranatureza-page .historic-split {
     grid-template-columns: 1fr;
     padding: 3rem 1.25rem 4rem;
   }
   .historic-page .historic-guide,
-  .gastronomy-page .historic-guide {
+  .gastronomy-page .historic-guide,
+  .praias-page .historic-guide,
+  .vidanortuna-page .historic-guide,
+  .comprasartesanato-page .historic-guide,
+  .aventuranatureza-page .historic-guide {
     position: static;
   }
   .historic-page .historic-plan,
-  .gastronomy-page .historic-plan {
+  .gastronomy-page .historic-plan,
+  .praias-page .historic-plan,
+  .vidanortuna-page .historic-plan,
+  .comprasartesanato-page .historic-plan,
+  .aventuranatureza-page .historic-plan {
     padding: 1rem 1.25rem 4rem;
   }
   .historic-page .historic-plan__inner,
-  .gastronomy-page .historic-plan__inner {
+  .gastronomy-page .historic-plan__inner,
+  .praias-page .historic-plan__inner,
+  .vidanortuna-page .historic-plan__inner,
+  .comprasartesanato-page .historic-plan__inner,
+  .aventuranatureza-page .historic-plan__inner {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
 }
 @media (max-width: 640px) {
   .historic-page .historic-location,
-  .gastronomy-page .historic-location {
+  .gastronomy-page .historic-location,
+  .praias-page .historic-location,
+  .vidanortuna-page .historic-location,
+  .comprasartesanato-page .historic-location,
+  .aventuranatureza-page .historic-location {
     grid-template-columns: 1fr;
   }
   .historic-page .historic-location__body,
-  .gastronomy-page .historic-location__body {
+  .gastronomy-page .historic-location__body,
+  .praias-page .historic-location__body,
+  .vidanortuna-page .historic-location__body,
+  .comprasartesanato-page .historic-location__body,
+  .aventuranatureza-page .historic-location__body {
     margin-top: 1.5rem;
   }
   .historic-page .historic-plan__cards,
-  .gastronomy-page .historic-plan__cards {
+  .gastronomy-page .historic-plan__cards,
+  .praias-page .historic-plan__cards,
+  .vidanortuna-page .historic-plan__cards,
+  .comprasartesanato-page .historic-plan__cards,
+  .aventuranatureza-page .historic-plan__cards {
     grid-template-columns: 1fr;
   }
 }
@@ -2509,19 +2818,59 @@ body {
   .gastronomy-page .historic-location__more,
   .gastronomy-page .historic-location__more.is-open,
   .gastronomy-page .historic-plan__cta,
-  .gastronomy-page .historic-plan__cta svg {
+  .gastronomy-page .historic-plan__cta svg,
+  .praias-page .historic-location__img,
+  .praias-page .historic-location__save,
+  .praias-page .historic-location__toggle svg,
+  .praias-page .historic-location__more,
+  .praias-page .historic-location__more.is-open,
+  .praias-page .historic-plan__cta,
+  .praias-page .historic-plan__cta svg,
+  .vidanortuna-page .historic-location__img,
+  .vidanortuna-page .historic-location__save,
+  .vidanortuna-page .historic-location__toggle svg,
+  .vidanortuna-page .historic-location__more,
+  .vidanortuna-page .historic-location__more.is-open,
+  .vidanortuna-page .historic-plan__cta,
+  .vidanortuna-page .historic-plan__cta svg,
+  .comprasartesanato-page .historic-location__img,
+  .comprasartesanato-page .historic-location__save,
+  .comprasartesanato-page .historic-location__toggle svg,
+  .comprasartesanato-page .historic-location__more,
+  .comprasartesanato-page .historic-location__more.is-open,
+  .comprasartesanato-page .historic-plan__cta,
+  .comprasartesanato-page .historic-plan__cta svg,
+  .aventuranatureza-page .historic-location__img,
+  .aventuranatureza-page .historic-location__save,
+  .aventuranatureza-page .historic-location__toggle svg,
+  .aventuranatureza-page .historic-location__more,
+  .aventuranatureza-page .historic-location__more.is-open,
+  .aventuranatureza-page .historic-plan__cta,
+  .aventuranatureza-page .historic-plan__cta svg {
     transition: none;
   }
   .historic-page .historic-plan__cta:hover svg,
-  .gastronomy-page .historic-plan__cta:hover svg {
+  .gastronomy-page .historic-plan__cta:hover svg,
+  .praias-page .historic-plan__cta:hover svg,
+  .vidanortuna-page .historic-plan__cta:hover svg,
+  .comprasartesanato-page .historic-plan__cta:hover svg,
+  .aventuranatureza-page .historic-plan__cta:hover svg {
     transform: none;
   }
   .historic-page .historic-plan__skeleton,
-  .gastronomy-page .historic-plan__skeleton {
+  .gastronomy-page .historic-plan__skeleton,
+  .praias-page .historic-plan__skeleton,
+  .vidanortuna-page .historic-plan__skeleton,
+  .comprasartesanato-page .historic-plan__skeleton,
+  .aventuranatureza-page .historic-plan__skeleton {
     animation: none;
   }
   .historic-page .historic-location:hover .historic-location__img,
-  .gastronomy-page .historic-location:hover .historic-location__img {
+  .gastronomy-page .historic-location:hover .historic-location__img,
+  .praias-page .historic-location:hover .historic-location__img,
+  .vidanortuna-page .historic-location:hover .historic-location__img,
+  .comprasartesanato-page .historic-location:hover .historic-location__img,
+  .aventuranatureza-page .historic-location:hover .historic-location__img {
     transform: none;
   }
 }
@@ -2533,4 +2882,6 @@ body {
   to {
     background-position: -200% 0;
   }
-}/*# sourceMappingURL=main.css.map */
+}
+
+/*# sourceMappingURL=main.css.map */

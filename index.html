@@ -15,126 +15,186 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/css/main.css" />
-
-    <!-- Estilos do modal de vídeo (galeria "Vitória em vídeo") -->
     <style>
-      .video-modal {
-        position: fixed;
-        inset: 0;
-        z-index: 2000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-      }
+    /* ==========================================================================
+   GALERIA DE VÍDEOS (CARROSSEL)
+   ========================================================================== */
+.video-gallery-carousel__track {
+  display: flex;
+  gap: 20px;
+  padding: 4px max(24px, calc((100% - (1400px - 24px)) / 2 + 24px)) 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 
-      .video-modal.is-open {
-        display: flex;
-      }
+  /* Impede a seleção de texto e libera o scroll vertical no mobile */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
 
-      .video-modal__backdrop {
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.85);
-      }
+.video-gallery-carousel__track::-webkit-scrollbar {
+  display: none;
+}
 
-      /* Sem overflow:hidden aqui, para o botão X (fora do quadro) não ser cortado */
-      .video-modal__dialog {
-        position: relative;
-        width: 100%;
-        max-width: 900px;
-        aspect-ratio: 16 / 9;
-      }
+/* Estado acionado via JS durante o arraste com o mouse */
+.video-gallery-carousel__track.is-dragging {
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  cursor: grabbing;
+}
 
-      /* Contêiner onde o JS insere o <iframe> (YouTube) ou o <video> (arquivo local) */
-      .video-modal__player {
-        width: 100%;
-        height: 100%;
-        background: #000;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      }
+/* ----- CARD DE VÍDEO ----- */
+.video-card {
+  flex: 0 0 auto;
+  width: 300px;
+  text-decoration: none;
 
-      .video-modal__player iframe,
-      .video-modal__player video {
-        width: 100%;
-        height: 100%;
-        border: 0;
-        display: block;
-      }
+  /* Impede que o navegador tente arrastar o card como um arquivo/objeto */
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
 
-      .video-modal__close {
-        position: absolute;
-        top: -44px;
-        right: 0;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        border: none;
-        background: rgba(255, 255, 255, 0.15);
-        color: #fff;
-        font-size: 24px;
-        line-height: 1;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+.video-card img,
+.video-card__cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 
-      .video-modal__close:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
+  /* EVITA O TRAVAMENTO PRINCIPAL: Impede a imagem de capturar o clique do mouse */
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
 
-      body.video-modal-open {
-        overflow: hidden;
-      }
+.video-card__thumb {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  background: linear-gradient(135deg, #102a45 0%, #0066cc 100%);
+}
 
-      /* Capa (imagem) dentro de cada card da galeria de vídeos */
-      .video-card__thumb {
-        position: relative;
-        overflow: hidden;
-      }
+/* Gradiante escuro para dar destaque ao botão e título */
+.video-card__thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  pointer-events: none;
+}
 
-      .video-card__cover {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 0;
-        pointer-events: none;
-      }
+/* Gradientes alternativos para as variações de thumb */
+.video-card__thumb--2 { background: linear-gradient(135deg, #0b6e99 0%, #4ac1f0 100%); }
+.video-card__thumb--3 { background: linear-gradient(135deg, #1a2b4c 0%, #34528a 100%); }
+.video-card__thumb--4 { background: linear-gradient(135deg, #14324f 0%, #2f7ea8 100%); }
+.video-card__thumb--5 { background: linear-gradient(135deg, #0f3d3e 0%, #1f7a7c 100%); }
+.video-card__thumb--6 { background: linear-gradient(135deg, #241b3a 0%, #4a2f6e 100%); }
 
-      .video-card__thumb::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        background: linear-gradient(
-          180deg,
-          rgba(0, 0, 0, 0.1) 0%,
-          rgba(0, 0, 0, 0.55) 100%
-        );
-        pointer-events: none;
-      }
+.video-card__play,
+.video-card__tag {
+  position: relative;
+  z-index: 2;
+}
 
-      /* O play já é position:absolute no main.css (centralizado); aqui só o z-index */
-      .video-card__play {
-        z-index: 2;
-      }
 
-      .video-card__tag {
-        position: relative;
-        z-index: 2;
-      }
+/* ==========================================================================
+   MODAL DE VÍDEO
+   ========================================================================== */
 
-      @media (max-width: 576px) {
-        .video-modal__close {
-          top: auto;
-          bottom: calc(100% + 8px);
-        }
-      }
+.video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.video-modal.is-open {
+  display: flex;
+}
+
+.video-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.video-modal__dialog {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+}
+
+.video-modal__player {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.video-modal__player iframe,
+.video-modal__player video {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.video-modal__close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.video-modal__close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Bloqueio de scroll do body com o modal aberto */
+body.video-modal-open {
+  overflow: hidden;
+}
+
+/* Responsividade do botão fechar no mobile */
+@media (max-width: 576px) {
+  .video-modal__close {
+    top: auto;
+    bottom: calc(100% + 8px);
+  }
+}
     </style>
   </head>
   <body class="page-home">
@@ -232,7 +292,9 @@
       <div class="video-gallery-carousel">
         <div class="video-gallery-carousel__track" id="videoTrack">
           <a
-            href="#"
+            href="https://www.youtube.com/shorts/uTsd8BVq97c"
+            target="_blank"
+            rel="noopener noreferrer"
             class="video-card"
             data-video="https://www.youtube.com/shorts/uTsd8BVq97c"
           >
@@ -256,7 +318,9 @@
           </a>
 
           <a
-            href="#"
+            href="https://www.youtube.com/watch?v=w9OSQDqcBNw"
+            target="_blank"
+            rel="noopener noreferrer"
             class="video-card"
             data-video="https://www.youtube.com/watch?v=w9OSQDqcBNw"
           >
@@ -278,7 +342,9 @@
           </a>
 
           <a
-            href="#"
+            href="https://www.youtube.com/watch?v=9PzkgFWaaGc"
+            target="_blank"
+            rel="noopener noreferrer"
             class="video-card"
             data-video="https://www.youtube.com/watch?v=9PzkgFWaaGc"
           >
@@ -302,7 +368,9 @@
           </a>
 
           <a
-            href="#"
+            href="https://www.youtube.com/watch?v=a434yO6YTVk"
+            target="_blank"
+            rel="noopener noreferrer"
             class="video-card"
             data-video="https://www.youtube.com/watch?v=a434yO6YTVk"
           >
@@ -326,7 +394,9 @@
           </a>
 
           <a
-            href="#"
+            href="https://www.youtube.com/watch?v=6_cPmIzhVxk"
+            target="_blank"
+            rel="noopener noreferrer"
             class="video-card"
             data-video="https://www.youtube.com/watch?v=6_cPmIzhVxk"
           >
@@ -350,7 +420,9 @@
           </a>
 
           <a
-            href="#"
+            href="https://www.youtube.com/watch?v=p0JvWW5zRME"
+            target="_blank"
+            rel="noopener noreferrer"
             class="video-card"
             data-video="https://www.youtube.com/watch?v=p0JvWW5zRME"
           >

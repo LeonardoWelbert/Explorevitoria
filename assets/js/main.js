@@ -187,15 +187,6 @@
     setTimeout(() => clearInterval(checkLoaded), 5000);
   }
 
-  // ==========================================
-  // CORREÇÃO PRINCIPAL: loadPageComponents()
-  // Agora aguardamos TODOS os componentes (header, footer,
-  // partners, contact, hero) carregarem antes de aplicar o
-  // idioma salvo. Antes, o mudarIdioma() só era chamado dentro
-  // do .then() do header, então footer/partners/contact/hero
-  // (que carregam em paralelo e podem terminar depois) nunca
-  // recebiam a tradução.
-  // ==========================================
   function loadPageComponents() {
     const isSolutions = window.location.pathname.includes("/solucoes/");
 
@@ -236,7 +227,6 @@
       fixContainerPaths(container);
       if (!container) return container;
 
-      // 1. Renderiza o reCAPTCHA se existir
       const recaptchaEl = container.querySelector(".g-recaptcha");
       if (recaptchaEl) {
         loadRecaptchaScript(() => {
@@ -250,7 +240,6 @@
         });
       }
 
-      // 2. CORREÇÃO: Adiciona o evento de submit SOMENTE APÓS o container carregar no DOM
       const contactForm = container.querySelector("#contactForm");
       if (contactForm) {
         contactForm.addEventListener("submit", async function (event) {
@@ -334,8 +323,6 @@
       return container;
     });
 
-    // Só aplica o idioma salvo depois que TODOS os componentes
-    // já estiverem no DOM (inclusive o footer).
     Promise.all([
       headerPromise,
       footerPromise,
@@ -404,20 +391,24 @@
       return trackEl.scrollWidth / 3;
     }
 
+    // CORREÇÃO CRÍTICA: Atualiza o scrollStart ao ajustar a posição do loop
     function normalizeScroll() {
       const loopWidth = getLoopWidth();
-      if (!loopWidth || !Number.isFinite(loopWidth)) return;
+      if (!loopWidth || !Number.isFinite(loopWidth) || loopWidth === 0) return;
 
       if (trackEl.scrollLeft < loopWidth * 0.5) {
         trackEl.scrollLeft += loopWidth;
+        if (isDown) scrollStart += loopWidth;
       } else if (trackEl.scrollLeft > loopWidth * 1.5) {
         trackEl.scrollLeft -= loopWidth;
+        if (isDown) scrollStart -= loopWidth;
       }
     }
 
     const setSnapDisabled = (state) => {
       carousel?.classList.toggle("is-dragging", state);
       trackEl.classList.toggle("is-dragging", state);
+      trackEl.style.scrollBehavior = state ? "auto" : "";
     };
 
     const cancelMomentum = () => {
@@ -529,6 +520,10 @@
       lastX = e.clientX;
       lastTime = performance.now();
       velocity = 0;
+
+      try {
+        trackEl.setPointerCapture(e.pointerId);
+      } catch {}
     });
 
     trackEl.addEventListener("pointermove", (e) => {
@@ -557,6 +552,11 @@
         try {
           trackEl.releasePointerCapture(e.pointerId);
         } catch {}
+      }
+
+      // Se parou de mover o mouse por mais de 80ms antes de soltar, ignora inércia
+      if (performance.now() - lastTime > 80) {
+        velocity = 0;
       }
 
       if (hasDragged) {
@@ -711,7 +711,9 @@
       dragged = false;
       startX = e.clientX;
       root.classList.add("is-dragging");
-      track.setPointerCapture(e.pointerId);
+      try {
+        track.setPointerCapture(e.pointerId);
+      } catch {}
       e.preventDefault();
     });
 
@@ -777,7 +779,7 @@
 
   function getYouTubeEmbedUrl(url) {
     const match = url.match(
-      /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i,
+      /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i
     );
 
     if (!match || !match[1]) return "";
@@ -786,22 +788,25 @@
 
   function initVideoModal(trackEl) {
     if (!trackEl) return;
+    if (trackEl.dataset.videoModalInitialized === "true") return;
+    trackEl.dataset.videoModalInitialized = "true";
 
-    const modal = document.getElementById("videoModal");
-    const player = document.getElementById("videoModalPlayer");
-
-    if (!modal || !player) {
-      console.warn(
-        "Modal de vídeo não encontrado: verifique se #videoModal e #videoModalPlayer existem no HTML.",
-      );
-      return;
+    function getModalElements() {
+      const modal = document.getElementById("videoModal");
+      const player = document.getElementById("videoModalPlayer");
+      return { modal, player };
     }
-
-    const closeBtn = modal.querySelector(".video-modal__close");
-    const backdrop = modal.querySelector(".video-modal__backdrop");
 
     function openModal(src) {
       if (!src) return;
+
+      const { modal, player } = getModalElements();
+      if (!modal || !player) {
+        console.warn(
+          "Modal de vídeo não encontrado: verifique se #videoModal e #videoModalPlayer existem no HTML."
+        );
+        return;
+      }
 
       const rawSrc = src.trim();
       player.innerHTML = "";
@@ -828,7 +833,9 @@
         video.autoplay = true;
         video.playsInline = true;
         player.appendChild(video);
-        video.play().catch(() => {});
+        video.play().catch((err) => {
+          console.warn("Erro ou restrição na reprodução do vídeo:", err);
+        });
       }
 
       modal.classList.add("is-open");
@@ -836,6 +843,9 @@
     }
 
     function closeModal() {
+      const { modal, player } = getModalElements();
+      if (!modal || !player) return;
+
       modal.classList.remove("is-open");
       document.body.classList.remove("video-modal-open");
 
@@ -849,35 +859,40 @@
       player.innerHTML = "";
     }
 
-    trackEl.addEventListener("click", (e) => {
-      const card = e.target.closest(".video-card");
-      if (!card || !trackEl.contains(card)) return;
+    let pressedCard = null;
 
-      e.preventDefault();
-      openModal(card.getAttribute("data-video"));
+    trackEl.addEventListener("pointerdown", (e) => {
+      pressedCard = e.target.closest(".video-card");
     });
 
-    closeBtn?.addEventListener("click", closeModal);
-    backdrop?.addEventListener("click", closeModal);
+    trackEl.addEventListener(
+      "click",
+      (e) => {
+        const card = e.target.closest(".video-card") || pressedCard;
+        pressedCard = null;
+
+        if (e.defaultPrevented || !card || !trackEl.contains(card)) return;
+
+        e.preventDefault();
+        openModal(card.getAttribute("data-video"));
+      },
+      true,
+    );
+
+    document.addEventListener("click", (e) => {
+      if (
+        e.target.closest(".video-modal__close") ||
+        e.target.closest(".video-modal__backdrop")
+      ) {
+        closeModal();
+      }
+    });
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.classList.contains("is-open"))
+      if (e.key === "Escape") {
         closeModal();
+      }
     });
-  }
-
-  function escapeHTML(str) {
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
-  function formatMarkdownText(text) {
-    let formatted = escapeHTML(text);
-    formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    formatted = formatted.replace(/\*(.*?)\*/g, "<em>$1</em>");
-    formatted = formatted.replace(/\n/g, "<br>");
-    return formatted;
   }
 
   function initMochilaoChat() {
@@ -923,6 +938,7 @@
         "Desculpe, ocorreu um erro ao gerar seu roteiro. Tente novamente!"
       );
     }
+
     async function handleUserMessage(texto) {
       if (!texto.trim()) return;
 
@@ -1164,51 +1180,345 @@
         note: "A autêntica Moqueca Capixaba é preparada exclusivamente em panela de barro feita por paneleiras artesãs de Goiabeiras, patrimônio cultural do Brasil. A receita não leva azeite de dendê nem leite de coco.",
       },
       galleryTitle: "Onde comer e o que saborear",
-      locations: [{
-        name: "Panela Capixaba",
- description:
-    "Restaurante tradicional no HortoMercado, referência em moqueca e culinária típica capixaba com excelente custo-benefício.Situado no tradicional HortoMercado da Enseada do Suá, o Panela Capixaba é um dos grandes guardiões da gastronomia regional em Vitória. O restaurante nasceu com o compromisso de resgatar e valorizar as receitas raízes do Espírito Santo, trazendo a autêntica Moqueca Capixaba preparada em panelas de barro artesanais produzidas pelas paneleiras de Goiabeiras. O ambiente é acolhedor, espaçoso e descontraído, ideal para reuniões de família e almoços em grupo. Além da moqueca de peixe e camarão, a experiência se completa com a famosa Torta Capixaba, moquequinha de banana, casquinha de siri e petiscos de frutos do mar bem servidos, consolidando o local como uma das opções de melhor custo-benefício para provar a verdadeira culinária capixaba com sabor caseiro e regional.",
-  tip: "Aberto de segunda a sábado das 11h às 23h e aos domingos das 11h às 16h.",
-  image: "/assets/img/panelacapi.webp",
-},
-       {
-  name: "Partido Alto",
-  description:
-    "Fundado em 1983, o Restaurante Partido Alto é uma das maiores referências em culinária capixaba e frutos do mar em Vitória. Localizado na Praia do Canto (na movimentada Rua João da Cruz), o estabelecimento destaca-se pelo preparo da autêntica Moqueca Capixaba servida na panela de barro, além de casquinha de siri, torta capixaba e pratos com peixes e mariscos frescos.",
-  tip: "Aberto de segunda a sábado das 11h às 01h e aos domingos das 11h às 00h, é ideal tanto para o almoço quanto para o jantar na Praia do Canto.",
-  image: "/assets/img/partidoalto.jpg",
-},
- {
-  name: "Don Camaleone",
-  description:
-    "Forneria e pizzaria descolada na Praia do Canto, famosa pelas pizzas artesanais de massa fina, drinks autorais e ambiente moderno.Inaugurada no final dos anos 2000 no coração da Praia do Canto, a Don Camaleone surgiu com a proposta de unir a tradição da pizza italiana ao conceito de forneria moderna e cosmopolita. A casa é famosa por sua arquitetura marcante e urbana, combinando iluminação aconchegante, arte e uma atmosfera jovem e animada. No cardápio, o grande destaque são as pizzas assadas no forno a lenha, preparadas com massa fina e crocante e recheios nobres, além de entradas clássicas como focaccias e arancinis, massas bem elaboradas e uma das cartas de drinks e cervejas mais movimentadas do bairro.", 
-  tip: "Aberto diariamente a partir das 17h30 até as 23h30. É recomendável chegar cedo nos fins de semana, pois o local costuma ter fila de espera devido à grande popularidade.",
-  image: "/assets/img/doncamaleone.jpeg",
-},
+      locations: [
         {
-  name: "A Oca - Botequim & Aconchego",
- description:
-  "Espaço cultural e gastronômico no Centro Histórico de Vitória, famoso por pratos executivos saborosos, petiscos brasileiros e ambiente acolhedor.Localizada em um casarão charmoso no Centro Histórico de Vitória, A Oca é muito mais do que um restaurante: é um ponto de encontro cultural que celebra a brasilidade, a arte e a boa gastronomia. O espaço surgiu com a proposta de revitalizar a experiência no centro da capital, oferecendo um ambiente aconchegante, repleto de elementos artísticos, música ao vivo e vegetação. Durante o dia, destaca-se pelos almoços executivos com tempero caseiro sofisticado e preços bastante acessíveis. À noite e nos fins de semana, o local se transforma em um botequim descontraído, servindo petiscos brasileiros criativos, opções vegetarianas e veganas, chope gelado e drinks autorais. A experiência na Oca combina sabor, preços justos e uma imersão na efervescência cultural e boêmia de Vitória.",
-  tip: "Aberto de terça a quinta das 12h às 15h, sextas e sábados das 12h às 23h e domingos das 12h às 17h. Excelente escolha para almoços durante a semana ou para curtir o fim de tarde no Centro Histórico.",
-  image: "/assets/img/aoca.jpg",
-},
-       {
-  name: "Divino Botequim",
- description:
-    "Boteco clássico e boêmio em Jardim da Penha, famoso pela comida de boteco premiada, feijoada aos sábados e chope trincando.Fundado no tradicional bairro de Jardim da Penha, o Divino Botequim é uma das grandes instituições da boemia e da cultura de boteco em Vitória. Com mesas espalhadas pela calçada e um clima super urbano, acolhedor e descontraído, o local atrai desde turmas de amigos para o happy hour até famílias em almoços de fim de semana. O grande destaque da casa é a gastronomia de botequim raiz elevada a outro patamar, com petiscos premiados no festival Roda de Boteco, como torresmo crocante, bolinhos recheados, gurjões de peixe e moquequinhas. Aos sábados, o local vira ponto de encontro para a tradicional feijoada completa servida com samba e cerveja bem gelada, proporcionando uma experiência legitimamente capixaba, boêmia e de preço justo.",
-  tip: "Aberto de terça a sexta das 17h às 00h, sábados das 11h30 às 00h e domingos das 11h30 às 17h. A feijoada de sábado é concorridíssima, então vale a pena chegar cedo.",
-  image: "/assets/img/divinobutequin.jpg",
-},
+          name: "Panela Capixaba",
+          description:
+            "Restaurante tradicional no HortoMercado, referência em moqueca e culinária típica capixaba com excelente custo-benefício. Situado no tradicional HortoMercado da Enseada do Suá, o Panela Capixaba é um dos grandes guardiões da gastronomia regional em Vitória. O restaurante nasceu com o compromisso de resgatar e valorizar as receitas raízes do Espírito Santo, trazendo a autêntica Moqueca Capixaba preparada em panelas de barro artesanais produzidas pelas paneleiras de Goiabeiras. O ambiente é acolhedor, espaçoso e descontraído, ideal para reuniões de família e almoços em grupo. Além da moqueca de peixe e camarão, a experiência se completa com a famosa Torta Capixaba, moquequinha de banana, casquinha de siri e petiscos de frutos do mar bem servidos, consolidando o local como uma das opções de melhor custo-benefício para provar a verdadeira culinária capixaba com sabor caseiro e regional.",
+          tip: "Aberto de segunda a sábado das 11h às 23h e aos domingos das 11h às 16h.",
+          image: "/assets/img/panelacapi.webp",
+        },
         {
-  name: "Casa de Bamba",
-  description:
-    "Ponto de encontro cultural e boêmio no Centro de Vitória, combinando roda de samba, brasilidade, comida de boteco gourmet e drinks.A Casa de Bamba é um dos centros culturais e gastronômicos mais vibrantes do Centro Histórico de Vitória. Com uma pegada totalmente urbana e focada na valorização da música e da brasilidade, o espaço atrai artistas, estudantes e amantes da boemia. A experiência combina apresentações ao vivo — que variam do samba de raiz ao choro e MPB — com uma gastronomia de boteco bem executada. O cardápio conta com porções fartas, caldos, arrumadinhos, opções vegetarianas e petiscos regionais a preços honestos, além de cerveja bem gelada e cachaças artesanais. É a escolha ideal para quem quer sentir a energia cultural noturna do centro da cidade.",
-  tip: "Aberto de quarta a sábado das 18h às 00h. Vale a pena conferir a programação musical nas redes sociais antes de ir, pois costuma ter rodas de samba bastante movimentadas.",
-  image: "/assets/img/casadabamba.jpg",
-},
+          name: "Partido Alto",
+          description:
+            "Fundado em 1983, o Restaurante Partido Alto é uma das maiores referências em culinária capixaba e frutos do mar em Vitória. Localizado na Praia do Canto (na movimentada Rua João da Cruz), o estabelecimento destaca-se pelo preparo da autêntica Moqueca Capixaba servida na panela de barro, além de casquinha de siri, torta capixaba e pratos com peixes e mariscos frescos.",
+          tip: "Aberto de segunda a sábado das 11h às 01h e aos domingos das 11h às 00h, é ideal tanto para o almoço quanto para o jantar na Praia do Canto.",
+          image: "/assets/img/partidoalto.jpg",
+        },
+        {
+          name: "Don Camaleone",
+          description:
+            "Forneria e pizzaria descolada na Praia do Canto, famosa pelas pizzas artesanais de massa fina, drinks autorais e ambiente moderno. Inaugurada no final dos anos 2000 no coração da Praia do Canto, a Don Camaleone surgiu com a proposta de unir a tradição da pizza italiana ao conceito de forneria moderna e cosmopolita. A casa é famosa por sua arquitetura marcante e urbana, combinando iluminação aconchegante, arte e uma atmosfera jovem e animada. No cardápio, o grande destaque são as pizzas assadas no forno a lenha, preparadas com massa fina e crocante e recheios nobres, além de entradas clássicas como focaccias e arancinis, massas bem elaboradas e uma das cartas de drinks e cervejas mais movimentadas do bairro.",
+          tip: "Aberto diariamente a partir das 17h30 até as 23h30. É recomendável chegar cedo nos fins de semana, pois o local costuma ter fila de espera devido à grande popularidade.",
+          image: "/assets/img/doncamaleone.jpeg",
+        },
+        {
+          name: "A Oca - Botequim & Aconchego",
+          description:
+            "Espaço cultural e gastronômico no Centro Histórico de Vitória, famoso por pratos executivos saborosos, petiscos brasileiros e ambiente acolhedor. Localizada em um casarão charmoso no Centro Histórico de Vitória, A Oca é muito mais do que um restaurante: é um ponto de encontro cultural que celebra a brasilidade, a arte e a boa gastronomia. O espaço surgiu com a proposta de revitalizar a experiência no centro da capital, oferecendo um ambiente aconchegante, repleto de elementos artísticos, música ao vivo e vegetação. Durante o dia, destaca-se pelos almoços executivos com tempero caseiro sofisticado e preços bastante acessíveis. À noite e nos fins de semana, o local se transforma em um botequim descontraído, servindo petiscos brasileiros criativos, opções vegetarianas e veganas, chope gelado e drinks autorais. A experiência na Oca combina sabor, preços justos e uma imersão na efervescência cultural e boêmia de Vitória.",
+          tip: "Aberto de terça a quinta das 12h às 15h, sextas e sábados das 12h às 23h e domingos das 12h às 17h. Excelente escolha para almoços durante a semana ou para curtir o fim de tarde no Centro Histórico.",
+          image: "/assets/img/aoca.jpg",
+        },
+        {
+          name: "Divino Botequim",
+          description:
+            "Boteco clássico e boêmio em Jardim da Penha, famoso pela comida de boteco premiada, feijoada aos sábados e chope trincando. Fundado no tradicional bairro de Jardim da Penha, o Divino Botequim é uma das grandes instituições da boemia e da cultura de boteco em Vitória. Com mesas espalhadas pela calçada e um clima super urbano, acolhedor e descontraído, o local atrai desde turmas de amigos para o happy hour até famílias em almoços de fim de semana. O grande destaque da casa é a gastronomia de botequim raiz elevada a outro patamar, com petiscos premiados no festival Roda de Boteco, como torresmo crocante, bolinhos recheados, gurjões de peixe e moquequinhas. Aos sábados, o local vira ponto de encontro para a tradicional feijoada completa servida com samba e cerveja bem gelada, proporcionando uma experiência legitimamente capixaba, boêmia e de preço justo.",
+          tip: "Aberto de terça a sexta das 17h às 00h, sábados das 11h30 às 00h e domingos das 11h30 às 17h. A feijoada de sábado é concorridíssima, então vale a pena chegar cedo.",
+          image: "/assets/img/divinobutequin.jpg",
+        },
+        {
+          name: "Casa de Bamba",
+          description:
+            "Ponto de encontro cultural e boêmio no Centro de Vitória, combinando roda de samba, brasilidade, comida de boteco gourmet e drinks. A Casa de Bamba é um dos centros culturais e gastronômicos mais vibrantes do Centro Histórico de Vitória. Com uma pegada totalmente urbana e focada na valorização da música e da brasilidade, o espaço atrai artistas, estudantes e amantes da boemia. A experiência combina apresentações ao vivo — que variam do samba de raiz ao choro e MPB — com uma gastronomia de boteco bem executada. O cardápio conta com porções fartas, caldos, arrumadinhos, opções vegetarianas e petiscos regionais a preços honestos, além de cerveja bem gelada e cachaças artesanais. É a escolha ideal para quem quer sentir a energia cultural noturna do centro da cidade.",
+          tip: "Aberto de quarta a sábado das 18h às 00h. Vale a pena conferir a programação musical nas redes sociais antes de ir, pois costuma ter rodas de samba bastante movimentadas.",
+          image: "/assets/img/casadabamba.jpg",
+        },
       ],
     },
+    //praias
+
+    praia: {
+      hero: {
+        image: "/assets/img/praia.jpg",
+        alt: "Orla da Praia de Camburi",
+      },
+      kicker: "Litoral",
+      title: "Praias, Ilhas e Orlas Marítimas",
+      subtitle:
+        "Com uma costa deslumbrante que combina praias urbanas bem estruturadas, enseadas de águas calmas e vilas históricas de pescadores, o litoral de Vitória oferece o cenário perfeito para relaxar e praticar desportos à beira-mar.",
+      guide: {
+        title: "Dicas práticas para visitantes estrangeiros",
+        items: [
+          {
+            icon: "sun",
+            label: "Melhor momento",
+            text: "As manhãs e o início da tarde são ideais para aproveitar o banho de mar em praias de águas calmas, como a Ilha do Boi e a Curva da Jurema. O fim da tarde é perfeito para caminhadas no calçadão de Camburi.",
+          },
+          {
+            icon: "shield",
+            label: "Segurança",
+            text: "As praias da capital contam com postos de salvamento e policiamento frequente. Mantenha os seus pertences à vista ao ir ao mar e evite nadar longe da costa em áreas com correntes.",
+          },
+          {
+            icon: "umbrella",
+            label: "Estrutura",
+            text: "A maioria das praias conta com quiosques modernos, aluguer de espreguiçadeiras, guarda-sóis e serviço de mesa na areia, aceitando pagamentos em cartão ou por aproximação.",
+          },
+          {
+            icon: "navigation",
+            label: "Como chegar",
+            text: "Todas as principais praias da cidade estão localizadas na área urbana e possuem fácil acesso via aplicações de transporte, autocarros municipais ou passeios de bicicleta pela ciclovia da orla.",
+          },
+        ],
+        note: "Vitória é uma ilha cercada por manguezais, enseadas e vegetação de restinga. Respeite a fauna local e utilize os contentores de lixo espalhados ao longo de todos os calçadões.",
+      },
+      galleryTitle: "Praias imperdíveis para conhecer em Vitória",
+      locations: [
+        {
+          name: "Praia de Camburi",
+          description:
+            "A praia urbana mais famosa e extensa de Vitória, perfeita para caminhadas, esportes náuticos, quiosques modernos e um pôr do sol incrível.Com cerca de 6 km de orla, a Praia de Camburi é o verdadeiro cartão-postal e ponto de encontro ao ar livre na capital capixaba. Localizada na zona norte da cidade, a praia conta com um calçadão largo muito frequentado para caminhadas, corridas e passeios de bicicleta, além de quiosques modernos que servem petiscos, água de coco e pratos da culinária local. Por ter um mar de águas calmas em alguns trechos e mais agitado em outros, atrai praticantes de stand-up paddle, kitesurf e vela. É o local ideal para sentir o ritmo urbano e litorâneo da cidade tanto de dia quanto à noite.",
+          tip: "Acesso livre 24 horas. O calçadão fica especialmente movimentado e agradável no fim da tarde para ver o pôr do sol ou fazer atividades físicas.",
+          image: "/assets/img/praiacamburi.jpg",
+        },
+        {
+          name: "Praia da Curva da Jurema",
+          description:
+            "Praia de águas calmas próxima ao Shopping Vitória, famosa por seus quiosques charmosos, gastronomia diversificada e vista para a Terceira Ponte.Localizada estrategicamente entre a Praia do Canto e a Enseada do Suá, a Curva da Jurema se destaca pelas suas águas tranquilas e sem ondas, protegidas por recifes naturais. Nos últimos anos, a orla passou por uma revitalização que transformou seus quiosques em lounges e restaurantes à beira-mar com propostas gastronômicas refinadas e descontraídas. É uma das praias favoritas dos moradores para tomar banho de mar com segurança, praticar esportes de areia como beach tennis e futevôlei, ou simplesmente relaxar admirando a vista para a Terceira Ponte e o Convento da Penha ao fundo.",
+          tip: "Acesso livre. Os quiosques funcionam geralmente das 09h às 22h, sendo uma ótima opção para emendar a praia com um almoço ou drink ao pôr do sol.",
+          image: "/assets/img/curvajurema.jpg",
+        },
+        {
+          name: "Praia do Canto (Praia das Castanheiras)",
+          description:
+            "Pequena praia urbana e arborizada no bairro da Praia do Canto, com mar tranquilo e sombra natural de castanheiras.Escondida ao longo da orla do bairro nobre da Praia do Canto e próxima às Praças dos Namorados e do Desejo, essa pequena faixa de areia é um refúgio calmo e muito arborizado. Sombreada por frondosas castanheiras, a praia possui mar extremamente calmo e raso, parecendo uma piscina natural, o que a torna ideal para famílias com crianças pequenas e para quem busca relaxar no meio da cidade. Além disso, sua localização permite conciliar um momento de descanso à beira-mar com um passeio pelo polo gastronômico e de lojas do bairro.",
+          tip: "Acesso livre 24 horas. Muito recomendada para ir pela manhã ou início da tarde aproveitando a sombra natural das árvores.",
+          image: "/assets/img/praiacanto.jpg",
+        },
+        {
+          name: "Ilha do Boi (Praia da Direita e Praia da Esquerda)",
+          description:
+            "Praias paradisíacas com águas cristalinas e esverdeadas em um dos bairros mais nobres e calmos da ilha de Vitória.Localizada em um bairro residencial de alto padrão em uma península da cidade, a Ilha do Boi abriga duas das praias mais bonitas e frequentadas da capital: a Praia da Direita e a Praia da Esquerda. Cercadas por pedras, vegetação nativa e com águas calmas, limpas e em tons de verde, essas pequenas enseadas parecem verdadeiras piscinas naturais escondidas na área urbana. É o destino preferido do público jovem e de quem busca um visual paradisíaco, ótimo para mergulho e contemplação da natureza.",
+          tip: "Acesso livre. O estacionamento no bairro é limitado, por isso vale a pena chegar cedo nos fins de semana e ensolarados.",
+          image: "/assets/img/ilhaboi.jpg",
+        },
+        {
+          name: "Ilha das Caieiras",
+          description:
+            "Polo histórico, gastronômico e litorâneo no manguezal de Vitória, berço da cultura das desfiadeiras de siri e da moqueca tradicional.Localizada no canal do manguezal na região noroeste de Vitória, a Ilha das Caieiras oferece uma experiência litorânea única e culturalmente rica. Antiga colônia de pescadores e uma das ocupações mais antigas da ilha, o local é o berço das tradicionais desfiadeiras de siri e paneleiras. Com um deck à beira da baía de Vitória, a região une um visual bucólico de barcos coloridos e manguezais a diversos restaurantes especializados em moquecas, torta capixaba e frutos do mar frescos. É um passeio imperdível para quem quer vivenciar o litoral pelo lado histórico, comunitário e gastronômico da capital.",
+          tip: "Acesso livre. Os restaurantes do deck funcionam geralmente entre 10h e 17h, sendo o destino ideal para o almoço de fim de semana.",
+          image: "/assets/img/ilhacareiras.jpg",
+        },
+      ],
+    },
+
+    "vida-noturna": {
+    hero: {
+      image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1200&auto=format&fit=crop",
+      alt: "Vida Noturna e Lazer Econômico em Vitória",
+    },
+    kicker: "Lazer & Noite",
+    title: "Vida Noturna e Lazer Barato",
+    subtitle:
+      "Aproveite a boemia capixaba sem pesar no bolso: bares universitários, feirinhas ao ar livre, música ao vivo e calçadões agitados.",
+    guide: {
+      title: "Dicas para economizar na noite capixaba",
+      items: [
+        {
+          icon: "glass",
+          label: "Dobradinha & Happy Hour",
+          text: "Muitos bares na Rua da Lama e em Jardim da Penha oferecem promoções de chopp e petiscos até as 20h.",
+        },
+        {
+          icon: "music",
+          label: "Eventos na Rua",
+          text: "Praças e calçadões costumam ter shows gratuitos, feirinhas gastronômicas e rodas de samba nos fins de semana.",
+        },
+      ],
+      note: "Dica de economia: prefira transporte coletivo ou aplicativo dividido em grupo ao frequentar os polos boêmios.",
+    },
+    galleryTitle: "Onde ir gastando pouco",
+    locations: [
+      {
+        name: "Rua da Lama (Jardim da Penha)",
+        description:
+          "O polo boêmio universitário mais famoso da cidade. Repleto de bares com mesas na calçada, cerveja barata e espetinhos.",
+        tip: "Ideal para ir em grupo. Os preços são acessíveis e o ambiente é descontraído ao ar livre.",
+        image: "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Triângulo das Bermudas (Praia do Canto)",
+        description:
+          "Apesar de ter opções sofisticadas, possui diversos pubs e bares com happy hour econômico e boa música ao vivo.",
+        tip: "Chegue cedo (entre 18h e 20h) para aproveitar as promoções de comida e bebida antes dos horários de pico.",
+        image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Feirinha da Praça dos Namorados",
+        description:
+          "Realizada nos fins de semana, combina artesanato, música e uma praça de alimentação variada a preços populares.",
+        tip: "Uma ótima opção de lazer noturno para passear, comer bem e gastar pouco antes de estender a noite.",
+        image: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Centro Histórico & Rua Sete",
+        description:
+          "Ponto de encontro do público alternativo, com bares culturais, rodas de samba de rua e drinks a preços acessíveis.",
+        tip: "Fique atento à programação cultural das praças do Centro, que frequentemente contam com eventos gratuitos.",
+        image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop",
+      },
+     
+      {
+        name: "Calçadão de Camburi (Quiosques Noturnos)",
+        description:
+          "Ótimo local para caminhadas noturnas, água de coco ou cerveja gelada nos quiosques com música ao vivo e brisa do mar.",
+        tip: "Lazer 100% gratuito para passear e com opções de lanches e porções acessíveis nos quiosques.",
+        image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop",
+      },
+      
+      {
+        name: "Praça do Papa (Enseada do Suá)",
+        description:
+          "Espaço amplo com vista panorâmica para a Terceira Ponte e Convento da Penha. Ponto de encontro para food trucks e luaus.",
+        tip: "Leve a sua própria bebida ou lanche para fazer um piquenique noturno com uma das melhores vistas da cidade.",
+        image: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=800&auto=format&fit=crop",
+      }
+    ],
+  },
+  "compras-artesanato": {
+    hero: {
+      image: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?q=80&w=1200&auto=format&fit=crop",
+      alt: "Feiras de Artesanato e Compras em Vitória",
+    },
+    kicker: "Compras & Cultura",
+    title: "Feiras, Artesanato e Compras Econômicas",
+    subtitle:
+      "Descubra os melhores locais em Vitória e região para adquirir souvenirs autênticos, arte local, roupas e artigos artesanais direto de quem produz, garantindo excelentes preços e apoiando a cultura capixaba.",
+    guide: {
+      title: "Guia e Dicas Práticas para Economizar nas Compras",
+      items: [
+        {
+          icon: "tag",
+          label: "Direto do Produtor",
+          text: "Comprar diretamente em feiras de rua ou associações comunitárias elimina intermediários, garantindo um valor muito mais acessível e apoiando o trabalho local.",
+        },
+        {
+          icon: "shopping-bag",
+          label: "Pechincha e Formas de Pagamento",
+          text: "Muitos expositores e lojas populares oferecem margem de negociação e ótimos descontos ao optar por pagamentos em dinheiro ou via Pix.",
+        },
+      ],
+      note: "Dica de ouro: A autêntica Panela de Barro conta com selo de Indicação Geográfica e é confeccionada manualmente pelas paneleiras registradas na Associação de Goiabeiras.",
+    },
+    galleryTitle: "Onde Fazer Compras Gastando Pouco",
+    locations: [
+      {
+        name: "Associação das Paneleiras de Goiabeiras",
+        description:
+          "O galpão oficial onde é mantida viva a tradição secular do fazer artesanal da Panela de Barro Capixaba, patrimônio imaterial do Brasil. Aqui você encontra desde minipaneiras para lembrancinhas até conjuntos completos para cozinhar a tradicional moqueca. Comprar diretamente no galpão com as artesãs garante os menores preços do Estado e peças autênticas de alta durabilidade.",
+        tip: "Além de adquirir as peças por valores bem menores que no comércio tradicional, você pode observar gratuitamente todo o processo de modelagem, queima e tintura com casca de mangue vermelho.",
+        image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Feirinha da Praça dos Namorados (Artesanato)",
+        description:
+          "Um dos pontos turísticos e culturais mais tradicionais das noites de fim de semana na Praia do Canto. A feira reúne centenas de barracas com grande variedade de produtos: vestuário artesanal, peças em couro, bijuterias, bolsas, cerâmicas, objetos de decoração e souvenirs temáticos do Espírito Santo, atendendo a todos os orçamentos.",
+        tip: "Ideal para passear no início da noite de sábado ou domingo. É o melhor local para comprar lembrancinhas criativas, como ímãs, chaveiros e acessórios exclusivos por valores super em conta.",
+        image: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Polo de Moda da Glória (Vila Velha)",
+        description:
+          "Localizado a poucos minutos do centro de Vitória, o Polo da Glória é o maior centro comercial a céu aberto focado em vestuário e calçados da Região Metropolitana. Com centenas de lojas de fábrica e galerias populares, o local oferece moda praia, moda feminina, masculina e infantil com preços de atacado e varejo imbatíveis.",
+        tip: "Excelente para quem quer renovar o guarda-roupa ou comprar biquínis, sungas e roupas de praia com valores muito inferiores aos praticados nos shoppings.",
+        image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Mercado da Vila Rubim (Centro)",
+        description:
+          "O mercado popular mais antigo e emblemático de Vitória. Um verdadeiro celeiro da cultura capixaba onde você encontra de tudo: temperos frescos, pimentas locais, cachaças artesanais, camarão seco, panelas, utilidades em palha e vime, além de souvenirs regionais por preços imbatíveis no comércio varejista.",
+        tip: "Lugar obrigatório para comprar produtos gastronômicos típicos para levar de viagem, como a tradicional pimenta da moqueca ou cachaças locais a preços bem populares.",
+        image: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Feira de Orgânicos e Artesanato de Jardim da Penha",
+        description:
+          "Uma feira comunitária vibrante realizada ao ar livre que reúne pequenos produtores rurais e artesãos locais. Oferece desde bordados, crochês, saboaria natural e plantas ornamentais até doces caseiros, compotas e quitutes tradicionais com preços amigáveis e atendimento acolhedor.",
+        tip: "Aproveite as manhãs de sábado para passear, tomar um café com quitutes caseiros e adquirir peças artesanais feitas por produtores independentes da região.",
+        image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Lojas e Ateliês do Centro Histórico",
+        description:
+          "Nas redondezas do Palácio Anchieta e da Praça Costa Pereira, surgiram diversos coletivos artísticos e pequenas lojas colaborativas. Esses espaços reúnem produções de artistas independentes capixabas, como gravuras, quadros em miniatura, cerâmicas estilizadas, postais ilustrados e ecobags exclusivas.",
+        tip: "Procure por postais pintados à mão e pequenas esculturas em cerâmica — são lembranças autênticas, cheias de identidade cultural e que custam muito pouco.",
+        image: "https://images.unsplash.com/photo-1459908676235-d5f02a50184b?q=80&w=800&auto=format&fit=crop",
+      }
+    ],
+  },
+  "aventura-natureza": {
+    hero: {
+      image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop",
+      alt: "Trilhas, Parques e Natureza em Vitória",
+    },
+    kicker: "Ecoturismo & Ar Livre",
+    title: "Aventura e Natureza Gastando Pouco",
+    subtitle: "Explore parques naturais, trilhas com vistas panorâmicas, reservas florestais e mirantes incríveis em Vitória e arredores, aproveitando o melhor do ecoturismo sem pagar nada ou gastando muito pouco.",
+    guide: {
+      title: "Dicas Práticas para Aventureiros Econômicos",
+      items: [
+        {
+          icon: "compass",
+          label: "Acesso Gratuito",
+          text: "A grande maioria dos parques municipais e estaduais da grande Vitória possui entrada 100% gratuita para caminhadas e contemplação.",
+        },
+        {
+          icon: "sun",
+          label: "Preparação e Economia",
+          text: "Leve a sua própria garrafa de água para reabastecer nos bebedouros dos parques e prepare lanches leves para fazer um piquenique ao ar livre.",
+        },
+      ],
+      note: "Dica de segurança: Para trilhas mais isoladas, como o Morro do Moreno ou Pedra da Cebola, prefira ir em grupo e nos horários de maior movimento pela manhã.",
+    },
+    galleryTitle: "Destinos Naturais e Imperdíveis",
+    locations: [
+      {
+        name: "Parque Pedra da Cebola",
+        description:
+          "Um dos parques urbanos mais emblemáticos de Vitória, famoso pela enorme rocha esculpida pela natureza em formato de cebola. Oferece vasta área verde, lagos, répteis, aves soltas, parquinho infantil e amplo gramado ideal para piqueniques, caminhadas e contemplação.",
+        tip: "A entrada é totalmente gratuita. É um local perfeito para descansar à sombra das árvores, praticar ioga ou fazer um piquenique econômico em família.",
+        image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Trilha do Morro do Moreno (Vila Velha)",
+        description:
+          "Localizado bem ao lado da Terceira Ponte, o Morro do Moreno oferece diversas opções de trilhas com subidas de diferentes níveis de dificuldade e vias de escalada. No topo, o visitante é recompensado com uma das vistas panorâmicas mais impressionantes de Vitória, Vila Velha e da baía.",
+        tip: "A caminhada pela estrada principal é gratuita e acessível. O melhor horário para subir é no início da manhã ou no fim da tarde para contemplar o pôr do sol.",
+        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Parque Estadual da Fonte Grande",
+        description:
+          "O verdadeiro pulmão verde da ilha de Vitória, encravado no coração da cidade. O parque conta com diversos mirantes estruturados (como o Mirante da Cidade e o do Sumaré) que oferecem vistas espetaculares de quase toda a Região Metropolitana e do canal de Vitória.",
+        tip: "A entrada no centro de visitantes e o acesso aos mirantes são gratuitos. Conta com acompanhamento de guias em horários específicos e ótimas pistas de caminhada.",
+        image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Parque Botânico Vale",
+        description:
+          "Inserido em um cinturão verde no bairro Jardim Camburi, é um espaço de preservação da Mata Atlântica com trilhas ecológicas guiadas, orquidário, vagão cultural e áreas para caminhada e passeios em família.",
+        tip: "A visitação é inteiramente gratuita. É um local extremamente seguro e limpo, excelente para passear com crianças e relaxar em meio à fauna e flora locais.",
+        image: "https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Projeto Tamar (Praça do Papa)",
+        description:
+          "Localizado no Parque Moscoso/Enseada do Suá, o Centro de Visitação do Projeto Tamar oferece um espaço educativo com tanques de observação de tartarugas marinhas, exposição interativa, mirante com vista para a Terceira Ponte e ilhas próximas.",
+        tip: "O ingresso tem preço simbólico e acessível, com opção de meia-entrada para estudantes e idosos, além de ter gratuidade em dias e eventos comunitários específicos.",
+        image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop",
+      },
+      {
+        name: "Reserva Ecológica Ilha das Caieiras",
+        description:
+          "Tradicional vila de pescadores onde a natureza do manguezal se encontra com a cultura capixaba. Além de ser o berço da torta capixaba, o local oferece passeios de barco econômicos pelos canais de mangue, observação de garças e um pôr do sol inesquecível.",
+        tip: "O passeio pelo deque de madeira à beira do mangue é gratuito. Passeios de barco comunitários no canal costumam ter preços bem em conta ao combinar com os barqueiros locais.",
+        image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop",
+      }
+    ],
+  },
   };
+
+  
 
   function experienceSvg(inner, cls) {
     return `<svg${cls ? ` class="${cls}"` : ""} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
@@ -1637,19 +1947,6 @@
 
 // ==========================================
 // SISTEMA DE TRADUÇÃO (PT-BR, PT-PT, EN)
-// ==========================================
-//
-// OBSERVAÇÃO: este objeto só tem chaves para o menu (nav.* / exp.*).
-// O footer e o conteúdo interno das páginas (sobre.html, mochilao.html,
-// etc.) ainda não têm nenhum atributo data-i18n nem entradas aqui —
-// por isso continuam em português mesmo com o fix de timing acima.
-// Me mande o footer.html (e quais páginas você quer traduzir) que eu
-// adiciono os data-i18n e as chaves correspondentes nos 3 idiomas.
-//
-// O conteúdo das páginas de experiência (historia-cultura.html,
-// gastronomia-capixaba.html, etc.) é montado via EXPERIENCIAS, que é
-// texto fixo em português — esse conteúdo também não é traduzido por
-// este sistema e precisaria de uma estrutura separada por idioma.
 // ==========================================
 
 const translations = {
