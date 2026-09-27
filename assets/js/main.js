@@ -1457,7 +1457,7 @@
           description:
             "O metro quadrado mais sofisticado para compras de rua no Espírito Santo, concentrado principalmente ao longo da Rua Aleixo Netto e suas travessas arborizadas. A região forma um shopping a céu aberto voltado para o alto padrão, reunindo badaladas boutiques de moda feminina, ateliês de estilistas capixabas, joalherias exclusivas e lojas de decoração de interiores, entrecortado por cafés charmosos e confeitarias finas.",
           tip: "Perfil: Alto Padrão. Ideal para quem busca moda autoral, grifes exclusivas e um atendimento altamente personalizado.",
-          image: "/assets/img/botique.jpg",
+          image: "/assets/img/lojas-praia-do-canto.webp",
         },
         {
           name: "Shopping Vitória",
@@ -1480,7 +1480,7 @@
             "A capital do vestuário no Espírito Santo, situada no bairro da Glória, na cidade vizinha de Vila Velha (a poucos minutos do centro de Vitória após cruzar a Terceira Ponte). É o maior centro comercial a céu aberto da Região Metropolitana, com centenas de lojas de fábrica e galerias focadas em moda praia, moda fitness e confecções locais a preços de atacado e varejo.",
           tip: "Perfil: Econômico a Médio. Use calçados confortáveis. É o melhor ponto do Estado para comprar biquínis e roupas de verão por uma fração do preço dos shoppings.",
           image:
-            "/assets/img/polo.webp",
+            "/assets/img/polo-da-gloria.webp",
         },
         {
           name: "Feirinha da Praça dos Namorados",
@@ -1488,7 +1488,7 @@
             "O encontro mais tradicional das noites de fim de semana na orla da Praia do Canto (Av. Saturnino de Brito). A Feirart reúne cerca de 200 expositores credenciados que oferecem trabalhos manuais em couro, crochê, cerâmica e madeira, além de bijuterias, roupas pintadas à mão e lembranças temáticas, acompanhados de uma concorrida praça de alimentação ao ar livre.",
           tip: "Perfil: Econômico. Funciona aos sábados e domingos à noite. O local perfeito para comprar chaveiros, ímãs e lembranças temáticas do Espírito Santo.",
           image:
-            "/assets/img/praca.webp",
+            "/assets/img/feirinha-praca-dos-namorados.webp",
         },
         {
           name: "Ateliês e Coletivos do Centro Histórico",
@@ -1496,7 +1496,7 @@
             "O refúgio da arte independente capixaba, espalhado por casarões antigos nos arredores do Palácio Anchieta e da Rua Sete de Setembro, no Centro. O local reúne coletivos artísticos, sebos e lojas colaborativas que comercializam produções de designers e artistas visuais locais, como gravuras, telas em miniatura, cerâmicas modernas, postais ilustrados e ecobags.",
           tip: "Perfil: Econômico a Médio. Uma excelente alternativa para quem prefere fugir dos souvenires clichês e levar arte original e cheia de identidade local para casa.",
           image:
-            "/assets/img/papa.webp",
+            "/assets/img/ palacioanchieta.jpg",
         },
         {
           name: "Feira de Orgânicos e Artesanato de Jardim da Penha",
