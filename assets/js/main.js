@@ -1496,7 +1496,7 @@
             "O refúgio da arte independente capixaba, espalhado por casarões antigos nos arredores do Palácio Anchieta e da Rua Sete de Setembro, no Centro. O local reúne coletivos artísticos, sebos e lojas colaborativas que comercializam produções de designers e artistas visuais locais, como gravuras, telas em miniatura, cerâmicas modernas, postais ilustrados e ecobags.",
           tip: "Perfil: Econômico a Médio. Uma excelente alternativa para quem prefere fugir dos souvenires clichês e levar arte original e cheia de identidade local para casa.",
           image:
-            "/assets/img/ palacioanchieta.jpg",
+            "/assets/img/palacio.jpg",
         },
         {
           name: "Feira de Orgânicos e Artesanato de Jardim da Penha",
