@@ -1457,7 +1457,7 @@
           description:
             "O metro quadrado mais sofisticado para compras de rua no Espírito Santo, concentrado principalmente ao longo da Rua Aleixo Netto e suas travessas arborizadas. A região forma um shopping a céu aberto voltado para o alto padrão, reunindo badaladas boutiques de moda feminina, ateliês de estilistas capixabas, joalherias exclusivas e lojas de decoração de interiores, entrecortado por cafés charmosos e confeitarias finas.",
           tip: "Perfil: Alto Padrão. Ideal para quem busca moda autoral, grifes exclusivas e um atendimento altamente personalizado.",
-          image: "/assets/img/Botique.jpg",
+          image: "/assets/img/botique.jpg",
         },
         {
           name: "Shopping Vitória",
