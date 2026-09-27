@@ -1123,7 +1123,7 @@
           description:
             "Um dos parques mais famosos e visitados de Vitória, o Parque Pedra da Cebola leva esse nome devido a uma curiosa formação rochosa esculpida pela natureza que lembra uma cebola descascando. O espaço, que antigamente abrigava uma pedreira, hoje é um grande refúgio verde localizado entre os bairros Jardim da Penha e Mata da Praia. O parque oferece uma rica biodiversidade com vegetação de Mata Atlântica e restinga, um belo jardim oriental, lagos, campo de futebol, parquinhos e amplos gramados. É comum cruzar com animais silvestres soltos pelo local, como iguanas, tartarugas e diversas espécies de aves.",
           tip: "O lugar é perfeito para fazer um piquenique ou caminhar no fim da tarde. Leve sua canga para relaxar no gramado, mas lembre-se da regra principal do parque: é proibido alimentar os animais silvestres.",
-          image: "/assets/img/57ef4c891bca1bdf0ace1a6e0a1e4f84.jpg",
+          image: "./assets/img/pedra-cebola.webp",
         },
         {
           name: "Igreja Nossa Senhora do Carmo",
@@ -1511,7 +1511,7 @@
     "aventura-natureza": {
       hero: {
         image:
-          "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1200&auto=format&fit=crop",
+          "/assets/img/Trilhas-Parques-e-Natureza-em-Vitoria-ES.webp",
         alt: "Trilhas, Parques e Natureza em Vitória",
       },
       kicker: "Ecoturismo & Ar Livre",
@@ -1552,7 +1552,7 @@
             "Um dos cartões-postais mais famosos de Vitória, localizado entre os bairros Jardim da Penha e Mata da Praia. O parque ocupa uma área de mais de 100 mil metros quadrados e chama a atenção pelo imponente afloramento rochoso esculpido naturalmente em formato de cebola. O espaço conta com vasta vegetação de Mata Atlântica e restinga, lagos ornamentais, jardim oriental, parquinho infantil e animais como tartarugas, peixes, aves e saguis que vivem soltos na área verde.",
           tip: "Perfil: Gratuito / Familiar. Ampla área de gramado ideal para piqueniques, leitura, prática de ioga e caminhadas leves em um ambiente seguro e bem estruturado.",
           image:
-            "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/pedra-cebola.webp",
         },
         {
           name: "Morro do Moreno",
