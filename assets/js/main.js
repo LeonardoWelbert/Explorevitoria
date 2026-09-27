@@ -1584,7 +1584,7 @@
             "Localizado na Enseada do Suá, próximo à Praça do Papa, o espaço é dedicado à pesquisa, conservação e conscientização sobre as tartarugas marinhas que frequentam a costa capixaba. A estrutura conta com tanques de observação com espécimes de diferentes tamanhos, auditório com exibições audiovisuais, espaços educativos interativos, loja oficial de produtos sustentáveis e um deck panorâmico estrategicamente voltado para a Baía de Vitória.",
           tip: "Perfil: Educativo / Cultural. O ingresso possui valor acessível com política de meia-entrada para estudantes, professores e idosos, além de gratuidade para crianças até 5 anos.",
           image:
-            "/assets/img/projeto-tamar.webp",
+            "/assets/img/tamar.webp",
         },
         {
           name: "Deque Contemplativo da Ilha das Caieiras",
