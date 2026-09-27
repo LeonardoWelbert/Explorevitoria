@@ -1123,7 +1123,7 @@
           description:
             "Um dos parques mais famosos e visitados de Vitória, o Parque Pedra da Cebola leva esse nome devido a uma curiosa formação rochosa esculpida pela natureza que lembra uma cebola descascando. O espaço, que antigamente abrigava uma pedreira, hoje é um grande refúgio verde localizado entre os bairros Jardim da Penha e Mata da Praia. O parque oferece uma rica biodiversidade com vegetação de Mata Atlântica e restinga, um belo jardim oriental, lagos, campo de futebol, parquinhos e amplos gramados. É comum cruzar com animais silvestres soltos pelo local, como iguanas, tartarugas e diversas espécies de aves.",
           tip: "O lugar é perfeito para fazer um piquenique ou caminhar no fim da tarde. Leve sua canga para relaxar no gramado, mas lembre-se da regra principal do parque: é proibido alimentar os animais silvestres.",
-          image: "./assets/img/pedra-cebola.webp",
+          image: "/assets/img/pedra-cebola.webp",
         },
         {
           name: "Igreja Nossa Senhora do Carmo",
@@ -1144,7 +1144,7 @@
           description:
             "Inaugurado em 1912, o Parque Moscoso é um dos espaços públicos históricos mais antigos de Vitória. O parque foi criado durante o processo de modernização urbana promovido pelo governo de Jerônimo Monteiro e possui aproximadamente 24 mil metros quadrados. Inspirado em jardins europeus, o espaço possui áreas arborizadas, alamedas, lagos, fontes e jardins. Um dos seus principais elementos é a Concha Acústica, palco histórico de apresentações culturais e estrutura tombada como patrimônio cultural pelo Conselho Estadual de Cultura.",
           tip: "Aberto todos os dias, das 5h às 22h. Às segundas-feiras, o parque permanece fechado das 9h às 17h para manutenção.",
-          image: "/assets/img/20171119-114743-largejpg.jpg",
+          image: "/assets/img/20171119-114743-large.webp",
         },
       ],
     },
