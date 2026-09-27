@@ -1457,14 +1457,14 @@
           description:
             "O metro quadrado mais sofisticado para compras de rua no Espírito Santo, concentrado principalmente ao longo da Rua Aleixo Netto e suas travessas arborizadas. A região forma um shopping a céu aberto voltado para o alto padrão, reunindo badaladas boutiques de moda feminina, ateliês de estilistas capixabas, joalherias exclusivas e lojas de decoração de interiores, entrecortado por cafés charmosos e confeitarias finas.",
           tip: "Perfil: Alto Padrão. Ideal para quem busca moda autoral, grifes exclusivas e um atendimento altamente personalizado.",
-          image: "/assets/img/praia-do-canto-compras.jpg",
+          image: "/assets/img/Botique.jpg",
         },
         {
           name: "Shopping Vitória",
           description:
             "O principal e mais luxuoso complexo comercial do Espírito Santo, situado na Avenida Américo Buaiz, na nobre região da Enseada do Suá. De frente para a Baía de Vitória, o shopping combina um mix invejável de lojas – desde redes globais até conceituadas grifes internacionais e marcas premium brasileiras. Conta com arquitetura moderna, amplos corredores e varandas gastronômicas com vista para o mar.",
           tip: "Perfil: Médio a Alto Padrão. A melhor opção climatizada e segura para concentrar grandes compras, especialmente em dias de chuva.",
-          image: "/assets/img/shopping-vitoria.jpg",
+          image: "/assets/img/shopping.webp",
         },
         {
           name: "Mercado da Vila Rubim",
@@ -1480,7 +1480,7 @@
             "A capital do vestuário no Espírito Santo, situada no bairro da Glória, na cidade vizinha de Vila Velha (a poucos minutos do centro de Vitória após cruzar a Terceira Ponte). É o maior centro comercial a céu aberto da Região Metropolitana, com centenas de lojas de fábrica e galerias focadas em moda praia, moda fitness e confecções locais a preços de atacado e varejo.",
           tip: "Perfil: Econômico a Médio. Use calçados confortáveis. É o melhor ponto do Estado para comprar biquínis e roupas de verão por uma fração do preço dos shoppings.",
           image:
-            "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/polo.webp",
         },
         {
           name: "Feirinha da Praça dos Namorados",
@@ -1488,7 +1488,7 @@
             "O encontro mais tradicional das noites de fim de semana na orla da Praia do Canto (Av. Saturnino de Brito). A Feirart reúne cerca de 200 expositores credenciados que oferecem trabalhos manuais em couro, crochê, cerâmica e madeira, além de bijuterias, roupas pintadas à mão e lembranças temáticas, acompanhados de uma concorrida praça de alimentação ao ar livre.",
           tip: "Perfil: Econômico. Funciona aos sábados e domingos à noite. O local perfeito para comprar chaveiros, ímãs e lembranças temáticas do Espírito Santo.",
           image:
-            "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/praca.webp",
         },
         {
           name: "Ateliês e Coletivos do Centro Histórico",
@@ -1496,7 +1496,7 @@
             "O refúgio da arte independente capixaba, espalhado por casarões antigos nos arredores do Palácio Anchieta e da Rua Sete de Setembro, no Centro. O local reúne coletivos artísticos, sebos e lojas colaborativas que comercializam produções de designers e artistas visuais locais, como gravuras, telas em miniatura, cerâmicas modernas, postais ilustrados e ecobags.",
           tip: "Perfil: Econômico a Médio. Uma excelente alternativa para quem prefere fugir dos souvenires clichês e levar arte original e cheia de identidade local para casa.",
           image:
-            "https://images.unsplash.com/photo-1459908676235-d5f02a50184b?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/papa.webp",
         },
         {
           name: "Feira de Orgânicos e Artesanato de Jardim da Penha",
@@ -1504,7 +1504,7 @@
             "Uma imersão na cultura comunitária e sustentável realizada na Praça Wolghano Netto, no coração de Jardim da Penha. Acontece aos sábados pela manhã e reúne pequenos produtores rurais e artesãos independentes comercializando bordados, saboaria natural, terrários, roupas feitas à mão e itens de decoração sustentável em um ambiente familiar.",
           tip: "Perfil: Econômico. Aproveite a manhã de sábado para garimpar produtos de autocuidado naturais e apoiar diretamente as famílias produtoras e artesãos capixabas.",
           image:
-            "https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/feira-jardim-penha.webp",
         },
       ],
     },
@@ -1560,7 +1560,7 @@
             "Proeminente formação rochosa de 184 metros de altitude situada na Praia da Costa, no município vizinho de Vila Velha (ao lado da Terceira Ponte). É o principal ponto de encontro dos praticantes de ecoturismo e esportes de aventura da região, oferecendo trilhas de diferentes níveis de dificuldade, rampas para voo livre e paredões para escalada e rapel. Do topo, avista-se de forma privilegiada o Convento da Penha, a Baía de Vitória e toda a orla.",
           tip: "Perfil: Gratuito / Aventura. A subida pela estrada principal é pavimentada e acessível. O momento mais concorrido é o final da tarde para contemplar o pôr do sol sobre a baía.",
           image:
-            "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/morro.webp",
         },
         {
           name: "Parque Estadual da Fonte Grande",
@@ -1568,7 +1568,7 @@
             "Considerado o maior remanescente contínuo de Mata Atlântica protegido no Maciço Central da Ilha de Vitória, abrangendo mais de 200 hectares. O parque possui relevo acidentado e conta com trilhas ecológicas sinalizadas e diversos mirantes estruturados com decks de madeira — com destaque para o Mirante da Cidade e o Mirante do Sumaré —, de onde é possível observar o canal marítimo, o Centro Histórico, os manguezais e os municípios vizinhos.",
           tip: "Perfil: Gratuito / Contemplativo. Possui Centro de Visitantes com maquetes e informações ambientais. Recomenda-se agendar visitas monitoradas ou ir nos horários de funcionamento dos mirantes.",
           image:
-            "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/fonte-grande.webp",
         },
         {
           name: "Parque Botânico Vale",
@@ -1576,7 +1576,7 @@
             "Com 33 hectares de área verde preservada no bairro Jardim Camburi, este parque funciona como uma verdadeira ilha de biodiversidade urbana. O local abriga mais de 140 espécies de árvores e plantas da Mata Atlântica, além de fauna silvestre nativa. A estrutura dispõe de trilhas ecológicas monitoradas, orquidário com centenas de espécies, vagão cultural com exposições interativas, anfiteatro ao ar livre e área de piquenique sob a copa das árvores.",
           tip: "Perfil: Gratuito / Educativo. Espaço totalmente plano, acessível e seguro, sendo uma das melhores opções da cidade para passeios tranquilos com crianças e idosos.",
           image:
-            "https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/parque-botanico.webp",
         },
         {
           name: "Centro de Visitação do Projeto Tamar",
@@ -1584,7 +1584,7 @@
             "Localizado na Enseada do Suá, próximo à Praça do Papa, o espaço é dedicado à pesquisa, conservação e conscientização sobre as tartarugas marinhas que frequentam a costa capixaba. A estrutura conta com tanques de observação com espécimes de diferentes tamanhos, auditório com exibições audiovisuais, espaços educativos interativos, loja oficial de produtos sustentáveis e um deck panorâmico estrategicamente voltado para a Baía de Vitória.",
           tip: "Perfil: Educativo / Cultural. O ingresso possui valor acessível com política de meia-entrada para estudantes, professores e idosos, além de gratuidade para crianças até 5 anos.",
           image:
-            "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/projeto-tamar.webp",
         },
         {
           name: "Deque Contemplativo da Ilha das Caieiras",
@@ -1592,7 +1592,7 @@
             "Um dos bairros mais antigos e tradicionais de Vitória, onde o ecossistema de manguezal se conecta diretamente com a história da pesca e da gastronomia capixaba. A orla da comunidade conta com um extenso deque de madeira construído sobre o canal, proporcionando uma caminhada contemplativa com vista para a vegetação nativa, garças, garças-brancas e barcos de pesca artesanal ancorados.",
           tip: "Perfil: Cultural / Gratuito. Acesso livre para passeios no deque. É possível contratar passeios de barco com barqueiros locais no canal para conhecer os manguezais por outro ângulo.",
           image:
-            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/deque.webp",
         },
         {
           name: "Parque Municipal Horto de Maruípe",
@@ -1600,7 +1600,7 @@
             "Uma das áreas verdes mais antigas da ilha, localizada no bairro Maruípe. O parque é cortado por uma alagada e arborizada alameda de palmeiras-imperiais seculares e conta com uma lagoa central, pista de caminhada, academia ao ar livre e quadras esportivas. O espaço preserva espécies nativas da Mata Atlântica e é um ponto de encontro tradicional da comunidade local para atividades físicas.",
           tip: "Perfil: Gratuito / Esportivo. Excelente opção para caminhadas matinais debaixo da sombra das árvores e para observar aves aquáticas ao redor do lago.",
           image:
-            "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/maruipe.webp",
         },
         {
           name: "Parque Natural Municipal Von Schilgen",
@@ -1608,7 +1608,7 @@
             "Encravado no Morro do Suá, no bairro Praia do Canto, este refúgio ecológico ocupa uma antiga chácara familiar que preservou sua cobertura florestal e pomar histórico. O parque oferece trilhas suaves em meio à vegetação nativa e exótica, ruínas da antiga residência, mirante com vista para o bairro e um ambiente de extremo silêncio e tranquilidade bem no meio da área urbana.",
           tip: "Perfil: Gratuito / Contemplativo. Ideal para quem deseja um refúgio calmo para leitura ou uma caminhada leve sem se afastar da região central e comercial da cidade.",
           image:
-            "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800&auto=format&fit=crop",
+            "/assets/img/parque-natural.webp",
         },
       ],
     },
