@@ -259,7 +259,7 @@
           };
 
           try {
-            const resposta = await fetch("http://localhost:3000/salvar-contato", {
+            const resposta = await fetch("http://localhost:3000/api/contato", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(dados),
@@ -284,7 +284,7 @@
 
               contactForm.reset();
             } else {
-              alert("Ocorreu um erro ao guardar na base de dados: " + resultado.erro);
+              alert("Ocorreu um erro ao guardar na base de dados: " + (resultado.mensagem || resultado.erro || "Erro desconhecido."));
             }
           } catch (error) {
             console.error("Erro de ligação:", error);
@@ -2009,3 +2009,43 @@ function mudarIdioma(idioma) {
 
   localStorage.setItem("idioma-selecionado", idioma);
 }
+
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // Impede o recarregamento da página
+
+    // Captura os dados diretamente pelos IDs do seu HTML
+    const formData = {
+        nome: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        telefone: document.getElementById('phone').value,
+        mensagem: document.getElementById('message').value
+    };
+
+    // Validação básica
+    if (!formData.nome || !formData.email || !formData.telefone) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:3000/api/contato', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.sucesso) {
+            alert('Mensagem enviada com sucesso! Em breve entraremos em contato.');
+            document.getElementById('contactForm').reset(); // Limpa os campos do formulário
+        } else {
+            alert('Erro: ' + result.mensagem);
+        }
+    } catch (error) {
+        console.error('Erro na conexão com o servidor:', error);
+        alert('Não foi possível conectar ao servidor. Verifique se a API está rodando.');
+    }
+});
