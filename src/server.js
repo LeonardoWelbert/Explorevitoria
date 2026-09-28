@@ -1,4 +1,5 @@
-require('dotenv').config(); // Carrega as variáveis do arquivo .env
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const express = require('express');
 const mysql = require('mysql2');
@@ -6,6 +7,13 @@ const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const requiredEnv = ['DB_HOST', 'DB_USER', 'DB_PASSWORD', 'DB_NAME'];
+const missingEnv = requiredEnv.filter((name) => process.env[name] === undefined);
+
+if (missingEnv.length > 0) {
+    console.error(`Configure as variáveis ${missingEnv.join(', ')} no arquivo ${path.join(__dirname, '.env')}.`);
+    process.exit(1);
+}
 
 app.use(cors());
 app.use(express.json());
@@ -14,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 // Conexão usando variáveis de ambiente de forma segura
 const db = mysql.createPool({
     host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT || 3306),
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
