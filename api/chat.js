@@ -41,12 +41,13 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     ],
   });
 
-  // Lista de modelos leves por ordem de preferência para fallback
+  // Identificadores válidos da API REST do Gemini
   const MODELOS = [
-    "gemini-1.5-flash",
+    "gemini-1.5-flash-latest",
     "gemini-2.0-flash",
-    "gemini-1.5-flash-8b",
+    "gemini-1.5-pro-latest",
   ];
+
   let ultimoErro = null;
 
   for (const modelo of MODELOS) {
@@ -70,28 +71,28 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
 
       ultimoErro = data.error?.message || `Erro HTTP ${response.status}`;
       console.warn(
-        `Modelo ${modelo} indisponível (${response.status}): ${ultimoErro}`,
+        `Modelo ${modelo} falhou com status ${response.status}: ${ultimoErro}`,
       );
 
-      // Se não for erro de sobrecarga/cota (ex: chave inválida), encerra imediatamente
-      if (response.status !== 503 && response.status !== 429) {
-        return res.status(response.status).json({
-          error: "Erro na API do Gemini",
-          detalhe: ultimoErro,
-        });
+      // Se for 404 (modelo não existe nessa versão da API), 503 (sobrecarga) ou 429 (cota), tenta o próximo modelo
+      if ([404, 503, 429].includes(response.status)) {
+        await new Promise((r) => setTimeout(r, 200));
+        continue;
       }
 
-      // Pequena pausa (300ms) antes de tentar o próximo modelo reserva
-      await new Promise((r) => setTimeout(r, 300));
+      // Para erros de autenticação ou chaves inválidas (400, 401, 403), interrompe
+      return res.status(response.status).json({
+        error: "Erro na API do Gemini",
+        detalhe: ultimoErro,
+      });
     } catch (error) {
       ultimoErro = error.message;
       console.error(`Erro de rede no modelo ${modelo}:`, error.message);
     }
   }
 
-  // Se todos os modelos da lista falharem
   return res.status(503).json({
-    error: "Serviço da IA temporariamente indisponível por alta demanda.",
+    error: "Serviço da IA temporariamente indisponível.",
     detalhe: ultimoErro,
   });
 }
