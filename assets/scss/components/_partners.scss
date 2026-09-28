@@ -51,21 +51,48 @@
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   overflow: hidden;
+  padding: 8px 0; 
+
+  // fade nas bordas esquerda/direita pra suavizar a entrada/saída das logos
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 120px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  &::before {
+    left: 0;
+    background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
+  }
+
+  &::after {
+    right: 0;
+    background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
+  }
 
   &__track {
     display: flex;
     align-items: center;
-    gap: 72px;
+    gap: 32px;
     width: max-content;
-    /* Aumentei levemente o tempo de 8s para 15s para evitar que a velocidade gere "engasgos" visuais com imagens pesadas */
-    animation: partners-scroll 15s linear infinite alternate;
-    will-change: transform; /* Avisa ao navegador para usar a GPU */
+    animation: partners-scroll 25s linear infinite alternate;
+    will-change: transform;
   }
 
   @media (max-width: $breakpoint-md) {
+    &::before,
+    &::after {
+      width: 60px;
+    }
+
     &__track {
-      gap: 48px;
-      animation-duration: 20s;
+      gap: 20px;
+      animation-duration: 28s;
     }
   }
 }
@@ -75,21 +102,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60px; /* Aumentado levemente para fotos ficarem mais visíveis */
-  width: 140px; /* Fixar a largura previne o navegador de recalcular o layout */
+  height: 110px; 
+  width: 220px;
+  padding: 20px 28px;
+  background: #fff;
+  border: 1px solid rgba($color-secondary, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
 
   img {
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;
-    border-radius: 8px; /* Arredonda os cantos das fotos JPG */
-    transform: translateZ(0); /* Força a renderização em hardware (GPU) */
-    will-change: transform;
+    filter: grayscale(100%);
+    opacity: 0.75;
+    transition:
+      filter 0.25s ease,
+      opacity 0.25s ease;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+
+    img {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
   }
 
   @media (max-width: $breakpoint-md) {
-    height: 45px;
-    width: 110px;
+    height: 80px;
+    width: 160px;
+    padding: 14px 18px;
+    border-radius: 12px;
   }
 }
 

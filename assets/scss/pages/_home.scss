@@ -160,8 +160,6 @@
   font-size: $font-size-sm;
 }
 
-
-
 // Mochilão / IA
 .backpack-cta {
   padding: 100px 0;
@@ -484,6 +482,15 @@
       line-height: $line-height-body;
       margin-bottom: 0;
     }
+  }
+}
+
+.video-card {
+  &__tag {
+    color: #e9e6e6;
+  }
+  &__play {
+    color: #e9e6e6;
   }
 }
 

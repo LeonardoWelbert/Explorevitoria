@@ -908,6 +908,64 @@
 
     if (!chatMessages || !chatForm || !chatInput || !chatSend) return;
 
+    // Em desenvolvimento (Live Server) a API roda em outra porta
+    const isLocal = ["localhost", "127.0.0.1"].includes(location.hostname);
+    const CHAT_API_URL = isLocal
+      ? "http://localhost:3000/api/chat"
+      : "/api/chat";
+
+    function escapeHTML(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    // Converte o markdown básico devolvido pela IA em HTML seguro
+    function formatMarkdownText(text) {
+      const lines = escapeHTML(text).split("\n");
+      const out = [];
+      let inList = false;
+
+      const inline = (t) =>
+        t
+          .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+          .replace(/(^|[^*])\*(?!\s)(.+?)\*(?!\*)/g, "$1<em>$2</em>");
+
+      lines.forEach((raw) => {
+        const line = raw.trim();
+        const item = line.match(/^[*-]\s+(.*)$/);
+
+        if (item) {
+          if (!inList) {
+            out.push("<ul>");
+            inList = true;
+          }
+          out.push("<li>" + inline(item[1]) + "</li>");
+          return;
+        }
+
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+
+        if (!line) return;
+
+        const h = line.match(/^#{1,6}\s+(.*)$/);
+        out.push(
+          h
+            ? "<strong>" + inline(h[1]) + "</strong><br>"
+            : "<p>" + inline(line) + "</p>",
+        );
+      });
+
+      if (inList) out.push("</ul>");
+      return out.join("");
+    }
+
     function addMessage(html, tipo) {
       const div = document.createElement("div");
       div.className = "msg msg--" + tipo;
@@ -927,7 +985,7 @@
     }
 
     async function fetchGeminiResponse(userPrompt) {
-      const response = await fetch("/api/chat", {
+      const response = await fetch(CHAT_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userPrompt }),
@@ -1310,8 +1368,7 @@
 
     "vida-noturna": {
       hero: {
-        image:
-          "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1200&auto=format&fit=crop",
+        image: "/assets/img/4c6976c8dbeb0d9c33383830ba04743f.jpg",
         alt: "Vida Noturna e Gastronomia em Vitória",
       },
       kicker: "Lazer & Experiências Noturnas",
@@ -1479,39 +1536,34 @@
           description:
             "A capital do vestuário no Espírito Santo, situada no bairro da Glória, na cidade vizinha de Vila Velha (a poucos minutos do centro de Vitória após cruzar a Terceira Ponte). É o maior centro comercial a céu aberto da Região Metropolitana, com centenas de lojas de fábrica e galerias focadas em moda praia, moda fitness e confecções locais a preços de atacado e varejo.",
           tip: "Perfil: Econômico a Médio. Use calçados confortáveis. É o melhor ponto do Estado para comprar biquínis e roupas de verão por uma fração do preço dos shoppings.",
-          image:
-            "/assets/img/polo-da-gloria.webp",
+          image: "/assets/img/polo-da-gloria.webp",
         },
         {
           name: "Feirinha da Praça dos Namorados",
           description:
             "O encontro mais tradicional das noites de fim de semana na orla da Praia do Canto (Av. Saturnino de Brito). A Feirart reúne cerca de 200 expositores credenciados que oferecem trabalhos manuais em couro, crochê, cerâmica e madeira, além de bijuterias, roupas pintadas à mão e lembranças temáticas, acompanhados de uma concorrida praça de alimentação ao ar livre.",
           tip: "Perfil: Econômico. Funciona aos sábados e domingos à noite. O local perfeito para comprar chaveiros, ímãs e lembranças temáticas do Espírito Santo.",
-          image:
-            "/assets/img/feirinha-praca-dos-namorados.webp",
+          image: "/assets/img/feirinha-praca-dos-namorados.webp",
         },
         {
           name: "Ateliês e Coletivos do Centro Histórico",
           description:
             "O refúgio da arte independente capixaba, espalhado por casarões antigos nos arredores do Palácio Anchieta e da Rua Sete de Setembro, no Centro. O local reúne coletivos artísticos, sebos e lojas colaborativas que comercializam produções de designers e artistas visuais locais, como gravuras, telas em miniatura, cerâmicas modernas, postais ilustrados e ecobags.",
           tip: "Perfil: Econômico a Médio. Uma excelente alternativa para quem prefere fugir dos souvenires clichês e levar arte original e cheia de identidade local para casa.",
-          image:
-            "/assets/img/palacio.jpg",
+          image: "/assets/img/palacio.jpg",
         },
         {
           name: "Feira de Orgânicos e Artesanato de Jardim da Penha",
           description:
             "Uma imersão na cultura comunitária e sustentável realizada na Praça Wolghano Netto, no coração de Jardim da Penha. Acontece aos sábados pela manhã e reúne pequenos produtores rurais e artesãos independentes comercializando bordados, saboaria natural, terrários, roupas feitas à mão e itens de decoração sustentável em um ambiente familiar.",
           tip: "Perfil: Econômico. Aproveite a manhã de sábado para garimpar produtos de autocuidado naturais e apoiar diretamente as famílias produtoras e artesãos capixabas.",
-          image:
-            "/assets/img/feira-jardim-penha.webp",
+          image: "/assets/img/feira-jardim-penha.webp",
         },
       ],
     },
     "aventura-natureza": {
       hero: {
-        image:
-          "/assets/img/Trilhas-Parques-e-Natureza-em-Vitoria-ES.webp",
+        image: "/assets/img/9eab51890779a0ff3973fb9c975c195e.jpg",
         alt: "Trilhas, Parques e Natureza em Vitória",
       },
       kicker: "Ecoturismo & Ar Livre",
@@ -1551,64 +1603,56 @@
           description:
             "Um dos cartões-postais mais famosos de Vitória, localizado entre os bairros Jardim da Penha e Mata da Praia. O parque ocupa uma área de mais de 100 mil metros quadrados e chama a atenção pelo imponente afloramento rochoso esculpido naturalmente em formato de cebola. O espaço conta com vasta vegetação de Mata Atlântica e restinga, lagos ornamentais, jardim oriental, parquinho infantil e animais como tartarugas, peixes, aves e saguis que vivem soltos na área verde.",
           tip: "Perfil: Gratuito / Familiar. Ampla área de gramado ideal para piqueniques, leitura, prática de ioga e caminhadas leves em um ambiente seguro e bem estruturado.",
-          image:
-            "/assets/img/pedra-cebola.webp",
+          image: "/assets/img/pedra-cebola.webp",
         },
         {
           name: "Morro do Moreno",
           description:
             "Proeminente formação rochosa de 184 metros de altitude situada na Praia da Costa, no município vizinho de Vila Velha (ao lado da Terceira Ponte). É o principal ponto de encontro dos praticantes de ecoturismo e esportes de aventura da região, oferecendo trilhas de diferentes níveis de dificuldade, rampas para voo livre e paredões para escalada e rapel. Do topo, avista-se de forma privilegiada o Convento da Penha, a Baía de Vitória e toda a orla.",
           tip: "Perfil: Gratuito / Aventura. A subida pela estrada principal é pavimentada e acessível. O momento mais concorrido é o final da tarde para contemplar o pôr do sol sobre a baía.",
-          image:
-            "/assets/img/morro.webp",
+          image: "/assets/img/morro.webp",
         },
         {
           name: "Parque Estadual da Fonte Grande",
           description:
             "Considerado o maior remanescente contínuo de Mata Atlântica protegido no Maciço Central da Ilha de Vitória, abrangendo mais de 200 hectares. O parque possui relevo acidentado e conta com trilhas ecológicas sinalizadas e diversos mirantes estruturados com decks de madeira — com destaque para o Mirante da Cidade e o Mirante do Sumaré —, de onde é possível observar o canal marítimo, o Centro Histórico, os manguezais e os municípios vizinhos.",
           tip: "Perfil: Gratuito / Contemplativo. Possui Centro de Visitantes com maquetes e informações ambientais. Recomenda-se agendar visitas monitoradas ou ir nos horários de funcionamento dos mirantes.",
-          image:
-            "/assets/img/fonte-grande.webp",
+          image: "/assets/img/fonte-grande.webp",
         },
         {
           name: "Parque Botânico Vale",
           description:
             "Com 33 hectares de área verde preservada no bairro Jardim Camburi, este parque funciona como uma verdadeira ilha de biodiversidade urbana. O local abriga mais de 140 espécies de árvores e plantas da Mata Atlântica, além de fauna silvestre nativa. A estrutura dispõe de trilhas ecológicas monitoradas, orquidário com centenas de espécies, vagão cultural com exposições interativas, anfiteatro ao ar livre e área de piquenique sob a copa das árvores.",
           tip: "Perfil: Gratuito / Educativo. Espaço totalmente plano, acessível e seguro, sendo uma das melhores opções da cidade para passeios tranquilos com crianças e idosos.",
-          image:
-            "/assets/img/parque-botanico.webp",
+          image: "/assets/img/parque-botanico.webp",
         },
         {
           name: "Centro de Visitação do Projeto Tamar",
           description:
             "Localizado na Enseada do Suá, próximo à Praça do Papa, o espaço é dedicado à pesquisa, conservação e conscientização sobre as tartarugas marinhas que frequentam a costa capixaba. A estrutura conta com tanques de observação com espécimes de diferentes tamanhos, auditório com exibições audiovisuais, espaços educativos interativos, loja oficial de produtos sustentáveis e um deck panorâmico estrategicamente voltado para a Baía de Vitória.",
           tip: "Perfil: Educativo / Cultural. O ingresso possui valor acessível com política de meia-entrada para estudantes, professores e idosos, além de gratuidade para crianças até 5 anos.",
-          image:
-            "/assets/img/tamar.webp",
+          image: "/assets/img/tamar.webp",
         },
         {
           name: "Deque Contemplativo da Ilha das Caieiras",
           description:
             "Um dos bairros mais antigos e tradicionais de Vitória, onde o ecossistema de manguezal se conecta diretamente com a história da pesca e da gastronomia capixaba. A orla da comunidade conta com um extenso deque de madeira construído sobre o canal, proporcionando uma caminhada contemplativa com vista para a vegetação nativa, garças, garças-brancas e barcos de pesca artesanal ancorados.",
           tip: "Perfil: Cultural / Gratuito. Acesso livre para passeios no deque. É possível contratar passeios de barco com barqueiros locais no canal para conhecer os manguezais por outro ângulo.",
-          image:
-            "/assets/img/deque.webp",
+          image: "/assets/img/deque.webp",
         },
         {
           name: "Parque Municipal Horto de Maruípe",
           description:
             "Uma das áreas verdes mais antigas da ilha, localizada no bairro Maruípe. O parque é cortado por uma alagada e arborizada alameda de palmeiras-imperiais seculares e conta com uma lagoa central, pista de caminhada, academia ao ar livre e quadras esportivas. O espaço preserva espécies nativas da Mata Atlântica e é um ponto de encontro tradicional da comunidade local para atividades físicas.",
           tip: "Perfil: Gratuito / Esportivo. Excelente opção para caminhadas matinais debaixo da sombra das árvores e para observar aves aquáticas ao redor do lago.",
-          image:
-            "/assets/img/maruipe.webp",
+          image: "/assets/img/maruipe.webp",
         },
         {
           name: "Parque Natural Municipal Von Schilgen",
           description:
             "Encravado no Morro do Suá, no bairro Praia do Canto, este refúgio ecológico ocupa uma antiga chácara familiar que preservou sua cobertura florestal e pomar histórico. O parque oferece trilhas suaves em meio à vegetação nativa e exótica, ruínas da antiga residência, mirante com vista para o bairro e um ambiente de extremo silêncio e tranquilidade bem no meio da área urbana.",
           tip: "Perfil: Gratuito / Contemplativo. Ideal para quem deseja um refúgio calmo para leitura ou uma caminhada leve sem se afastar da região central e comercial da cidade.",
-          image:
-            "/assets/img/parque-natural.webp",
+          image: "/assets/img/parque-natural.webp",
         },
       ],
     },
@@ -2010,6 +2054,25 @@
     );
   }
 
+  function initTimelineReveal() {
+    const items = document.querySelectorAll(".timeline__item");
+    if (!items.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.25 },
+    );
+
+    items.forEach((item) => observer.observe(item));
+  }
+
   function init() {
     setFavicon();
     loadPageComponents();
@@ -2030,6 +2093,7 @@
 
     initMochilaoChat();
     initExperiencePage();
+    initTimelineReveal();
   }
 
   if (document.readyState === "loading") {
@@ -2104,44 +2168,46 @@ function mudarIdioma(idioma) {
   localStorage.setItem("idioma-selecionado", idioma);
 }
 
-document.getElementById("contactForm").addEventListener("submit", async (e) => {
-  e.preventDefault(); // Impede o recarregamento da página
+document
+  .getElementById("contactForm")
+  ?.addEventListener("submit", async (e) => {
+    e.preventDefault(); // Impede o recarregamento da página
 
-  // Captura os dados diretamente pelos IDs do seu HTML
-  const formData = {
-    nome: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    telefone: document.getElementById("phone").value,
-    mensagem: document.getElementById("message").value,
-  };
+    // Captura os dados diretamente pelos IDs do seu HTML
+    const formData = {
+      nome: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      telefone: document.getElementById("phone").value,
+      mensagem: document.getElementById("message").value,
+    };
 
-  // Validação básica
-  if (!formData.nome || !formData.email || !formData.telefone) {
-    alert("Por favor, preencha todos os campos obrigatórios.");
-    return;
-  }
-
-  try {
-    const response = await fetch("http://localhost:3000/api/contato", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    const result = await response.json();
-
-    if (result.sucesso) {
-      alert("Mensagem enviada com sucesso! Em breve entraremos em contato.");
-      document.getElementById("contactForm").reset(); // Limpa os campos do formulário
-    } else {
-      alert("Erro: " + result.mensagem);
+    // Validação básica
+    if (!formData.nome || !formData.email || !formData.telefone) {
+      alert("Por favor, preencha todos os campos obrigatórios.");
+      return;
     }
-  } catch (error) {
-    console.error("Erro na conexão com o servidor:", error);
-    alert(
-      "Não foi possível conectar ao servidor. Verifique se a API está rodando.",
-    );
-  }
-});
+
+    try {
+      const response = await fetch("http://localhost:3000/api/contato", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (result.sucesso) {
+        alert("Mensagem enviada com sucesso! Em breve entraremos em contato.");
+        document.getElementById("contactForm").reset(); // Limpa os campos do formulário
+      } else {
+        alert("Erro: " + result.mensagem);
+      }
+    } catch (error) {
+      console.error("Erro na conexão com o servidor:", error);
+      alert(
+        "Não foi possível conectar ao servidor. Verifique se a API está rodando.",
+      );
+    }
+  });

@@ -39,295 +39,570 @@
       </div>
     </section>
 
-    <style>
-      /* ==== Seções extras da página Sobre Nós ==== */
-      .como-funciona {
-        padding: 90px 0;
-      }
-      .como-funciona__step {
-        text-align: center;
-        padding: 32px 20px;
-        height: 100%;
-      }
-      .como-funciona__number {
-        width: 48px;
-        height: 48px;
-        margin: 0 auto 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: #4ac1f0;
-        color: #ffffff;
-        font-weight: 700;
-        font-size: 1.1rem;
-      }
-      .como-funciona__step h3 {
-        font-size: 1.15rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-      }
-      .como-funciona__step p {
-        color: #5a5a5a;
-        font-size: 0.95rem;
-        line-height: 1.6;
-      }
+ <style>
+  /* ==== Seções extras da página Sobre Nós ==== */
+  .como-funciona {
+    padding: 90px 0;
+  }
+  .como-funciona__step {
+    text-align: center;
+    padding: 32px 20px;
+    height: 100%;
+  }
+  .como-funciona__number {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #4ac1f0;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .como-funciona__step h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .como-funciona__step p {
+    color: #5a5a5a;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
 
-      .comparativo {
-        padding: 60px 0 90px;
-      }
-      .comparativo__col {
-        border-radius: 16px;
-        padding: 32px 28px;
-        height: 100%;
-      }
-      .comparativo__col--old {
-        background: #f5f5f5;
-        border: 1px solid #e4e4e4;
-      }
-      .comparativo__col--new {
-        background: #eef6fd;
-        border: 1px solid #bfe2f7;
-      }
-      .comparativo__col h3 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 18px;
-      }
-      .comparativo__col ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      .comparativo__col li {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        margin-bottom: 14px;
-        font-size: 0.95rem;
-        color: #444;
-      }
-      .comparativo__icon {
-        font-weight: 700;
-        flex-shrink: 0;
-      }
-      .comparativo__col--old .comparativo__icon {
-        color: #b5391c;
-      }
-      .comparativo__col--new .comparativo__icon {
-        color: #1450c4;
-      }
+  /* ==== Timeline: como tudo começou ==== */
+  .timeline {
+    position: relative;
+    padding: 100px 0 40px;
+    background: #ffffff;
+  }
+  .timeline__badge {
+    display: inline-block;
+    padding: 6px 22px;
+    border: 1px solid #1450c4;
+    border-radius: 999px;
+    color: #1450c4;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+  }
+  .timeline__list {
+    position: relative;
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 900px;
+  }
+  .timeline__line {
+    position: absolute;
+    top: 260px;
+    bottom: 60px;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      to bottom,
+      rgba(20, 80, 196, 0) 0%,
+      rgba(20, 80, 196, 0.25) 8%,
+      rgba(20, 80, 196, 0.25) 92%,
+      rgba(20, 80, 196, 0) 100%
+    );
+  }
+  .timeline__item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: 50%;
+    padding-right: 56px;
+    margin-bottom: 64px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+  }
+  .timeline__item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .timeline__item:nth-child(even) {
+    margin-left: 50%;
+    justify-content: flex-start;
+    padding-right: 0;
+    padding-left: 56px;
+  }
+  .timeline__item:nth-child(even) .timeline__marker {
+    left: -24px;
+    right: auto;
+  }
+  .timeline__item:last-child {
+    margin-bottom: 0;
+  }
+  .timeline__marker {
+    position: absolute;
+    top: 4px;
+    right: -24px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid #1450c4;
+    border-radius: 50%;
+    color: #1450c4;
+    box-shadow: 0 6px 16px rgba(20, 80, 196, 0.15);
+    z-index: 2;
+  }
+  .timeline__marker svg {
+    width: 20px;
+    height: 20px;
+  }
+  .timeline__card {
+    width: 100%;
+    max-width: 380px;
+    background: #ffffff;
+    border: 1px solid #e7edf4;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(15, 47, 122, 0.06);
+    padding: 28px 28px 24px;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .timeline__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(15, 47, 122, 0.1);
+  }
+  .timeline__step {
+    display: block;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: rgba(20, 80, 196, 0.4);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .timeline__title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #0f2f7a;
+    margin-bottom: 10px;
+  }
+  .timeline__text {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: #444;
+    margin: 0;
+  }
+  @media (max-width: 991px) {
+    .timeline__line {
+      left: 24px;
+      transform: none;
+    }
+    .timeline__list {
+      max-width: none;
+    }
+    .timeline__item,
+    .timeline__item:nth-child(even) {
+      width: 100%;
+      margin-left: 0;
+      justify-content: flex-start;
+      padding-left: 64px;
+      padding-right: 0;
+    }
+    .timeline__item .timeline__marker,
+    .timeline__item:nth-child(even) .timeline__marker {
+      left: 0;
+      right: auto;
+    }
+    .timeline__card {
+      max-width: none;
+    }
+  }
+  @media (max-width: 767px) {
+    .timeline {
+      padding: 72px 0 24px;
+    }
+  }
 
-      .depoimentos {
-        padding: 90px 0;
-        background: #f5f8fb;
-      }
-      .depoimento-card {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 32px;
-        height: 100%;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
-      }
-      .depoimento-card__quote {
-        font-size: 0.98rem;
-        color: #333;
-        line-height: 1.7;
-        margin-bottom: 20px;
-      }
-      .depoimento-card__author {
-        font-weight: 700;
-        font-size: 0.95rem;
-      }
-      .depoimento-card__role {
-        font-size: 0.85rem;
-        color: #888;
-      }
-      /* Corrige o subtítulo (originalmente pensado para fundo escuro)
-         quando usado em seções de fundo claro */
-      .comparativo .section-subtitle,
-      .depoimentos .section-subtitle,
-      .cta-final .section-subtitle {
-        color: #6b7280 !important;
-        max-width: 640px;
-        margin-left: auto;
-        margin-right: auto;
-      }
+  /* ==== Comparativo (Atualizado) ==== */
+  .comparativo {
+    padding: 90px 0;
+  }
+  .comparativo__badge {
+    display: inline-block;
+    padding: 6px 22px;
+    border: 1px solid #1450c4;
+    border-radius: 999px;
+    color: #1450c4;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+  }
+  .comparativo__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    gap: 0 28px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .comparativo__col {
+    position: relative;
+    border-radius: 24px;
+    padding: 36px 32px;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .comparativo__col--old {
+    background: #ffffff;
+    border: 1px solid #e5ebf3;
+  }
+  .comparativo__col--new {
+    background: #eaf5ff;
+    border: 1px solid #a9d7f5;
+    box-shadow: 0 16px 36px rgba(20, 80, 196, 0.1);
+  }
+  .comparativo__col:hover {
+    transform: translateY(-4px);
+  }
+  .comparativo__col--old:hover {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  }
+  .comparativo__col--new:hover {
+    box-shadow: 0 20px 44px rgba(20, 80, 196, 0.16);
+  }
+  .comparativo__col-tag {
+    position: absolute;
+    top: -14px;
+    right: 28px;
+    background: #1450c4;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    box-shadow: 0 6px 14px rgba(20, 80, 196, 0.35);
+  }
+  .comparativo__col-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .comparativo__col-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .comparativo__col-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .comparativo__col-icon--old {
+    background: #eef0f3;
+    color: #8b98a8;
+  }
+  .comparativo__col-icon--new {
+    background: #d7ecff;
+    color: #1450c4;
+  }
+  .comparativo__col-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .comparativo__col--old .comparativo__col-label {
+    color: #9aa5b3;
+  }
+  .comparativo__col--new .comparativo__col-label {
+    color: #1450c4;
+  }
+  .comparativo__col h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    color: #16213a;
+  }
+  .comparativo__col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .comparativo__col li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 44px;
+    margin-bottom: 16px;
+    line-height: 1.55;
+    font-size: 0.95rem;
+    color: #444;
+  }
+  .comparativo__col li:last-child {
+    margin-bottom: 0;
+  }
+  .comparativo__icon {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .comparativo__icon svg {
+    width: 13px;
+    height: 13px;
+  }
+  .comparativo__icon--old {
+    background: rgba(181, 57, 28, 0.1);
+    color: #b5391c;
+  }
+  .comparativo__icon--new {
+    background: rgba(20, 80, 196, 0.12);
+    color: #1450c4;
+  }
+  .comparativo__divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+  }
+  .comparativo__divider span {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #eaf0f8;
+    box-shadow: 0 8px 20px rgba(15, 47, 122, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #1450c4;
+    letter-spacing: 0.5px;
+  }
 
-      .comparativo__col {
-        transition:
-          transform 0.25s ease,
-          box-shadow 0.25s ease;
-      }
-      .comparativo__col:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-      }
+  @media (max-width: 991px) {
+    .comparativo__grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .comparativo__divider {
+      padding: 0;
+    }
+    .comparativo__divider span {
+      margin: -6px auto;
+    }
+  }
+  @media (max-width: 767px) {
+    .comparativo {
+      padding: 72px 0;
+    }
+    .comparativo__col {
+      padding: 28px 24px;
+    }
+  }
 
-      .depoimento-card {
-        transition:
-          transform 0.25s ease,
-          box-shadow 0.25s ease;
-      }
-      .depoimento-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.09);
-      }
+  /* ==== Depoimentos ==== */
+  .depoimentos {
+    padding: 90px 0;
+    background: #f5f8fb;
+  }
+  .depoimento-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    height: 100%;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .depoimento-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.09);
+  }
+  .depoimento-card__quote {
+    font-size: 0.98rem;
+    color: #333;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .depoimento-card__author {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .depoimento-card__role {
+    font-size: 0.85rem;
+    color: #888;
+  }
 
-      .cta-final {
-        padding: 80px 0;
-        background: linear-gradient(135deg, #1450c4 0%, #0f2f7a 100%);
-        color: #ffffff;
-        text-align: center;
-      }
-      .cta-final .section-title {
-        color: #ffffff;
-      }
-      .cta-final .section-subtitle {
-        color: rgba(255, 255, 255, 0.85) !important;
-      }
-      .cta-final__btn {
-        display: inline-block;
-        margin-top: 28px;
-        padding: 14px 36px;
-        border-radius: 999px;
-        background: #ffffff;
-        color: #1450c4;
-        font-weight: 700;
-        text-decoration: none;
-        transition:
-          transform 0.2s ease,
-          box-shadow 0.2s ease;
-      }
-      .cta-final__btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-        color: #0f2f7a;
-      }
+  /* Corrige o subtítulo quando usado em seções de fundo claro */
+  .comparativo .section-subtitle,
+  .depoimentos .section-subtitle,
+  .cta-final .section-subtitle {
+    color: #6b7280 !important;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-      .page-sobre {
-        background: #f7fafc;
-      }
-      .page-sobre .section-wrapper,
-      .page-sobre .comparativo,
-      .page-sobre .depoimentos {
-        position: relative;
-      }
-      .page-sobre .section-wrapper {
-        background: #ffffff;
-      }
-      .page-sobre .about-section {
-        padding: 112px 0;
-      }
+  /* ==== CTA Final ==== */
+  .cta-final {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #1450c4 0%, #0f2f7a 100%);
+    color: #ffffff;
+    text-align: center;
+  }
+  .cta-final .section-title {
+    color: #ffffff;
+  }
+  .cta-final .section-subtitle {
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
+  .cta-final__btn {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 14px 36px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #1450c4;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .cta-final__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+    color: #0f2f7a;
+  }
 
-      .page-sobre .about-section__photo {
-        display: block;
-        width: 100%;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
-      }
-      .about-section__eyebrow,
-      .section-kicker {
-        display: inline-block;
-        margin-bottom: 16px;
-        color: #1450c4;
-        font-size: 0.75rem;
-        font-weight: 800;
-        letter-spacing: 0.12em;
-        line-height: 1.2;
-      }
-      .pillars .section-kicker {
-        color: #4ac1f0;
-      }
-      .page-sobre .comparativo {
-        background: #f7fafc;
-      }
-      .page-sobre .comparativo__col {
-        border-radius: 24px;
-        padding: 36px 32px;
-      }
-      .page-sobre .comparativo__col--old {
-        background: #ffffff;
-        border-color: #e5ebf3;
-      }
-      .page-sobre .comparativo__col--new {
-        background: #eaf5ff;
-        border-color: #a9d7f5;
-      }
-      .page-sobre .comparativo__col li {
-        min-height: 44px;
-        margin-bottom: 16px;
-        line-height: 1.55;
-      }
-      .page-sobre .comparativo__col--old .comparativo__icon {
-        color: #8b98a8;
-      }
-      .page-sobre .depoimentos {
-        background: #ffffff;
-      }
-      .page-sobre .depoimento-card {
-        position: relative;
-        border: 1px solid #e7edf4;
-        border-radius: 22px;
-        padding: 34px 30px 30px;
-        box-shadow: 0 12px 32px rgba(15, 47, 122, 0.06);
-      }
-      .page-sobre .depoimento-card::before {
-        content: "\201C";
-        display: block;
-        height: 28px;
-        color: #4ac1f0;
-        font-family: Georgia, serif;
-        font-size: 3.4rem;
-        line-height: 1;
-      }
-      .page-sobre .depoimento-card__quote {
-        min-height: 108px;
-      }
-      .page-sobre .cta-final {
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(
-          135deg,
-          #0f2f7a 0%,
-          #1450c4 58%,
-          #1689c8 100%
-        );
-      }
-      .page-sobre .cta-final::after {
-        content: "";
-        position: absolute;
-        width: 360px;
-        height: 360px;
-        right: -120px;
-        bottom: -220px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 50%;
-      }
-      .page-sobre .cta-final .container {
-        position: relative;
-        z-index: 1;
-      }
-      @media (max-width: 767px) {
-        .page-sobre .about-section {
-          padding: 72px 0;
-        }
-        .page-sobre .about-section__image-wrap {
-          border-radius: 20px;
-        }
-        .page-sobre .comparativo,
-        .page-sobre .depoimentos {
-          padding: 72px 0;
-        }
-        .page-sobre .comparativo__col,
-        .page-sobre .depoimento-card {
-          padding: 28px 24px;
-        }
-        .page-sobre .depoimento-card__quote {
-          min-height: 0;
-        }
-      }
-    </style>
+  /* ==== Ajustes Específicos da Página Sobre ==== */
+  .page-sobre {
+    background: #f7fafc;
+  }
+  .page-sobre .section-wrapper,
+  .page-sobre .comparativo,
+  .page-sobre .depoimentos {
+    position: relative;
+  }
+  .page-sobre .section-wrapper {
+    background: #ffffff;
+  }
+  .page-sobre .about-section {
+    padding: 112px 0;
+  }
+  .page-sobre .about-section__photo {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .about-section__eyebrow,
+  .section-kicker {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: #1450c4;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+  }
+  .pillars .section-kicker {
+    color: #4ac1f0;
+  }
+
+  /* Mantido o fundo específico para a seção comparativo na página sobre */
+  .page-sobre .comparativo {
+    background: #f7fafc; 
+  }
+
+  .page-sobre .depoimentos {
+    background: #ffffff;
+  }
+  .page-sobre .depoimento-card {
+    position: relative;
+    border: 1px solid #e7edf4;
+    border-radius: 22px;
+    padding: 34px 30px 30px;
+    box-shadow: 0 12px 32px rgba(15, 47, 122, 0.06);
+  }
+  .page-sobre .depoimento-card::before {
+    content: "\201C";
+    display: block;
+    height: 28px;
+    color: #4ac1f0;
+    font-family: Georgia, serif;
+    font-size: 3.4rem;
+    line-height: 1;
+  }
+  .page-sobre .depoimento-card__quote {
+    min-height: 108px;
+  }
+  .page-sobre .cta-final {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+      135deg,
+      #0f2f7a 0%,
+      #1450c4 58%,
+      #1689c8 100%
+    );
+  }
+  .page-sobre .cta-final::after {
+    content: "";
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    right: -120px;
+    bottom: -220px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+  }
+  .page-sobre .cta-final .container {
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 767px) {
+    .page-sobre .about-section {
+      padding: 72px 0;
+    }
+    .page-sobre .about-section__image-wrap {
+      border-radius: 20px;
+    }
+    .page-sobre .depoimentos {
+      padding: 72px 0;
+    }
+    .page-sobre .depoimento-card {
+      padding: 28px 24px;
+    }
+    .page-sobre .depoimento-card__quote {
+      min-height: 0;
+    }
+  }
+</style>
   </head>
   <body class="page-sobre">
     <div id="header-container"></div>
@@ -385,6 +660,100 @@
         </div>
       </section>
     </div>
+
+    <!-- Como tudo começou -->
+    <section class="timeline">
+      <div class="container">
+        <div class="text-center mb-5">
+          <span class="timeline__badge">COMO TUDO COMEÇOU</span>
+          <h2 class="about-section__title">Da sala de aula para a rua</h2>
+          <p class="section-subtitle">
+            Um resumo de como o Explore Vitória nasceu e pra quem ele existe
+            hoje.
+          </p>
+        </div>
+
+        <div class="timeline__line" aria-hidden="true"></div>
+
+        <ol class="timeline__list">
+          <li class="timeline__item">
+            <div class="timeline__marker">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M22 10L12 5 2 10l10 5 10-5Z" stroke-linejoin="round"/>
+                <path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="timeline__card">
+              <span class="timeline__step">01</span>
+              <h3 class="timeline__title">Da sala de aula pro campo</h3>
+              <p class="timeline__text">
+                Em 2024, um grupo de alunos do curso técnico do Senac recebeu
+                o desafio de transformar um Projeto Integrador em algo real:
+                um guia digital sobre Vitória.
+              </p>
+            </div>
+          </li>
+
+          <li class="timeline__item">
+            <div class="timeline__marker">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 22s7-7.58 7-12.5A7 7 0 0 0 5 9.5C5 14.42 12 22 12 22Z" stroke-linejoin="round"/>
+                <circle cx="12" cy="9.5" r="2.5"/>
+              </svg>
+            </div>
+            <div class="timeline__card">
+              <span class="timeline__step">02</span>
+              <h3 class="timeline__title">Vitória além do cartão-postal</h3>
+              <p class="timeline__text">
+                Percebemos que grande parte dos guias repetia sempre os
+                mesmos pontos turísticos. Faltava contar a cidade pelo olhar
+                de quem vive nela — os bairros, a gastronomia, as praias
+                menos óbvias.
+              </p>
+            </div>
+          </li>
+
+          <li class="timeline__item">
+            <div class="timeline__marker">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M15 9l-4.5 1.5L9 15l4.5-1.5L15 9Z" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="timeline__card">
+              <span class="timeline__step">03</span>
+              <h3 class="timeline__title">Curadoria com cara capixaba</h3>
+              <p class="timeline__text">
+                Reunimos parceiros locais, testamos experiências e
+                organizamos tudo em um só lugar: hospedagem, gastronomia,
+                roteiros e dicas práticas de como se locomover pela cidade.
+              </p>
+            </div>
+          </li>
+
+          <li class="timeline__item">
+            <div class="timeline__marker">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="9" cy="8" r="3.2"/>
+                <path d="M2.5 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2" stroke-linecap="round"/>
+                <path d="M16.5 5.5a3.2 3.2 0 0 1 0 6.4M20 20c0-3-1.9-5.3-4.7-6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="timeline__card">
+              <span class="timeline__step">04</span>
+              <h3 class="timeline__title">
+                Pra quem chega e pra quem já mora aqui
+              </h3>
+              <p class="timeline__text">
+                Hoje o Explore Vitória ajuda tanto visitantes de primeira
+                viagem quanto moradores que querem redescobrir a própria
+                cidade — sempre com informação prática, sem enrolação.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
 
     <!-- Como funciona -->
     <section class="pillars">
@@ -493,71 +862,129 @@
       </div>
     </section>
 
-    <!-- Diferencial vs. guias tradicionais -->
-    <section class="comparativo">
-      <div class="container">
-        <div class="text-center mb-5">
-          <h2 class="about-section__title">Menos busca, mais descoberta</h2>
-          <p class="section-subtitle">
-            Informação local e escolhas práticas para você montar uma viagem
-            mais leve, autêntica e possível.
-          </p>
-        </div>
-        <div class="row g-4 justify-content-center">
-          <div class="col-lg-5">
-            <div class="comparativo__col comparativo__col--old">
-              <h3>Quando tudo parece igual</h3>
-              <ul>
-                <li>
-                  <span class="comparativo__icon">—</span> Muitas opções sem
-                  contexto para decidir
-                </li>
-                <li>
-                  <span class="comparativo__icon">—</span> Dicas que não levam
-                  em conta o seu tempo ou orçamento
-                </li>
-                <li>
-                  <span class="comparativo__icon">—</span> Informações práticas
-                  espalhadas em vários lugares
-                </li>
-                <li>
-                  <span class="comparativo__icon">—</span> Roteiros distantes da
-                  rotina de quem vive na cidade
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-5">
-            <div class="comparativo__col comparativo__col--new">
-              <h3>Quando o roteiro entende você</h3>
-              <ul>
-                <li>
-                  <span class="comparativo__icon">✓</span> Sugestões organizadas
-                  pelos seus interesses
-                </li>
-                <li>
-                  <span class="comparativo__icon">✓</span> Planejamento atento
-                  ao seu tempo e orçamento
-                </li>
-                <li>
-                  <span class="comparativo__icon">✓</span> Dicas de mobilidade
-                  para circular com mais tranquilidade
-                </li>
-                <li>
-                  <span class="comparativo__icon">✓</span> Curadoria com o olhar
-                  de quem conhece Vitória
-                </li>
-              </ul>
-            </div>
+   <!-- Diferencial vs. guias tradicionais -->
+<section class="comparativo">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="comparativo__badge">O DIFERENCIAL</span>
+      <h2 class="about-section__title">Menos busca, mais descoberta</h2>
+      <p class="section-subtitle">
+        Informação local e escolhas práticas para você montar uma viagem
+        mais leve, autêntica e possível.
+      </p>
+    </div>
+
+    <div class="comparativo__grid">
+      <div class="comparativo__col comparativo__col--old">
+        <div class="comparativo__col-header">
+          <span class="comparativo__col-icon comparativo__col-icon--old">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="M21 21l-4.3-4.3" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <div>
+            <span class="comparativo__col-label">Do jeito antigo</span>
+            <h3>Quando tudo parece igual</h3>
           </div>
         </div>
+        <ul>
+          <li>
+            <span class="comparativo__icon comparativo__icon--old">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Muitas opções sem contexto para decidir
+          </li>
+          <li>
+            <span class="comparativo__icon comparativo__icon--old">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Dicas que não levam em conta o seu tempo ou orçamento
+          </li>
+          <li>
+            <span class="comparativo__icon comparativo__icon--old">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Informações práticas espalhadas em vários lugares
+          </li>
+          <li>
+            <span class="comparativo__icon comparativo__icon--old">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Roteiros distantes da rotina de quem vive na cidade
+          </li>
+        </ul>
       </div>
-    </section>
+
+      <div class="comparativo__divider" aria-hidden="true">
+        <span>VS</span>
+      </div>
+
+      <div class="comparativo__col comparativo__col--new">
+        <span class="comparativo__col-tag">Explore Vitória</span>
+        <div class="comparativo__col-header">
+          <span class="comparativo__col-icon comparativo__col-icon--new">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2Z" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <div>
+            <span class="comparativo__col-label">Com o guia</span>
+            <h3>Quando o roteiro entende você</h3>
+          </div>
+        </div>
+        <ul>
+          <li>
+            <span class="comparativo__icon comparativo__icon--new">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Sugestões organizadas pelos seus interesses
+          </li>
+          <li>
+            <span class="comparativo__icon comparativo__icon--new">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Planejamento atento ao seu tempo e orçamento
+          </li>
+          <li>
+            <span class="comparativo__icon comparativo__icon--new">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Dicas de mobilidade para circular com mais tranquilidade
+          </li>
+          <li>
+            <span class="comparativo__icon comparativo__icon--new">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Curadoria com o olhar de quem conhece Vitória
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
     <!-- Depoimentos -->
     <section class="depoimentos">
       <div class="container">
         <div class="text-center mb-5">
+          <span class="depoimentos__badge">DEPOIMENTOS</span>
           <h2 class="about-section__title">
             Experiências que queremos proporcionar
           </h2>
@@ -565,45 +992,83 @@
             Exemplos de como o guia pode tornar a sua descoberta mais simples.
           </p>
         </div>
+
         <div class="row g-4">
-          <div class="col-md-6">
+          <div class="col-md-6 col-lg-4">
             <div class="depoimento-card">
+              <span class="depoimento-card__quote-mark">&ldquo;</span>
               <p class="depoimento-card__quote">
-                “Eu não sabia por onde começar em Vitória. Encontrar praias,
-                história e comida capixaba no mesmo lugar deixou o planejamento
-                muito mais fácil.”
+                Eu não sabia por onde começar em Vitória. Encontrar praias,
+                história e comida capixaba no mesmo lugar deixou o
+                planejamento muito mais fácil.
               </p>
-              <div class="depoimento-card__author">
-                Para quem visita pela primeira vez
-              </div>
-              <div class="depoimento-card__role">
-                Descobrir sem se perder nas opções
+              <div class="depoimento-card__footer">
+                <img
+                  class="depoimento-card__avatar"
+                  src="https://i.pravatar.cc/150?img=32"
+                  alt="Visitante que usou o Explore Vitória"
+                  loading="lazy"
+                />
+                <div class="depoimento-card__info">
+                  <span class="depoimento-card__author"
+                    >Primeira viagem a Vitória</span
+                  >
+                  <span class="depoimento-card__role"
+                    >Descobrir sem se perder nas opções</span
+                  >
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+
+          <div class="col-md-6 col-lg-4">
             <div class="depoimento-card">
+              <span class="depoimento-card__quote-mark">&ldquo;</span>
               <p class="depoimento-card__quote">
-                “Gostei de poder pensar no roteiro de acordo com o meu tempo e o
-                meu orçamento, sem precisar seguir um passeio pronto.”
+                Gostei de poder pensar no roteiro de acordo com o meu tempo e
+                o meu orçamento, sem precisar seguir um passeio pronto.
               </p>
-              <div class="depoimento-card__author">
-                Para quem gosta de liberdade
+              <div class="depoimento-card__footer">
+                <img
+                  class="depoimento-card__avatar"
+                  src="https://i.pravatar.cc/150?img=47"
+                  alt="Viajante que montou o próprio roteiro"
+                  loading="lazy"
+                />
+                <div class="depoimento-card__info">
+                  <span class="depoimento-card__author"
+                    >Roteiro no próprio ritmo</span
+                  >
+                  <span class="depoimento-card__role"
+                    >Liberdade pra escolher o passeio</span
+                  >
+                </div>
               </div>
-              <div class="depoimento-card__role">Escolher o próprio ritmo</div>
             </div>
           </div>
-          <div class="col-md-6">
+
+          <div class="col-md-6 col-lg-4">
             <div class="depoimento-card">
+              <span class="depoimento-card__quote-mark">&ldquo;</span>
               <p class="depoimento-card__quote">
-                “As dicas de transporte ajudam a entender melhor como circular
-                pela cidade e aproveitar mais o dia.”
+                As dicas de transporte ajudam a entender melhor como circular
+                pela cidade e aproveitar mais o dia.
               </p>
-              <div class="depoimento-card__author">
-                Para quem quer viajar melhor
-              </div>
-              <div class="depoimento-card__role">
-                Aproveitar mais com planejamento
+              <div class="depoimento-card__footer">
+                <img
+                  class="depoimento-card__avatar"
+                  src="https://i.pravatar.cc/150?img=15"
+                  alt="Turista que aproveitou as dicas de transporte"
+                  loading="lazy"
+                />
+                <div class="depoimento-card__info">
+                  <span class="depoimento-card__author"
+                    >Mais dias, mais aproveitados</span
+                  >
+                  <span class="depoimento-card__role"
+                    >Planejamento facilita o passeio</span
+                  >
+                </div>
               </div>
             </div>
           </div>
