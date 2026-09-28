@@ -55,15 +55,13 @@ cd src
 npm install
 ```
 
-Crie `src/.env` com os dados da sua instalação local do MySQL:
+Dentro de `src`, copie o modelo e preencha os dados da instalação local do MySQL:
 
-```dotenv
-PORT=3000
-DB_HOST=localhost
-DB_USER=seu_usuario
-DB_PASSWORD=sua_senha
-DB_NAME=explore_vitoria
+```powershell
+Copy-Item .env.example .env
 ```
+
+Edite `src/.env` no computador de destino. Esse arquivo contém credenciais locais e não deve ser enviado ao Git.
 
 Inicie a API:
 
