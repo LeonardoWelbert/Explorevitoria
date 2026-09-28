@@ -1,155 +1,260 @@
+// ============================================================
+// PARCEIROS — versão 2 (seção azul escura + logos em "tiles")
+// ============================================================
+$partners-dark: mix(#000, $color-secondary, 62%);
+$partners-mid: mix(#000, $color-secondary, 30%);
+$partners-tile: 132px;
+$partners-tile-gap: 26px;
+
 .partners {
-  padding: 96px 0 64px;
+  position: relative;
+  padding: 112px 0 104px;
+  color: #fff;
+  background: linear-gradient(160deg, $partners-mid 0%, $partners-dark 100%);
+  overflow: hidden;
+  isolation: isolate;
+
+  // brilhos de luz nos cantos
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 620px;
+    height: 620px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: -260px;
+    left: -180px;
+    background: radial-gradient(circle, rgba($color-primary, 0.55) 0%, rgba($color-primary, 0) 70%);
+  }
+
+  &::after {
+    right: -200px;
+    bottom: -300px;
+    background: radial-gradient(circle, rgba(#4da3ff, 0.35) 0%, rgba(#4da3ff, 0) 70%);
+  }
+
+  // textura de pontinhos (bem sutil)
+  .container::before {
+    content: "";
+    position: absolute;
+    inset: -112px 0 -104px;
+    z-index: -1;
+    background-image: radial-gradient(rgba(#fff, 0.09) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
+    pointer-events: none;
+  }
+
+  .container {
+    position: relative;
+  }
+
+  &__col {
+    margin: 0 auto;
+    text-align: center;
+  }
 
   &__badge {
-    display: inline-block;
-    padding: 6px 22px;
-    border: $border-width-subtle solid $color-primary;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 24px;
+    border: 1px solid rgba(#fff, 0.28);
     border-radius: $border-radius-pill;
-    color: $color-primary;
+    background: rgba(#fff, 0.08);
+    backdrop-filter: blur(6px);
+    color: #fff;
     font-family: $font-family-base;
     font-size: $font-size-xs;
     font-weight: $font-weight-light;
-    letter-spacing: 0.5px;
-    margin-bottom: 24px;
+    letter-spacing: 3px;
+    margin-bottom: 28px;
+
+    // pontinho pulsante
+    &::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4da3ff;
+      box-shadow: 0 0 0 0 rgba(#4da3ff, 0.7);
+      animation: partners-pulse 2s infinite;
+    }
   }
 
   &__title {
-    max-width: 720px;
-    color: $color-secondary;
+    max-width: 780px;
+    margin: 0 auto 22px;
+    color: #fff;
     font-family: $font-family-base;
     font-weight: $font-weight-extrabold;
     font-size: $font-size-lg;
     line-height: $line-height-tight;
-    margin-bottom: 20px;
+    text-wrap: balance;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 72px;
+      height: 4px;
+      margin: 26px auto 0;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #4da3ff, rgba(#4da3ff, 0));
+    }
   }
 
   &__subtitle {
-    max-width: 620px;
-    color: $color-text-dark;
+    max-width: 600px;
+    margin: 0 auto 72px;
+    color: rgba(#fff, 0.74);
     font-family: $font-family-base;
     font-weight: $font-weight-regular;
     font-size: $font-size-sm;
     line-height: $line-height-body;
-    margin-bottom: 56px;
   }
 
   @media (max-width: $breakpoint-md) {
+    padding: 80px 0 72px;
+
     &__title {
       font-size: $font-size-md;
     }
 
     &__subtitle {
-      margin-bottom: 40px;
+      margin-bottom: 48px;
     }
   }
 }
 
+// ------------------------------------------------------------
+// Carrossel infinito
+// ------------------------------------------------------------
 .partners-carousel {
   position: relative;
-  width: 100%;
+  width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
+  padding: 28px 0 44px; // espaço p/ hover e sombra não cortarem
   overflow: hidden;
-  padding: 8px 0; 
 
-  // fade nas bordas esquerda/direita pra suavizar a entrada/saída das logos
-  &::before,
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 120px;
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  &::before {
-    left: 0;
-    background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
-  }
-
-  &::after {
-    right: 0;
-    background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
-  }
+  // fade nas pontas via máscara (funciona com qualquer fundo)
+  mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
 
   &__track {
     display: flex;
     align-items: center;
-    gap: 32px;
     width: max-content;
-    animation: partners-scroll 25s linear infinite alternate;
+    animation: partners-scroll 45s linear infinite;
     will-change: transform;
   }
 
+  &:hover &__track {
+    animation-play-state: paused;
+  }
+
   @media (max-width: $breakpoint-md) {
-    &::before,
-    &::after {
-      width: 60px;
-    }
+    mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
 
     &__track {
-      gap: 20px;
-      animation-duration: 28s;
+      animation-duration: 34s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    overflow-x: auto;
+
+    &__track {
+      animation: none;
     }
   }
 }
 
+// Cada logo vira um "tile" quadrado, estilo ícone de app
 .partners-logo {
+  position: relative;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 110px; 
-  width: 220px;
-  padding: 20px 28px;
+  width: $partners-tile;
+  height: $partners-tile;
+  margin-right: $partners-tile-gap;
+  border-radius: 28px;
   background: #fff;
-  border: 1px solid rgba($color-secondary, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  border: 1px solid rgba(#fff, 0.18);
+  box-shadow:
+    0 14px 32px rgba(#000, 0.35),
+    inset 0 0 0 1px rgba(#fff, 0.4);
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    filter 0.25s ease;
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s ease;
 
   img {
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-    filter: grayscale(100%);
-    opacity: 0.75;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // preenche o tile: some o "quadrado cinza" das logos
+    filter: grayscale(100%) contrast(1.08);
+    opacity: 0.88;
     transition:
-      filter 0.25s ease,
-      opacity 0.25s ease;
+      filter 0.35s ease,
+      opacity 0.35s ease,
+      transform 0.5s ease;
+  }
+
+  // brilho diagonal que passa no hover
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 35%, rgba(#fff, 0.55) 50%, transparent 65%);
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+    pointer-events: none;
   }
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-10px) scale(1.06);
+    box-shadow:
+      0 0 0 2px rgba(#fff, 0.7),
+      0 26px 50px rgba($color-primary, 0.6);
 
     img {
-      filter: grayscale(0%);
+      filter: grayscale(0%) contrast(1);
       opacity: 1;
+      transform: scale(1.06);
+    }
+
+    &::after {
+      transform: translateX(120%);
     }
   }
 
   @media (max-width: $breakpoint-md) {
-    height: 80px;
-    width: 160px;
-    padding: 14px 18px;
-    border-radius: 12px;
+    width: 96px;
+    height: 96px;
+    margin-right: 16px;
+    border-radius: 20px;
   }
 }
 
 @keyframes partners-scroll {
-  0%,
-  2% {
+  from {
     transform: translateX(0);
   }
-  98%,
+  to {
+    transform: translateX(-50%); // metade = conteúdo original + clone
+  }
+}
+
+@keyframes partners-pulse {
+  70% {
+    box-shadow: 0 0 0 10px rgba(#4da3ff, 0);
+  }
   100% {
-    transform: translateX(calc(-100% + 100vw));
+    box-shadow: 0 0 0 0 rgba(#4da3ff, 0);
   }
 }

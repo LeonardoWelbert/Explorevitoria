@@ -16,185 +16,194 @@
     />
     <link rel="stylesheet" href="assets/css/main.css" />
     <style>
-    /* ==========================================================================
+      /* ==========================================================================
    GALERIA DE VÍDEOS (CARROSSEL)
    ========================================================================== */
-.video-gallery-carousel__track {
-  display: flex;
-  gap: 20px;
-  padding: 4px max(24px, calc((100% - (1400px - 24px)) / 2 + 24px)) 12px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+      .video-gallery-carousel__track {
+        display: flex;
+        gap: 20px;
+        padding: 4px max(24px, calc((100% - (1400px - 24px)) / 2 + 24px)) 12px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
 
-  /* Impede a seleção de texto e libera o scroll vertical no mobile */
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: pan-y;
-  cursor: grab;
-}
+        /* Impede a seleção de texto e libera o scroll vertical no mobile */
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: pan-y;
+        cursor: grab;
+      }
 
-.video-gallery-carousel__track::-webkit-scrollbar {
-  display: none;
-}
+      .video-gallery-carousel__track::-webkit-scrollbar {
+        display: none;
+      }
 
-/* Estado acionado via JS durante o arraste com o mouse */
-.video-gallery-carousel__track.is-dragging {
-  scroll-snap-type: none;
-  scroll-behavior: auto;
-  cursor: grabbing;
-}
+      /* Estado acionado via JS durante o arraste com o mouse */
+      .video-gallery-carousel__track.is-dragging {
+        scroll-snap-type: none;
+        scroll-behavior: auto;
+        cursor: grabbing;
+      }
 
-/* ----- CARD DE VÍDEO ----- */
-.video-card {
-  flex: 0 0 auto;
-  width: 300px;
-  text-decoration: none;
+      /* ----- CARD DE VÍDEO ----- */
+      .video-card {
+        flex: 0 0 auto;
+        width: 300px;
+        text-decoration: none;
 
-  /* Impede que o navegador tente arrastar o card como um arquivo/objeto */
-  -webkit-user-drag: none;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: pan-y;
-}
+        /* Impede que o navegador tente arrastar o card como um arquivo/objeto */
+        -webkit-user-drag: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: pan-y;
+      }
 
-.video-card img,
-.video-card__cover {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
+      .video-card img,
+      .video-card__cover {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
 
-  /* EVITA O TRAVAMENTO PRINCIPAL: Impede a imagem de capturar o clique do mouse */
-  pointer-events: none;
-  -webkit-user-drag: none;
-}
+        /* EVITA O TRAVAMENTO PRINCIPAL: Impede a imagem de capturar o clique do mouse */
+        pointer-events: none;
+        -webkit-user-drag: none;
+      }
 
-.video-card__thumb {
-  position: relative;
-  width: 100%;
-  height: 200px;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  padding: 16px;
-  background: linear-gradient(135deg, #102a45 0%, #0066cc 100%);
-}
+      .video-card__thumb {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+        padding: 16px;
+        background: linear-gradient(135deg, #102a45 0%, #0066cc 100%);
+      }
 
-/* Gradiante escuro para dar destaque ao botão e título */
-.video-card__thumb::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.1) 0%,
-    rgba(0, 0, 0, 0.55) 100%
-  );
-  pointer-events: none;
-}
+      /* Gradiante escuro para dar destaque ao botão e título */
+      .video-card__thumb::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.1) 0%,
+          rgba(0, 0, 0, 0.55) 100%
+        );
+        pointer-events: none;
+      }
 
-/* Gradientes alternativos para as variações de thumb */
-.video-card__thumb--2 { background: linear-gradient(135deg, #0b6e99 0%, #4ac1f0 100%); }
-.video-card__thumb--3 { background: linear-gradient(135deg, #1a2b4c 0%, #34528a 100%); }
-.video-card__thumb--4 { background: linear-gradient(135deg, #14324f 0%, #2f7ea8 100%); }
-.video-card__thumb--5 { background: linear-gradient(135deg, #0f3d3e 0%, #1f7a7c 100%); }
-.video-card__thumb--6 { background: linear-gradient(135deg, #241b3a 0%, #4a2f6e 100%); }
+      /* Gradientes alternativos para as variações de thumb */
+      .video-card__thumb--2 {
+        background: linear-gradient(135deg, #0b6e99 0%, #4ac1f0 100%);
+      }
+      .video-card__thumb--3 {
+        background: linear-gradient(135deg, #1a2b4c 0%, #34528a 100%);
+      }
+      .video-card__thumb--4 {
+        background: linear-gradient(135deg, #14324f 0%, #2f7ea8 100%);
+      }
+      .video-card__thumb--5 {
+        background: linear-gradient(135deg, #0f3d3e 0%, #1f7a7c 100%);
+      }
+      .video-card__thumb--6 {
+        background: linear-gradient(135deg, #241b3a 0%, #4a2f6e 100%);
+      }
 
-.video-card__play,
-.video-card__tag {
-  position: relative;
-  z-index: 2;
-}
+      .video-card__play,
+      .video-card__tag {
+        position: relative;
+        z-index: 2;
+      }
 
-
-/* ==========================================================================
+      /* ==========================================================================
    MODAL DE VÍDEO
    ========================================================================== */
 
-.video-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
+      .video-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
 
-.video-modal.is-open {
-  display: flex;
-}
+      .video-modal.is-open {
+        display: flex;
+      }
 
-.video-modal__backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-}
+      .video-modal__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+      }
 
-.video-modal__dialog {
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  aspect-ratio: 16 / 9;
-}
+      .video-modal__dialog {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        aspect-ratio: 16 / 9;
+      }
 
-.video-modal__player {
-  width: 100%;
-  height: 100%;
-  background: #000;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
+      .video-modal__player {
+        width: 100%;
+        height: 100%;
+        background: #000;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
 
-.video-modal__player iframe,
-.video-modal__player video {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-}
+      .video-modal__player iframe,
+      .video-modal__player video {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+      }
 
-.video-modal__close {
-  position: absolute;
-  top: -44px;
-  right: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-}
+      .video-modal__close {
+        position: absolute;
+        top: -44px;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease;
+      }
 
-.video-modal__close:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
+      .video-modal__close:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
 
-/* Bloqueio de scroll do body com o modal aberto */
-body.video-modal-open {
-  overflow: hidden;
-}
+      /* Bloqueio de scroll do body com o modal aberto */
+      body.video-modal-open {
+        overflow: hidden;
+      }
 
-/* Responsividade do botão fechar no mobile */
-@media (max-width: 576px) {
-  .video-modal__close {
-    top: auto;
-    bottom: calc(100% + 8px);
-  }
-}
+      /* Responsividade do botão fechar no mobile */
+      @media (max-width: 576px) {
+        .video-modal__close {
+          top: auto;
+          bottom: calc(100% + 8px);
+        }
+      }
     </style>
   </head>
   <body class="page-home">
@@ -629,9 +638,6 @@ body.video-modal-open {
       </div>
     </section>
 
-    <!--Parceiros-->
-    <div id="partners-container"></div>
-
     <!-- Explorar -->
     <section class="segmentos">
       <div class="container">
@@ -857,6 +863,9 @@ body.video-modal-open {
         </div>
       </div>
     </section>
+
+    <!--Parceiros-->
+    <div id="partners-container"></div>
 
     <!-- Mochilão / IA -->
     <section class="backpack-cta">

@@ -218,7 +218,11 @@
     const partnersPromise = loadComponent(
       "components/partners.html",
       "partners-container",
-    ).then(fixContainerPaths);
+    ).then((container) => {
+      fixContainerPaths(container);
+      initPartnersCarousel(container);
+      return container;
+    });
 
     const contactPromise = loadComponent(
       "components/contact.html",
@@ -342,6 +346,19 @@
     });
   }
 
+  function initPartnersCarousel(root) {
+    const track = root?.querySelector("#partnersTrack");
+    if (!track || track.dataset.cloned === "true") return;
+
+    Array.from(track.children).forEach((item) => {
+      const clone = item.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      clone.querySelector("img")?.setAttribute("alt", "");
+      track.appendChild(clone);
+    });
+
+    track.dataset.cloned = "true";
+  }
   function initDraggableCarousel(
     trackEl,
     itemSelector,
