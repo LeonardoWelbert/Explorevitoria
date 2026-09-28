@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  // CORS (necessário quando o front roda no Live Server, porta 5500)
+  // CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -18,10 +18,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Mensagem inválida" });
   }
 
-  const systemInstruction = `Você é o guia turístico virtual 'IA Explore Vitória'. Seu objetivo é fornecer roteiros de viagem práticos, organizados e personalizados em Vitória (Espírito Santo) e região metropolitana (Vila Velha, Serra, Guarapari).
-Considere opções gastronômicas (moqueca, torta capixaba), passeios históricos, praias e transporte (Sistema Transcol e Aquaviário).
-Seja amigável, direto, contextualizado e formate o roteiro de forma bem organizada com tópicos.`;
-
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
@@ -29,7 +25,9 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     return res.status(500).json({ error: "Configuração ausente no servidor" });
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+  const systemInstruction = `Você é o guia turístico virtual 'IA Explore Vitória'. Seu objetivo é fornecer roteiros de viagem práticos, organizados e personalizados em Vitória (Espírito Santo) e região metropolitana (Vila Velha, Serra, Guarapari).
+Considere opções gastronômicas (moqueca, torta capixaba), passeios históricos, praias e transporte (Sistema Transcol e Aquaviário).
+Seja amigável, direto, contextualizado e formate o roteiro de forma bem organizada com tópicos.`;
 
   const body = JSON.stringify({
     contents: [
@@ -43,11 +41,18 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
     ],
   });
 
-  const MAX_TENTATIVAS = 3;
+  // Lista de modelos leves por ordem de preferência para fallback
+  const MODELOS = [
+    "gemini-1.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash-8b",
+  ];
   let ultimoErro = null;
 
-  for (let tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
+  for (const modelo of MODELOS) {
     try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent?key=${apiKey}`;
+
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,35 +68,30 @@ Seja amigável, direto, contextualizado e formate o roteiro de forma bem organiz
         return res.status(200).json({ resposta: texto });
       }
 
-      // Erros temporários (modelo sobrecarregado) valem retry; outros erros, não.
-      const temporario = response.status === 503 || response.status === 429;
       ultimoErro = data.error?.message || `Erro HTTP ${response.status}`;
-
       console.warn(
-        `Tentativa ${tentativa}/${MAX_TENTATIVAS} falhou: ${ultimoErro}`,
+        `Modelo ${modelo} indisponível (${response.status}): ${ultimoErro}`,
       );
 
-      if (!temporario || tentativa === MAX_TENTATIVAS) {
+      // Se não for erro de sobrecarga/cota (ex: chave inválida), encerra imediatamente
+      if (response.status !== 503 && response.status !== 429) {
         return res.status(response.status).json({
           error: "Erro na API do Gemini",
           detalhe: ultimoErro,
         });
       }
 
-      // Espera um pouco antes de tentar de novo (backoff crescente)
-      await new Promise((r) => setTimeout(r, tentativa * 700));
+      // Pequena pausa (300ms) antes de tentar o próximo modelo reserva
+      await new Promise((r) => setTimeout(r, 300));
     } catch (error) {
       ultimoErro = error.message;
-      console.error(
-        `Tentativa ${tentativa}/${MAX_TENTATIVAS} erro de rede:`,
-        error.message,
-      );
-      if (tentativa === MAX_TENTATIVAS) {
-        return res
-          .status(500)
-          .json({ error: "Erro ao gerar roteiro", detalhe: ultimoErro });
-      }
-      await new Promise((r) => setTimeout(r, tentativa * 700));
+      console.error(`Erro de rede no modelo ${modelo}:`, error.message);
     }
   }
+
+  // Se todos os modelos da lista falharem
+  return res.status(503).json({
+    error: "Serviço da IA temporariamente indisponível por alta demanda.",
+    detalhe: ultimoErro,
+  });
 }
